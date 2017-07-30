@@ -1,0 +1,70 @@
+/* BASIC CSS */
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+    font: 12pt "Tahoma";
+}
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+/* A4 PAGE STYLE */
+
+.page {
+    width: 21cm;
+    min-height: 29.7cm;
+    margin: 1cm auto;
+    border: 1px #D3D3D3 solid;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.half-tag {
+    display: inline-block;
+    float: right;
+    height: calc(29.7cm / 5);
+    width: 50%;
+    /*border: 1px solid #000;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);*/
+}
+
+/* PRICE TAG STYLES */
+
+.half-tag:nth-child(even) .text-content{ 
+
+	/* Position */
+	position: relative;
+    top: 1cm;
+    right: 2cm;
+
+    /* Safari */
+    -webkit-transform: rotate(-90deg);
+    /* Firefox */
+    -moz-transform: rotate(-90deg);
+    /* IE */
+    -ms-transform: rotate(-90deg);
+    /* Opera */
+    -o-transform: rotate(-90deg);
+}
+
+.half-tag:nth-child(odd) .text-content{ 
+
+    /* Position */
+	position: relative;
+    top: 1cm;
+    left: 2cm;
+
+    /* Safari */
+    -webkit-transform: rotate(90deg);
+    /* Firefox */
+    -moz-transform: rotate(90deg);
+    /* IE */
+    -ms-transform: rotate(90deg);
+    /* Opera */
+    -o-transform: rotate(90deg);
+}
+
+.text-content { text-align: center; }

@@ -1,0 +1,5 @@
+.menu {
+	background: #CCC;
+	flex: 1;
+	overflow-y: scroll;
+}

@@ -6,6 +6,7 @@ body {
     background-color: #FAFAFA;
     font: 12pt "Tahoma";
 }
+
 * {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -22,9 +23,10 @@ body {
     background: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
+
 .half-tag {
     display: inline-block;
-    float: right;
+    float: left;
     height: calc(29.7cm / 5);
     width: 50%;
     /*border: 1px solid #000;
@@ -34,11 +36,10 @@ body {
 /* PRICE TAG STYLES */
 
 .half-tag:nth-child(even) .text-content{ 
-
-	/* Position */
+    /* Position */
 	position: relative;
     top: 1cm;
-    right: 2cm;
+    /*left: 1cm;*/
 
     /* Safari */
     -webkit-transform: rotate(-90deg);
@@ -51,11 +52,10 @@ body {
 }
 
 .half-tag:nth-child(odd) .text-content{ 
-
     /* Position */
 	position: relative;
     top: 1cm;
-    left: 2cm;
+    /*right: 1cm;*/
 
     /* Safari */
     -webkit-transform: rotate(90deg);

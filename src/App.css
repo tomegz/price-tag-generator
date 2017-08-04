@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 .App {
   text-align: center;
 }
@@ -10,24 +13,57 @@
 .App-header {
   background-color: #222;
   height: 150px;
-  padding: 20px;
+  /*padding: 20px;*/
   color: white;
 }
 
 .wrapper {
 	margin: 0;
 	padding: 0;
-	max-height: 400px;
+	height: 440px;
 	display: flex;
 }
 
 .App-footer {
     background-color: #222;
-    height: 41px;
+    height: 83px;
     padding: 20px;
     color: white;
 }
+
+.pricetag-list {
+    display: none;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* PRINT MEDIA QUERIES */
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+@media print {
+
+    html, body {
+        width: 210mm;
+        height: 297mm;
+    }
+    .App-header, .wrapper, .App-footer { display: none; }
+    .pricetag-list {
+        display: initial;
+        margin: 0;
+        border: initial;
+        border-radius: initial;
+        width: initial;
+        min-height: initial;
+        box-shadow: initial;
+        background: initial;
+        page-break-after: always;
+    }
+
 }

@@ -1,0 +1,40 @@
+.half-tag {
+    display: inline-block;
+    float: left;
+    height: calc(29.7cm / 5);
+    width: 50%;
+}
+
+.half-tag:nth-child(even) .text-content{ 
+    /* Position */
+	position: relative;
+    top: 1cm;
+    /*left: 1cm;*/
+
+    /* Safari */
+    -webkit-transform: rotate(-90deg);
+    /* Firefox */
+    -moz-transform: rotate(-90deg);
+    /* IE */
+    -ms-transform: rotate(-90deg);
+    /* Opera */
+    -o-transform: rotate(-90deg);
+}
+
+.half-tag:nth-child(odd) .text-content{ 
+    /* Position */
+	position: relative;
+    top: 1cm;
+    /*right: 1cm;*/
+
+    /* Safari */
+    -webkit-transform: rotate(90deg);
+    /* Firefox */
+    -moz-transform: rotate(90deg);
+    /* IE */
+    -ms-transform: rotate(90deg);
+    /* Opera */
+    -o-transform: rotate(90deg);
+}
+
+.text-content { text-align: center; }

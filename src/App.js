@@ -26,7 +26,7 @@ class App extends Component {
         <div className="wrapper">
           <Menu />
           <Order />
-          <Inventory />
+          <Inventory pricetags={this.state.pricetags} />
         </div>
         <footer className="App-footer"></footer>
         {/* Here price tags must be rendered and hidden*/}

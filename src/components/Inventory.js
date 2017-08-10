@@ -6,16 +6,8 @@ class Inventory extends Component {
     return (
       <div className="inventory">
         <h2>Inventory</h2>
-        <h4>test</h4>
-        <h4>test</h4>
-        <h4>test</h4>
-        <h4>test</h4>
-        <h4>test</h4>
-        <h4>test</h4>
-        <h4>test</h4>
-        <h4>test</h4>
-        <h4>test</h4>
-        <h4>test</h4>
+        {Object.keys(this.props.pricetags)
+               .map(key => <p key={key}>{this.props.pricetags[key].name}</p>)}
       </div>
     );
   }

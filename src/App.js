@@ -13,10 +13,11 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      pricetags: samplePricetags
+      items: samplePricetags
     };
   }
   render() {
+    const { items } = this.state;
     return (
       <div className="App">
         <div className="App-header">
@@ -26,17 +27,13 @@ class App extends Component {
         <div className="wrapper">
           <Menu />
           <Order />
-          <Inventory pricetags={this.state.pricetags} />
+          <Inventory items={items} />
         </div>
         <footer className="App-footer"></footer>
         {/* Here price tags must be rendered and hidden*/}
         <div className="pricetag-list">
-          {Object.keys(this.state.pricetags)
-                 .map(key => {
-                        return (
-                          <Pricetag key={key} details={this.state.pricetags[key]} />
-                        );
-                      })} 
+          {Object.keys(items)
+                 .map(key => <Pricetag key={key} details={items[key]} />)} 
         </div>
       </div>
     );

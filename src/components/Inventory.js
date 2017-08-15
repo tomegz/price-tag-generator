@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+
+import AddItemForm from "./AddItemForm";
 import "../styles/Inventory.css";
 
 class Inventory extends Component {
@@ -22,6 +24,7 @@ class Inventory extends Component {
         <h2>Inventory</h2>
         {Object.keys(items)
                .map(this.renderItem)}
+        <AddItemForm addItem={this.props.addItem} />
       </div>
     );
   }

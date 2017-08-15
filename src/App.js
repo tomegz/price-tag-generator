@@ -12,9 +12,17 @@ import samplePricetags from "./helpers/samplePricetags";
 class App extends Component {
   constructor() {
     super();
+    this.addItem = this.addItem.bind(this);
     this.state = {
-      items: samplePricetags
+      items: samplePricetags,
+      order: {}
     };
+  }
+  addItem(item) {
+    const items = {...this.state.items};
+    const timestamp = Date.now();
+    items[`item${timestamp}`] = item;
+    this.setState({ items });
   }
   render() {
     const { items } = this.state;
@@ -25,9 +33,9 @@ class App extends Component {
           <h2>Price Tag Generator</h2>
         </div>
         <div className="wrapper">
-          <Menu />
+          <Menu items={items}/>
           <Order />
-          <Inventory items={items} />
+          <Inventory items={items} addItem={this.addItem} />
         </div>
         <footer className="App-footer"></footer>
         {/* Here price tags must be rendered and hidden*/}

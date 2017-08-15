@@ -11,7 +11,7 @@ class Menu extends Component {
         <h2>Menu</h2>
         <ul className="list-of-items">
           {Object.keys(items)
-                 .map((key) => <Item key={key} details={items[key]} />)}
+                 .map((key) => <Item key={key} index={key} details={items[key]} addToOrder={this.props.addToOrder} />)}
         </ul>
       </div>
     );

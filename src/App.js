@@ -13,6 +13,7 @@ class App extends Component {
   constructor() {
     super();
     this.addItem = this.addItem.bind(this);
+    this.addToOrder = this.addToOrder.bind(this);
     this.state = {
       items: samplePricetags,
       order: {}
@@ -24,8 +25,20 @@ class App extends Component {
     items[`item${timestamp}`] = item;
     this.setState({ items });
   }
+  addToOrder(key) {
+    const order = {...this.state.order};
+    order[key] = order[key] + 1 || 1;
+    this.setState({ order });
+  }
   render() {
-    const { items } = this.state;
+    const { items, order } = this.state;
+    const pricetags = [];
+    Object.keys(order)
+          .forEach(key => {
+            for(var i=0; i<order[key]; i++) {
+              pricetags.push(<Pricetag key={`${key}-${i}`} details={items[key]} />);
+            }
+          });
     return (
       <div className="App">
         <div className="App-header">
@@ -33,15 +46,14 @@ class App extends Component {
           <h2>Price Tag Generator</h2>
         </div>
         <div className="wrapper">
-          <Menu items={items}/>
+          <Menu items={items} addToOrder={this.addToOrder} />
           <Order />
           <Inventory items={items} addItem={this.addItem} />
         </div>
         <footer className="App-footer"></footer>
         {/* Here price tags must be rendered and hidden*/}
         <div className="pricetag-list">
-          {Object.keys(items)
-                 .map(key => <Pricetag key={key} details={items[key]} />)} 
+          {pricetags}
         </div>
       </div>
     );

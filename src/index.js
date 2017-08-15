@@ -14,7 +14,7 @@ const Root = () => {
       <Switch>
         <Route exact path="/" component={LoginForm} />
         { /* Exact pattern because of only one store so far */ }
-        <Route path="/profi-bike" component={App} />
+        <Route path="/store/:storeId" component={App} />
         <Route component={NotFound} />
       </Switch>
     </Router>

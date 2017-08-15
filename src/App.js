@@ -7,6 +7,8 @@ import Order from "./components/Order";
 import Inventory from "./components/Inventory";
 import Pricetag from "./components/Pricetag";
 
+import base from "./base";
+
 import samplePricetags from "./helpers/samplePricetags";
 
 class App extends Component {
@@ -15,9 +17,18 @@ class App extends Component {
     this.addItem = this.addItem.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
     this.state = {
-      items: samplePricetags,
+      items: {},
       order: {}
     };
+  }
+  componentWillMount() {
+    this.ref = base.syncState(`${this.props.match.params.storeId}/items`, {
+      context: this,
+      state: "items"
+    });
+  }
+  componentWillUnmount() {
+    base.removeBinding(this.ref);
   }
   addItem(item) {
     const items = {...this.state.items};
@@ -47,7 +58,7 @@ class App extends Component {
         </div>
         <div className="wrapper">
           <Menu items={items} addToOrder={this.addToOrder} />
-          <Order />
+          <Order items={items} order={order} />
           <Inventory items={items} addItem={this.addItem} />
         </div>
         <footer className="App-footer"></footer>

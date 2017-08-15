@@ -1,0 +1,13 @@
+{
+	"profi-bike": {
+		"items": {
+			"item1": {
+				"name": "Kross",
+				"model": "Trans Siberian",
+				"price": 1699,
+				"discountPrice": 1499,
+				"discountStatus": "on"
+			}
+		}
+    }
+}

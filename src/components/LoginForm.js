@@ -8,8 +8,8 @@ class LoginForm extends React.Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    const store = this.storeInput.value;
-    this.context.router.history.push(`/${store}`);
+    const storeId = this.storeInput.value;
+    this.context.router.history.push(`/store/${storeId}`);
   }
   render() {
     return (

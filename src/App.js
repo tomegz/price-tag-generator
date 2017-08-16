@@ -22,13 +22,26 @@ class App extends Component {
     };
   }
   componentWillMount() {
-    this.ref = base.syncState(`${this.props.match.params.storeId}/items`, {
+    const storeId = this.props.match ? this.props.match.params.storeId : this.props.params.storeId;
+    this.ref = base.syncState(`${storeId}/items`, {
       context: this,
       state: "items"
     });
+
+    const localStorageRef = localStorage.getItem(`order-${storeId}`);
+    if(localStorageRef) {
+      this.setState({
+        order: JSON.parse(localStorageRef)
+      });
+    }
+
   }
   componentWillUnmount() {
     base.removeBinding(this.ref);
+  }
+  componentWillUpdate(nextProps, nextState) {
+    localStorage.setItem(`order-${this.props.match.params.storeId}`, 
+      JSON.stringify(nextState.order));
   }
   addItem(item) {
     const items = {...this.state.items};
@@ -45,11 +58,12 @@ class App extends Component {
     const { items, order } = this.state;
     const pricetags = [];
     Object.keys(order)
-          .forEach(key => {
-            for(var i=0; i<order[key]; i++) {
-              pricetags.push(<Pricetag key={`${key}-${i}`} details={items[key]} />);
-            }
-          });
+        .forEach(key => {
+          for(var i=0; i<order[key]; i++) {
+            pricetags.push(<Pricetag key={`${key}-${i}`} 
+                                      details={items[key]} />);
+          }
+        });
     return (
       <div className="App">
         <div className="App-header">
@@ -58,7 +72,8 @@ class App extends Component {
         </div>
         <div className="wrapper">
           <Menu items={items} addToOrder={this.addToOrder} />
-          <Order items={items} order={order} />
+          <Order items={items} 
+                 order={order} />
           <Inventory items={items} addItem={this.addItem} />
         </div>
         <footer className="App-footer"></footer>

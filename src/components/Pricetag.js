@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/Pricetag.css";
+import PropTypes from "prop-types";
 
 class Pricetag extends React.Component {
   render() {
@@ -26,6 +27,24 @@ class Pricetag extends React.Component {
         </div>
       </div>
     );
+  }
+}
+
+Pricetag.propTypes = {
+  details: PropTypes.object.isRequired
+}
+
+/* Fixes issue that Pricetags are rendered after order is initialized, but apparently 
+   items are not yet initialized, causing React trying to render Pricetag with details of 
+   undefined */
+
+Pricetag.defaultProps = {
+  details: {
+    name: "default",
+    model: "default",
+    price: 999,
+    discountPrice: 999,
+    discountStatus: "off"
   }
 }
 

@@ -14,7 +14,7 @@ class Order extends Component {
     }
     return (
       <li key={key}>
-        <span>{count}szt. {item.name} {item.model}</span>
+        <span><strong>{count}szt.</strong> {item.name} {item.model}</span>
       </li>
     );
   }
@@ -26,7 +26,7 @@ class Order extends Component {
     }, 0);
     return (
       <div className="order">
-        <h2>Order</h2>
+        <h2>Ceny do druku</h2>
         <ul className="order-list">
           {orderIds.map(this.renderOrder)}
           <li className="total">

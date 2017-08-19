@@ -1,5 +1,8 @@
 .order {
-	background: #c13131;
+	background: #ccc;
 	flex: 1;
 	overflow-y: scroll;
+}
+.order-list {
+	list-style: none;
 }

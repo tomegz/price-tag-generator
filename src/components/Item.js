@@ -9,7 +9,7 @@ class Item extends React.Component {
         <h4>{`${details.name} ${details.model}`}</h4>
         <span className="price">{details.price}</span>
         {isOnDiscount ? <span className="discountPrice">{details.discountPrice}</span> : ""}
-        <button onClick={() => this.props.addToOrder(index)}>Drukuj</button>
+        <button onClick={() => this.props.addToOrder(index)}>+</button>
       </li>
     );
   }

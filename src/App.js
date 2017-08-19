@@ -9,13 +9,13 @@ import Pricetag from "./components/Pricetag";
 
 import base from "./base";
 
-import samplePricetags from "./helpers/samplePricetags";
 
 class App extends Component {
   constructor() {
     super();
     this.addItem = this.addItem.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
+    this.updateItem = this.updateItem.bind(this);
     this.state = {
       items: {},
       order: {}
@@ -49,6 +49,11 @@ class App extends Component {
     items[`item${timestamp}`] = item;
     this.setState({ items });
   }
+  updateItem(key, updatedItem) {
+    const items = {...this.state.items};
+    items[key] = updatedItem;
+    this.setState({ items });
+  }
   addToOrder(key) {
     const order = {...this.state.order};
     order[key] = order[key] + 1 || 1;
@@ -74,7 +79,7 @@ class App extends Component {
           <Menu items={items} addToOrder={this.addToOrder} />
           <Order items={items} 
                  order={order} />
-          <Inventory items={items} addItem={this.addItem} />
+          <Inventory items={items} addItem={this.addItem} updateItem={this.updateItem} />
         </div>
         <footer className="App-footer"></footer>
         {/* Here price tags must be rendered and hidden*/}

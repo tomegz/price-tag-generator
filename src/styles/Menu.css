@@ -1,5 +1,12 @@
 .menu {
-	background: #CCC;
+	background: #abcdef;
 	flex: 1;
 	overflow-y: scroll;
+}
+.list-of-items {
+	list-style: none;
+}
+.list-of-items li > * {
+	display: inline-block;
+	margin-right: 5px;
 }

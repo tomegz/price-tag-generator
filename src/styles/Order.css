@@ -5,4 +5,35 @@
 }
 .order-list {
 	list-style: none;
+	text-align: left;
+}
+.order-list li button {
+  font-size: 22px;
+  border: 0;
+  background: transparent;
+  display: none;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
+.order-list li:hover button {
+  display: inline;
+  background: #000;
+  color: #fff;
+}
+button.print-button {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+} 
+button.print-button:focus {
+	outline: none;
+	outline-style: none;
+	outline-width: 0;
+}
+button.print-button::-moz-focus-inner {
+	border: 0;
+}
+button.print-button:hover {
+	color: #000;
 }

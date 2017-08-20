@@ -1,4 +1,5 @@
 .inventory {
+  padding: 0 10px;
 	background: #abcdef;
 	flex: 1;
 	overflow-y: scroll;
@@ -35,4 +36,8 @@
 .item-edit select:focus {
   outline: 0;
   background: #fef2de;
+}
+.item-edit select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
 }

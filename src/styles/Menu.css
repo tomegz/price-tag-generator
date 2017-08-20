@@ -5,8 +5,33 @@
 }
 .list-of-items {
 	list-style: none;
+	text-align: left;
 }
 .list-of-items li > * {
 	display: inline-block;
 	margin-right: 5px;
 }
+.menu-item {
+	display: block;
+	max-height: 30px;
+}
+.menu-item button {
+	font-size: 22px;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	line-height: 1;
+    padding: 0;
+}
+.menu-item:hover button {
+	color: green;
+}
+li.menu-item button:focus {
+	outline: none;
+	outline-style: none;
+	outline-width: 0;
+}
+li.menu-item button::-moz-focus-inner {
+  border: 0;
+}
+

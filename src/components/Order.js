@@ -9,12 +9,14 @@ class Order extends Component {
   renderOrder(key) {
     const item = this.props.items[key];
     const count = this.props.order[key];
+    const removeButton = <button onClick={() => this.props.removeFromOrder(key)}>&times;</button>;
     if(!item) {
-      return <li key={key}>Cena tego produktu nie jest już dostępna do druku</li>;
+      return <li key={key}>Cena tego produktu nie jest już dostępna do druku {removeButton}</li>;
     }
     return (
       <li key={key}>
         <span><strong>{count}szt.</strong> {item.name} {item.model}</span>
+        {removeButton}
       </li>
     );
   }
@@ -27,6 +29,7 @@ class Order extends Component {
     return (
       <div className="order">
         <h2>Ceny do druku</h2>
+        <button className="print-button" onClick={() => window.print()}><i className="fa fa-print fa-3x" /></button>
         <ul className="order-list">
           {orderIds.map(this.renderOrder)}
           <li className="total">

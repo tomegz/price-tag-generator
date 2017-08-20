@@ -15,6 +15,7 @@ class App extends Component {
     super();
     this.addItem = this.addItem.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
+    this.removeFromOrder = this.removeFromOrder.bind(this);
     this.updateItem = this.updateItem.bind(this);
     this.state = {
       items: {},
@@ -59,6 +60,11 @@ class App extends Component {
     order[key] = order[key] + 1 || 1;
     this.setState({ order });
   }
+  removeFromOrder(key) {
+    const order = {...this.state.order};
+    delete order[key];
+    this.setState({ order });
+  }
   render() {
     const { items, order } = this.state;
     const pricetags = [];
@@ -78,7 +84,8 @@ class App extends Component {
         <div className="wrapper">
           <Menu items={items} addToOrder={this.addToOrder} />
           <Order items={items} 
-                 order={order} />
+                 order={order}
+                 removeFromOrder={this.removeFromOrder} />
           <Inventory items={items} addItem={this.addItem} updateItem={this.updateItem} />
         </div>
         <footer className="App-footer"></footer>

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 class AddItemForm extends React.Component {
   constructor() {
@@ -32,6 +33,10 @@ class AddItemForm extends React.Component {
       </form>
     );
   }
+}
+
+AddItemForm.propTypes = {
+  addItem: PropTypes.func.isRequired
 }
 
 export default AddItemForm;

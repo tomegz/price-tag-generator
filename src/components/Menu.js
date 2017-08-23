@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 
 import Item from "./Item";
 import "../styles/Menu.css";
@@ -16,6 +17,11 @@ class Menu extends Component {
       </div>
     );
   }
+}
+
+Menu.propTypes = {
+  items: PropTypes.object.isRequired,
+  addToOrder: PropTypes.func.isRequired
 }
 
 export default Menu;

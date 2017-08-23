@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 class Item extends React.Component {
   render() {
@@ -13,6 +14,12 @@ class Item extends React.Component {
       </li>
     );
   }
+}
+
+Item.propTypes = {
+  details: PropTypes.object.isRequired,
+  index: PropTypes.string.isRequired,
+  addToOrder: PropTypes.func.isRequired
 }
 
 export default Item;

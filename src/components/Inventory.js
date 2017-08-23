@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 
 import AddItemForm from "./AddItemForm";
 import "../styles/Inventory.css";
@@ -44,6 +45,12 @@ class Inventory extends Component {
       </div>
     );
   }
+}
+
+Inventory.propTypes = {
+  items: PropTypes.object.isRequired,
+  addItem: PropTypes.func.isRequired,
+  updateItem: PropTypes.func.isRequired
 }
 
 export default Inventory;

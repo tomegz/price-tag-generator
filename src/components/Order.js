@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
+
 import "../styles/Order.css";
 import CSSTransitionGroup from "react-addons-css-transition-group";
 
@@ -56,6 +58,12 @@ class Order extends Component {
       </div>
     );
   }
+}
+
+Order.propTypes = {
+  items: PropTypes.object.isRequired,
+  order: PropTypes.object.isRequired,
+  removeFromOrder: PropTypes.func.isRequired
 }
 
 export default Order;

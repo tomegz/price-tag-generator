@@ -79,7 +79,7 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Price Tag Generator</h2>
+          <h2>Profi Bike - Drukowanie cen</h2>
         </div>
         <div className="wrapper">
           <Menu items={items} addToOrder={this.addToOrder} />

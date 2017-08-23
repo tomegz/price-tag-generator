@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import "../styles/Order.css";
+import CSSTransitionGroup from "react-addons-css-transition-group";
 
 class Order extends Component {
   constructor() {
@@ -15,7 +16,19 @@ class Order extends Component {
     }
     return (
       <li key={key}>
-        <span><strong>{count}szt.</strong> {item.name} {item.model}</span>
+        <span>
+          <strong>
+            <CSSTransitionGroup component="span"
+                                className="count"
+                                transitionName="count"
+                                transitionEnterTimeout={250}
+                                transitionLeaveTimeout={250}>
+              <span key={count}>{count}</span>
+            </CSSTransitionGroup>
+            szt.
+          </strong> 
+          {item.name} {item.model}
+        </span>
         {removeButton}
       </li>
     );
@@ -30,12 +43,16 @@ class Order extends Component {
       <div className="order">
         <h2>Ceny do druku</h2>
         <button className="print-button" onClick={() => window.print()}><i className="fa fa-print fa-3x" /></button>
-        <ul className="order-list">
+        <CSSTransitionGroup className="order-list" 
+                            component="ul" 
+                            transitionName="order"
+                            transitionEnterTimeout={500}
+                            transitionLeaveTimeout={500}>
           {orderIds.map(this.renderOrder)}
           <li className="total">
             <strong>Ilość cen do druku: </strong>{total}
           </li>
-        </ul>
+        </CSSTransitionGroup>
       </div>
     );
   }

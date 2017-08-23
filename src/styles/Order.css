@@ -7,6 +7,9 @@
 	list-style: none;
 	text-align: left;
 }
+.order-list li > span {
+  position: relative;
+}
 .order-list li button {
   font-size: 22px;
   border: 0;
@@ -36,4 +39,50 @@ button.print-button::-moz-focus-inner {
 }
 button.print-button:hover {
 	color: #000;
+}
+
+/* ANIMATION CSS */
+
+.order-enter {
+  transition: all 0.5s;
+  transform: translateX(-120%);
+  max-height: 0;
+}
+
+.order-enter.order-enter-active {
+  max-height: 50px;
+  transform: translateX(0);
+}
+
+.order-leave {
+  transition: all 0.5s;
+  transform: translateX(0);
+  max-height: 50px;
+}
+
+.order-leave.order-leave-active {
+  transform: translateX(120%);
+  max-height: 0;
+  padding: 0;
+}
+
+.count-enter {
+  transition: all 0.25s;
+  transform: translateY(100%);
+}
+
+.count-enter.count-enter-active {
+  transform: translateY(0);
+}
+
+.count-leave {
+  transition: all 0.25s;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  transform: translateY(0);
+}
+
+.count-leave.count-leave-active {
+  transform: translateY(-100%);
 }

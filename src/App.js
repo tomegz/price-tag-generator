@@ -86,7 +86,10 @@ class App extends Component {
           <Order items={items} 
                  order={order}
                  removeFromOrder={this.removeFromOrder} />
-          <Inventory items={items} addItem={this.addItem} updateItem={this.updateItem} />
+          <Inventory items={items} 
+                     addItem={this.addItem} 
+                     updateItem={this.updateItem} 
+                     storeId={this.props.match.params.storeId} />
         </div>
         <footer className="App-footer"></footer>
         {/* Here price tags must be rendered and hidden*/}

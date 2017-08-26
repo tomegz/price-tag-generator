@@ -13,14 +13,35 @@ class Inventory extends Component {
     this.renderLogin = this.renderLogin.bind(this);
     this.authenticate = this.authenticate.bind(this);
     this.authHandler = this.authHandler.bind(this);
+    this.logout = this.logout.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    //this.componentDidMount = this.componentDidMount.bind(this);
     this.state = {
       uid: null,
       owner: null
     }
   }
   componentDidMount() {
-    console.log(firebase.auth());
+    //authenticate user
+    firebase.database()
+            .ref("profi-bike/owner")
+            .once("value")
+            .then((snapshot) => {
+                const owner = snapshot.val();
+                this.setState({ owner });
+            });
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({
+          uid: user.uid
+        });
+      } else {
+        this.setState({ uid: null });
+      }
+    });
+    /*const user = firebase.auth().currentUser;
+    const uid = user ? user.uid : "";
+    this.setState({ uid });*/
   }
   handleChange(e, key) {
     const item = this.props.items[key];
@@ -65,6 +86,9 @@ class Inventory extends Component {
     })
     .catch((err) => console.log(err.message));
   }
+  logout() {
+    firebase.auth().signOut();
+  }
   renderLogin() {
     return (
       <div className="login">
@@ -76,7 +100,7 @@ class Inventory extends Component {
     );
   }
   render() {
-    const logout = <button>Wyloguj się</button>;
+    const logout = <button onClick={() => this.logout()}>Wyloguj się</button>;
     const { items } = this.props;
     if(!this.state.uid) {
       return <div className="inventory">{this.renderLogin()}</div>;

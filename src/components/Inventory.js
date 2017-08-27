@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 import AddItemForm from "./AddItemForm";
 import "../styles/Inventory.css";
-import base from "../base";
 import firebase from "firebase";
 
 class Inventory extends Component {
@@ -16,19 +15,10 @@ class Inventory extends Component {
     this.logout = this.logout.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.state = {
-      uid: null,
-      owner: null
+      uid: null
     }
   }
   componentDidMount() {
-    //authenticate user
-    firebase.database()
-            .ref("profi-bike/owner")
-            .once("value")
-            .then((snapshot) => {
-                const owner = snapshot.val();
-                this.setState({ owner });
-            });
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
@@ -39,9 +29,6 @@ class Inventory extends Component {
         this.setState({ uid: null });
       }
     });
-    /*const user = firebase.auth().currentUser;
-    const uid = user ? user.uid : "";
-    this.setState({ uid });*/
   }
   handleChange(e, key) {
     const item = this.props.items[key];
@@ -75,21 +62,22 @@ class Inventory extends Component {
                    .catch((e) => console.log(e.message));
   }
   authHandler(authData) {
-    base.fetch(this.props.storeId, {
+    /*base.fetch(this.props.storeId, {
       context: this
     })
     .then((data) => {
       this.setState({
         uid: authData.uid,
-        owner: data.owner
       });
       this.props.authorize(authData.uid);
     })
-    .catch((err) => console.log(err.message));
+    .catch((err) => console.log(err.message));*/
+    const uid = authData.uid;
+    this.setState({ uid });
+    this.props.authorize(uid);
   }
   logout() {
     firebase.auth().signOut();
-    console.log("trying to remove binding");
     this.props.removeBinding();
   }
   renderLogin() {
@@ -107,14 +95,6 @@ class Inventory extends Component {
     const { items } = this.props;
     if(!this.state.uid) {
       return <div className="inventory">{this.renderLogin()}</div>;
-    }
-    if(this.state.uid !== this.state.owner) {
-      return (
-        <div>
-          Nie masz uprawnień do korzystania z aplikacji dla tego sklepu.
-          {logout}
-        </div>
-      );
     }
     return (
       <div className="inventory">

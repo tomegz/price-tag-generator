@@ -15,7 +15,6 @@ class Inventory extends Component {
     this.authHandler = this.authHandler.bind(this);
     this.logout = this.logout.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    //this.componentDidMount = this.componentDidMount.bind(this);
     this.state = {
       uid: null,
       owner: null
@@ -35,6 +34,7 @@ class Inventory extends Component {
         this.setState({
           uid: user.uid
         });
+        this.props.authorize(this.state.uid);
       } else {
         this.setState({ uid: null });
       }
@@ -83,11 +83,14 @@ class Inventory extends Component {
         uid: authData.uid,
         owner: data.owner
       });
+      this.props.authorize(authData.uid);
     })
     .catch((err) => console.log(err.message));
   }
   logout() {
     firebase.auth().signOut();
+    console.log("trying to remove binding");
+    this.props.removeBinding();
   }
   renderLogin() {
     return (

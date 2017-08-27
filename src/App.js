@@ -7,6 +7,7 @@ import Order from "./components/Order";
 import Inventory from "./components/Inventory";
 import Pricetag from "./components/Pricetag";
 
+import firebase from "firebase";
 import base from "./base";
 
 
@@ -17,12 +18,15 @@ class App extends Component {
     this.addToOrder = this.addToOrder.bind(this);
     this.removeFromOrder = this.removeFromOrder.bind(this);
     this.updateItem = this.updateItem.bind(this);
+    this.getItems = this.getItems.bind(this);
+    this.authorize = this.authorize.bind(this);
+    this.removeBinding = this.removeBinding.bind(this);
     this.state = {
       items: {},
       order: {}
     };
   }
-  componentWillMount() {
+  getItems() {
     const storeId = this.props.match ? this.props.match.params.storeId : this.props.params.storeId;
     this.ref = base.syncState(`${storeId}/items`, {
       context: this,
@@ -37,8 +41,19 @@ class App extends Component {
     }
 
   }
+  authorize(user) {
+    firebase.database()
+            .ref("profi-bike/owner")
+            .once("value")
+            .then((snapshot) => {
+                const owner = snapshot.val();
+                if(user === owner) {
+                  this.getItems();
+                }
+            });
+  }
   componentWillUnmount() {
-    base.removeBinding(this.ref);
+    this.removeBinding();
   }
   componentWillUpdate(nextProps, nextState) {
     localStorage.setItem(`order-${this.props.match.params.storeId}`, 
@@ -65,6 +80,9 @@ class App extends Component {
     delete order[key];
     this.setState({ order });
   }
+  removeBinding() {
+    base.removeBinding(this.ref);
+  }
   render() {
     const { items, order } = this.state;
     const pricetags = [];
@@ -89,7 +107,9 @@ class App extends Component {
           <Inventory items={items} 
                      addItem={this.addItem} 
                      updateItem={this.updateItem} 
-                     storeId={this.props.match.params.storeId} />
+                     storeId={this.props.match.params.storeId}
+                     authorize={this.authorize} 
+                     removeBinding={this.removeBinding} />
         </div>
         <footer className="App-footer"></footer>
         {/* Here price tags must be rendered and hidden*/}

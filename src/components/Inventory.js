@@ -36,7 +36,6 @@ class Inventory extends Component {
       ...item,
       [e.target.name]: e.target.value
     }
-    console.log(updatedItem);
     this.props.updateItem(key, updatedItem);
   }
   renderItem(key) {

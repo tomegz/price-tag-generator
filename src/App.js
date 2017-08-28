@@ -18,19 +18,28 @@ class App extends Component {
     this.addToOrder = this.addToOrder.bind(this);
     this.removeFromOrder = this.removeFromOrder.bind(this);
     this.updateItem = this.updateItem.bind(this);
-    this.getItems = this.getItems.bind(this);
+    this.getItemsAndBrands = this.getItemsAndBrands.bind(this);
     this.authorize = this.authorize.bind(this);
+    this.chooseBrand = this.chooseBrand.bind(this);
     this.removeBinding = this.removeBinding.bind(this);
     this.state = {
       items: {},
-      order: {}
+      order: {},
+      brands: [],
+      currentBrand: "Wszystkie marki"
     };
   }
-  getItems() {
+  getItemsAndBrands() {
     const storeId = this.props.match ? this.props.match.params.storeId : this.props.params.storeId;
     this.ref = base.syncState(`${storeId}/items`, {
       context: this,
       state: "items"
+    });
+
+    /* sync brands */
+    base.syncState(`${storeId}/brands`, {
+      context: this,
+      state: "brands"
     });
 
     const localStorageRef = localStorage.getItem(`order-${storeId}`);
@@ -48,7 +57,7 @@ class App extends Component {
             .then((snapshot) => {
                 const owner = snapshot.val();
                 if(user === owner) {
-                  this.getItems();
+                  this.getItemsAndBrands();
                 }
             });
   }
@@ -80,11 +89,15 @@ class App extends Component {
     delete order[key];
     this.setState({ order });
   }
+  chooseBrand(brand) {
+    const currentBrand = brand;
+    this.setState({ currentBrand });
+  }
   removeBinding() {
     base.removeBinding(this.ref);
   }
   render() {
-    const { items, order } = this.state;
+    const { items, order, brands, currentBrand } = this.state;
     const pricetags = [];
     Object.keys(order)
         .forEach(key => {
@@ -100,7 +113,11 @@ class App extends Component {
           <h2>Profi Bike - Drukowanie cen</h2>
         </div>
         <div className="wrapper">
-          <Menu items={items} addToOrder={this.addToOrder} />
+          <Menu items={items} 
+                brands={brands}
+                currentBrand={currentBrand}
+                addToOrder={this.addToOrder}
+                chooseBrand={this.chooseBrand} />
           <Order items={items} 
                  order={order}
                  removeFromOrder={this.removeFromOrder} />

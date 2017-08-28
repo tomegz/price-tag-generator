@@ -35,6 +35,7 @@ class Menu extends Component {
 Menu.propTypes = {
   items: PropTypes.object.isRequired,
   brands: PropTypes.array.isRequired,
+  currentBrand: PropTypes.string.isRequired,
   addToOrder: PropTypes.func.isRequired
 }
 

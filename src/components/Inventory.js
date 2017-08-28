@@ -9,6 +9,7 @@ class Inventory extends Component {
   constructor() {
     super();
     this.renderItem = this.renderItem.bind(this);
+    this.filterItems = this.filterItems.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
     this.authenticate = this.authenticate.bind(this);
     this.authHandler = this.authHandler.bind(this);
@@ -53,6 +54,13 @@ class Inventory extends Component {
       </div>
     );
   }
+  filterItems(keys) {
+    const { items, currentBrand } = this.props;
+    if(currentBrand === "Wszystkie marki") {
+      return keys;
+    }
+    return keys.filter(key => items[key].name === currentBrand);
+  }
   authenticate() {
     const email = this.emailInput.value; 
     const password = this.passwordInput.value;
@@ -95,12 +103,12 @@ class Inventory extends Component {
     if(!this.state.uid) {
       return <div className="inventory">{this.renderLogin()}</div>;
     }
+    const itemsToRender = this.filterItems(Object.keys(items));
     return (
       <div className="inventory">
         <h2>Edycja cen</h2>
         {logout}
-        {Object.keys(items)
-               .map(this.renderItem)}
+        {itemsToRender.map(this.renderItem)}
         <AddItemForm addItem={this.props.addItem} />
       </div>
     );
@@ -109,6 +117,7 @@ class Inventory extends Component {
 
 Inventory.propTypes = {
   items: PropTypes.object.isRequired,
+  currentBrand: PropTypes.string.isRequired,
   addItem: PropTypes.func.isRequired,
   updateItem: PropTypes.func.isRequired,
   storeId: PropTypes.string.isRequired

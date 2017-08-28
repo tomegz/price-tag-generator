@@ -122,6 +122,7 @@ class App extends Component {
                  order={order}
                  removeFromOrder={this.removeFromOrder} />
           <Inventory items={items} 
+                     currentBrand={currentBrand}
                      addItem={this.addItem} 
                      updateItem={this.updateItem} 
                      storeId={this.props.match.params.storeId}

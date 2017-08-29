@@ -11,16 +11,16 @@ class Pricetag extends React.Component {
       <div>
         <div className="half-tag">
           <div className="text-content">
-            <h2>{details.name}</h2>
-            <h4>{details.model}</h4>
+            <h2>{details.name.toUpperCase()}</h2>
+            <h4>{details.model.toUpperCase()}</h4>
             <p className={onDiscount ? "before-discount" : ""}>{details.price},-</p>
             {discountPrice}
           </div>
         </div>
         <div className="half-tag">
           <div className="text-content">
-            <h2>{details.name}</h2>
-            <h4>{details.model}</h4>
+            <h2>{details.name.toUpperCase()}</h2>
+            <h4>{details.model.toUpperCase()}</h4>
             <p className={onDiscount ? "before-discount" : ""}>{details.price},-</p>
             {discountPrice}
           </div>

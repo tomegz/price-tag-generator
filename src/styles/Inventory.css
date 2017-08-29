@@ -4,7 +4,21 @@
 	flex: 1;
 	overflow-y: scroll;
 }
-.item-edit {
+.add-item-wrapper {
+  border-top: 2px dashed #222;
+  border-bottom: 2px dashed #222;
+  margin: 20px 0;
+}
+.btn-logout {
+  background: transparent;
+  border: 0;
+  margin-top: 20px;
+  cursor: pointer;
+}
+.btn-logout:hover {
+  color: #000;
+}
+.item-edit, .add-item {
   margin-bottom: 20px;
   border: 2px solid #000;
   border-bottom: 1px solid #000;
@@ -16,13 +30,16 @@
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
 }
-.item-edit input { width: 33.33%; }
-.item-edit select { width: 66.66%; }
+.item-edit input, .add-item input { width: 33.33%; }
+.item-edit select, .add-item select { width: 66.66%; }
+.item-edit select:last-of-type, .add-item select:last-of-type { width: 100%; }
 .item-edit input,
-.item-edit select {
+.item-edit select,
+.add-item input,
+.add-item select,
+.add-item button {
   padding: 10px;
   line-height: 1;
-  /*font-size: 1.2rem;*/
   border: 0;
   border-bottom: 1px solid #000;
   border-right: 1px solid #000;
@@ -32,12 +49,22 @@
   border-radius: 0;
   background: #fff;
 }
+.add-item button {
+  width: 100%;
+  cursor: pointer;
+}
+.add-item button:hover {
+  background: #000;
+  color: #FFF;
+}
 .item-edit input:focus,
-.item-edit select:focus {
+.item-edit select:focus,
+.add-item input:focus,
+.add-item select:focus {
   outline: 0;
   background: #fef2de;
 }
-.item-edit select:-moz-focusring {
+.item-edit select:-moz-focusring, .add-item select:-moz-focusring, .add-item button:-moz-focusring {
     color: transparent;
     text-shadow: 0 0 0 #000;
 }

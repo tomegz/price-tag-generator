@@ -51,6 +51,13 @@ class Inventory extends Component {
           <option value="off">Promocja wyłączona</option>
         </select>
         <input type="text" name="discountPrice" value={item.discountPrice} placeholder="Cena promocyjna" onChange={(e) => this.handleChange(e, key)}/>
+        <select type="text" name="bikeType" value={item.bikeType} placeholder="Typ roweru" onChange={(e) => this.handleChange(e, key)}>
+          <option value="MTB">MTB</option>
+          <option value="Trekking">Trekking</option>
+          <option value="Cross">Cross</option>
+          <option value="City">City</option>
+          <option value="Kid">Kid</option>
+        </select>
       </div>
     );
   }
@@ -61,7 +68,8 @@ class Inventory extends Component {
     }
     return keys.filter(key => items[key].name === currentBrand);
   }
-  authenticate() {
+  authenticate(e) {
+    e.preventDefault();
     const email = this.emailInput.value; 
     const password = this.passwordInput.value;
     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -89,16 +97,16 @@ class Inventory extends Component {
   }
   renderLogin() {
     return (
-      <div className="login">
+      <form onSubmit={(e) => this.authenticate(e)} className="login">
         <h2>Zaloguj się, aby korzystać z aplikacji</h2>
         <input type="email" placeholder="Twój email" ref={(input) => this.emailInput = input} />
         <input type="password" placeholder="Twoje hasło" ref={(input) => this.passwordInput = input} />
-        <button type="submit" onClick={() => this.authenticate()}>Zaloguj</button>
-      </div>
+        <button type="submit">Zaloguj</button>
+      </form>
     );
   }
   render() {
-    const logout = <button onClick={() => this.logout()}>Wyloguj się</button>;
+    const logout = <button className="btn-logout" onClick={() => this.logout()}><i className="fa fa-sign-out fa-3x" /></button>;
     const { items } = this.props;
     if(!this.state.uid) {
       return <div className="inventory">{this.renderLogin()}</div>;
@@ -106,10 +114,10 @@ class Inventory extends Component {
     const itemsToRender = this.filterItems(Object.keys(items));
     return (
       <div className="inventory">
-        <h2>Edycja cen</h2>
         {logout}
-        {itemsToRender.map(this.renderItem)}
         <AddItemForm addItem={this.props.addItem} />
+        <h4>Edytuj ceny</h4>
+        {itemsToRender.map(this.renderItem)}
       </div>
     );
   }

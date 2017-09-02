@@ -24,10 +24,10 @@ class AddItemForm extends React.Component {
       <div className="add-item-wrapper">
         <h4>Dodaj nową cenę</h4>
         <form ref={(input) => this.itemForm = input} className="add-item" onSubmit={this.createItem}>
-          <input ref={(input) => this.name = input} type="text" placeholder="Marka" />
-          <input ref={(input) => this.model = input} type="text" placeholder="Model" />
-          <input ref={(input) => this.price = input} type="text" placeholder="Cena" />
-          <input ref={(input) => this.discountPrice = input} type="text" placeholder="Cena promocyjna" />
+          <input ref={(input) => this.name = input} type="text" placeholder="Marka" required />
+          <input ref={(input) => this.model = input} type="text" placeholder="Model" required />
+          <input ref={(input) => this.price = input} type="text" placeholder="Cena" required />
+          <input ref={(input) => this.discountPrice = input} type="text" placeholder="Cena promocyjna" required />
           <select ref={(input) => this.discountStatus = input}>
             <option value="on">Promocja włączona</option>
             <option value="off">Promocja wyłączona</option>

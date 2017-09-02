@@ -4,13 +4,15 @@
 	flex: 1;
 	overflow-y: scroll;
 }
-.login input, button {
+.login input, .login button {
   width: 80%;
 }
 .login button {
   cursor: pointer;
 }
-.add-item-wrapper {
+.add-item-wrapper {    -webkit-appearance: none;
+       -moz-appearance: none;
+            appear
   border-top: 2px dashed #222;
   border-bottom: 2px dashed #222;
   margin: 20px 0;

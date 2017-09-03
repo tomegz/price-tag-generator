@@ -123,7 +123,7 @@ Inventory.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   addItem: PropTypes.func.isRequired,
   updateItem: PropTypes.func.isRequired,
-  storeId: PropTypes.string.isRequired
+  removeBinding: PropTypes.func.isRequired
 }
 
 export default Inventory;

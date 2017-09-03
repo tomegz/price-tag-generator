@@ -1,13 +1,11 @@
 import React from "react";
-import "../styles/Pricetag.css";
 import PropTypes from "prop-types";
+import "../styles/Pricetag.css";
 
-class Pricetag extends React.Component {
-  render() {
-    const { details } = this.props;
-    const onDiscount = details.discountStatus === "on";
-    const discountPrice = onDiscount ? <p>{details.discountPrice},-</p> : "";
-    return (
+const Pricetag = ({details}) => {
+  const onDiscount = details.discountStatus === "on";
+  const discountPrice = onDiscount ? <p>{details.discountPrice},-</p> : "";
+  return (
       <div>
         <div className="half-tag">
           <div className="text-content">
@@ -26,9 +24,8 @@ class Pricetag extends React.Component {
           </div>
         </div>
       </div>
-    );
-  }
-}
+  );
+};
 
 Pricetag.propTypes = {
   details: PropTypes.object.isRequired

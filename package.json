@@ -2,6 +2,7 @@
   "name": "price-tag-generator",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://tomegz.github.io/price-tag-generator/",
   "dependencies": {
     "firebase": "^4.2.0",
     "prop-types": "^15.5.10",

@@ -46,11 +46,11 @@ class App extends Component {
   }
   authorize(user) {
     firebase.database()
-            .ref("profi-bike/owner")
+            .ref("profi-bike/owners")
             .once("value")
             .then((snapshot) => {
-                const owner = snapshot.val();
-                if(user === owner) {
+                const owners = snapshot.val();
+                if(owners.includes(user)) {
                   this.getItems();
                 }
             });

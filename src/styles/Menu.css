@@ -3,9 +3,8 @@
 	flex: 1;
 	overflow-y: scroll;
 }
-.menu select {
-	cursor: pointer;
-    padding: 10px;
+.menu input {
+	padding: 10px;
     line-height: 1;
     border: 0;
     border: 1px solid #000;
@@ -14,14 +13,6 @@
             appearance: none;
     border-radius: 0;
     background: #fff;
-}
-.menu select:focus {
-	outline: 0;
-    background: #fef2de;
-}
-.menu select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #000;
 }
 .list-of-items {
 	list-style: none;

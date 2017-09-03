@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import Item from "./Item";
-import FilterSelect from "./FilterSelect";
+import FindItemBar from "./FindItemBar";
 import "../styles/Menu.css";
 
 class Menu extends Component {
@@ -10,20 +10,22 @@ class Menu extends Component {
     super();
     this.filterItems = this.filterItems.bind(this);
   }
-  filterItems(keys) {
-    const { items, currentBrand } = this.props;
-    if(currentBrand === "Wszystkie marki") {
-      return keys;
-    }
-    return keys.filter(key => items[key].name === currentBrand);
+  filterItems(keys){
+    const { items, searchQuery } = this.props;
+    const filteredItems = keys.filter( key => {
+      const isNameValid = items[key].name.toLowerCase().indexOf(searchQuery) !== -1;
+      const isModelValid = items[key].model.toLowerCase().indexOf(searchQuery) !== -1;
+      return isNameValid || isModelValid;
+    });
+    return filteredItems;
   }
   render() {
-    const { items, brands, addToOrder } = this.props;
+    const { items, addToOrder, setSearchQuery } = this.props;
     const itemsToRender = this.filterItems(Object.keys(items));
     return (
       <div className="menu">
         <h2>Menu</h2>
-        <FilterSelect brands={brands} chooseBrand={this.props.chooseBrand} />
+        <FindItemBar setSearchQuery={setSearchQuery} />
         <ul className="list-of-items">
           {itemsToRender.map((key) => <Item key={key} index={key} details={items[key]} addToOrder={addToOrder} />)}
         </ul>
@@ -34,8 +36,8 @@ class Menu extends Component {
 
 Menu.propTypes = {
   items: PropTypes.object.isRequired,
-  brands: PropTypes.array.isRequired,
-  currentBrand: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string.isRequired,
   addToOrder: PropTypes.func.isRequired
 }
 

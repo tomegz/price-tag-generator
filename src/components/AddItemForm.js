@@ -25,7 +25,7 @@ class AddItemForm extends React.Component {
         <h4>Dodaj nową cenę</h4>
         <form ref={(input) => this.itemForm = input} className="add-item" onSubmit={this.createItem}>
           <input ref={(input) => this.name = input} type="text" placeholder="Marka" required />
-          <input ref={(input) => this.model = input} type="text" placeholder="Model" required />
+          <input ref={(input) => this.model = input} type="text" placeholder="Model" required  />
           <input ref={(input) => this.price = input} type="text" placeholder="Cena" required />
           <input ref={(input) => this.discountPrice = input} type="text" placeholder="Cena promocyjna" required />
           <select ref={(input) => this.discountStatus = input}>

@@ -7,12 +7,16 @@
 .login input, .login button {
   width: 80%;
 }
+input:required {
+    box-shadow:none;
+}
 .login button {
   cursor: pointer;
 }
-.add-item-wrapper {    -webkit-appearance: none;
+.add-item-wrapper {    
+  -webkit-appearance: none;
        -moz-appearance: none;
-            appear
+            appearance: none;
   border-top: 2px dashed #222;
   border-bottom: 2px dashed #222;
   margin: 20px 0;

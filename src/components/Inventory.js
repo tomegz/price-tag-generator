@@ -62,11 +62,13 @@ class Inventory extends Component {
     );
   }
   filterItems(keys) {
-    const { items, currentBrand } = this.props;
-    if(currentBrand === "Wszystkie marki") {
-      return keys;
-    }
-    return keys.filter(key => items[key].name === currentBrand);
+    const { items, searchQuery } = this.props;
+    const filteredItems = keys.filter( key => {
+      const isNameValid = items[key].name.toLowerCase().indexOf(searchQuery) !== -1;
+      const isModelValid = items[key].model.toLowerCase().indexOf(searchQuery) !== -1;
+      return isNameValid || isModelValid;
+    });
+    return filteredItems;
   }
   authenticate(e) {
     e.preventDefault();
@@ -125,7 +127,7 @@ class Inventory extends Component {
 
 Inventory.propTypes = {
   items: PropTypes.object.isRequired,
-  currentBrand: PropTypes.string.isRequired,
+  searchQuery: PropTypes.string.isRequired,
   addItem: PropTypes.func.isRequired,
   updateItem: PropTypes.func.isRequired,
   storeId: PropTypes.string.isRequired

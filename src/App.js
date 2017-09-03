@@ -18,28 +18,21 @@ class App extends Component {
     this.addToOrder = this.addToOrder.bind(this);
     this.removeFromOrder = this.removeFromOrder.bind(this);
     this.updateItem = this.updateItem.bind(this);
-    this.getItemsAndBrands = this.getItemsAndBrands.bind(this);
+    this.setSearchQuery = this.setSearchQuery.bind(this);
+    this.getItems = this.getItems.bind(this);
     this.authorize = this.authorize.bind(this);
-    this.chooseBrand = this.chooseBrand.bind(this);
     this.removeBinding = this.removeBinding.bind(this);
     this.state = {
       items: {},
       order: {},
-      brands: [],
-      currentBrand: "Wszystkie marki"
+      searchQuery: ""
     };
   }
-  getItemsAndBrands() {
+  getItems() {
     const storeId = this.props.match ? this.props.match.params.storeId : this.props.params.storeId;
     this.ref = base.syncState(`${storeId}/items`, {
       context: this,
       state: "items"
-    });
-
-    /* sync brands */
-    base.syncState(`${storeId}/brands`, {
-      context: this,
-      state: "brands"
     });
 
     const localStorageRef = localStorage.getItem(`order-${storeId}`);
@@ -57,7 +50,7 @@ class App extends Component {
             .then((snapshot) => {
                 const owner = snapshot.val();
                 if(user === owner) {
-                  this.getItemsAndBrands();
+                  this.getItems();
                 }
             });
   }
@@ -79,6 +72,10 @@ class App extends Component {
     items[key] = updatedItem;
     this.setState({ items });
   }
+  setSearchQuery(text) {
+    const searchQuery = text;
+    this.setState({ searchQuery });
+  }
   addToOrder(key) {
     const order = {...this.state.order};
     order[key] = order[key] + 1 || 1;
@@ -89,15 +86,11 @@ class App extends Component {
     delete order[key];
     this.setState({ order });
   }
-  chooseBrand(brand) {
-    const currentBrand = brand;
-    this.setState({ currentBrand });
-  }
   removeBinding() {
     base.removeBinding(this.ref);
   }
   render() {
-    const { items, order, brands, currentBrand } = this.state;
+    const { items, order, searchQuery } = this.state;
     const pricetags = [];
     Object.keys(order)
         .forEach(key => {
@@ -114,15 +107,14 @@ class App extends Component {
         </div>
         <div className="wrapper">
           <Menu items={items} 
-                brands={brands}
-                currentBrand={currentBrand}
+                searchQuery={searchQuery}
                 addToOrder={this.addToOrder}
-                chooseBrand={this.chooseBrand} />
+                setSearchQuery={this.setSearchQuery} />
           <Order items={items} 
                  order={order}
                  removeFromOrder={this.removeFromOrder} />
           <Inventory items={items} 
-                     currentBrand={currentBrand}
+                     searchQuery={searchQuery}
                      addItem={this.addItem} 
                      updateItem={this.updateItem} 
                      storeId={this.props.match.params.storeId}

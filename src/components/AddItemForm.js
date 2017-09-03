@@ -11,7 +11,6 @@ class AddItemForm extends React.Component {
     const item = {
       name: this.name.value,
       model: this.model.value,
-      bikeType: this.bikeType.value,
       price: this.price.value,
       discountPrice: this.discountPrice.value,
       discountStatus: this.discountStatus.value
@@ -27,18 +26,11 @@ class AddItemForm extends React.Component {
           <input ref={(input) => this.name = input} type="text" placeholder="Marka" required />
           <input ref={(input) => this.model = input} type="text" placeholder="Model" required  />
           <input ref={(input) => this.price = input} type="text" placeholder="Cena" required />
-          <input ref={(input) => this.discountPrice = input} type="text" placeholder="Cena promocyjna" required />
           <select ref={(input) => this.discountStatus = input}>
             <option value="on">Promocja włączona</option>
             <option value="off">Promocja wyłączona</option>
           </select>
-          <select ref={(input) => this.bikeType = input}>
-            <option value="MTB">MTB</option>
-            <option value="Trekking">Trekking</option>
-            <option value="Cross">Cross</option>
-            <option value="City">City</option>
-            <option value="Kid">Kid</option>
-          </select>
+          <input ref={(input) => this.discountPrice = input} type="text" placeholder="Cena promocyjna" required />
           <button type="submit"><strong>+ DODAJ</strong></button>
         </form>
       </div>

@@ -51,13 +51,6 @@ class Inventory extends Component {
           <option value="off">Promocja wyłączona</option>
         </select>
         <input type="text" name="discountPrice" value={item.discountPrice} placeholder="Cena promocyjna" onChange={(e) => this.handleChange(e, key)}/>
-        <select type="text" name="bikeType" value={item.bikeType} placeholder="Typ roweru" onChange={(e) => this.handleChange(e, key)}>
-          <option value="MTB">MTB</option>
-          <option value="Trekking">Trekking</option>
-          <option value="Cross">Cross</option>
-          <option value="City">City</option>
-          <option value="Kid">Kid</option>
-        </select>
       </div>
     );
   }

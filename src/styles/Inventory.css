@@ -44,7 +44,6 @@ input:required {
 }
 .item-edit input, .add-item input { width: 33.33%; }
 .item-edit select, .add-item select { width: 66.66%; }
-.item-edit select:last-of-type, .add-item select:last-of-type { width: 100%; }
 .item-edit input,
 .item-edit select,
 .add-item input,

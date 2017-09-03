@@ -29,7 +29,8 @@ class App extends Component {
     };
   }
   getItems() {
-    const storeId = this.props.match ? this.props.match.params.storeId : this.props.params.storeId;
+    /* Since there's only one store, it is hardcoded for now */
+    const storeId = "profi-bike";
     this.ref = base.syncState(`${storeId}/items`, {
       context: this,
       state: "items"
@@ -58,7 +59,7 @@ class App extends Component {
     this.removeBinding();
   }
   componentWillUpdate(nextProps, nextState) {
-    localStorage.setItem(`order-${this.props.match.params.storeId}`, 
+    localStorage.setItem(`order-profi-bike`, 
       JSON.stringify(nextState.order));
   }
   addItem(item) {
@@ -73,7 +74,7 @@ class App extends Component {
     this.setState({ items });
   }
   setSearchQuery(text) {
-    const searchQuery = text;
+    const searchQuery = text.toLowerCase();
     this.setState({ searchQuery });
   }
   addToOrder(key) {
@@ -117,7 +118,7 @@ class App extends Component {
                      searchQuery={searchQuery}
                      addItem={this.addItem} 
                      updateItem={this.updateItem} 
-                     storeId={this.props.match.params.storeId}
+                     /*storeId={this.props.match.params.storeId}*/
                      authorize={this.authorize} 
                      removeBinding={this.removeBinding} />
         </div>

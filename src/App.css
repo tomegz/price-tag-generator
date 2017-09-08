@@ -12,21 +12,20 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
-  /*padding: 20px;*/
+  height: 22vh;
   color: white;
 }
 
 .wrapper {
 	margin: 0;
 	padding: 0;
-	height: 465px;
+  height: 68vh;
 	display: flex;
 }
 
 .App-footer {
     background-color: #222;
-    height: 56px;
+    height: 10vh;
     padding: 20px;
     color: white;
 }

@@ -11,10 +11,10 @@ class Order extends Component {
     this.scrollToBottom = this.scrollToBottom.bind(this);
   }
   componentDidMount() {
-    this.scrollToBottom();
+    setTimeout(this.scrollToBottom, 500);
   }
   componentDidUpdate() {
-    this.scrollToBottom();
+    setTimeout(this.scrollToBottom, 500);
   }
   scrollToBottom() {
     const list = this._orderList;
@@ -57,17 +57,16 @@ class Order extends Component {
     return (
       <div className="order" ref={(c) => this._orderList = c}>
         <h2>Ceny do druku</h2>
-        <button className="print-button" onClick={() => window.print()}><i className="fa fa-print fa-3x" /></button>
         <CSSTransitionGroup className="order-list" 
                             component="ul" 
                             transitionName="order"
                             transitionEnterTimeout={500}
                             transitionLeaveTimeout={500}>
           {orderIds.map(this.renderOrder)}
-          <li className="total">
-            <strong>Ilość cen do druku: </strong>{total}
-          </li>
         </CSSTransitionGroup>
+        <button className="print-button" onClick={() => window.print()}><i className="fa fa-print fa-2x" /></button>
+        <button className="remove-button" onClick={this.props.removeWholeOrder}><i className="fa fa-remove fa-2x" /></button>
+        <p className="total"><strong>Ilość cen do druku: </strong>{total}</p>
       </div>
     );
   }
@@ -76,7 +75,8 @@ class Order extends Component {
 Order.propTypes = {
   items: PropTypes.object.isRequired,
   order: PropTypes.object.isRequired,
-  removeFromOrder: PropTypes.func.isRequired
+  removeFromOrder: PropTypes.func.isRequired,
+  removeWholeOrder: PropTypes.func.isRequired
 }
 
 export default Order;

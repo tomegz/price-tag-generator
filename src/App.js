@@ -17,6 +17,7 @@ class App extends Component {
     this.addItem = this.addItem.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
     this.removeFromOrder = this.removeFromOrder.bind(this);
+    this.removeWholeOrder = this.removeWholeOrder.bind(this);
     this.updateItem = this.updateItem.bind(this);
     this.setSearchQuery = this.setSearchQuery.bind(this);
     this.getItems = this.getItems.bind(this);
@@ -87,6 +88,10 @@ class App extends Component {
     delete order[key];
     this.setState({ order });
   }
+  removeWholeOrder() {
+    const order = {};
+    this.setState({ order });
+  }
   removeBinding() {
     base.removeBinding(this.ref);
   }
@@ -113,7 +118,8 @@ class App extends Component {
                 setSearchQuery={this.setSearchQuery} />
           <Order items={items} 
                  order={order}
-                 removeFromOrder={this.removeFromOrder} />
+                 removeFromOrder={this.removeFromOrder}
+                 removeWholeOrder={this.removeWholeOrder} />
           <Inventory items={items} 
                      searchQuery={searchQuery}
                      addItem={this.addItem} 

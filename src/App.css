@@ -8,11 +8,13 @@
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
+  margin-top: 10px;
 }
 
 .App-header {
   background-color: #222;
   height: 22vh;
+  min-height: 100px;
   color: white;
 }
 

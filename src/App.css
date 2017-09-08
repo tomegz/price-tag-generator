@@ -7,11 +7,15 @@
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-  margin-top: 10px;
+  flex-basis: 100%;
+  margin-top: 20px;
 }
 
 .App-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   background-color: #222;
   height: 22vh;
   min-height: 100px;

@@ -43,6 +43,7 @@ input:required {
       flex-wrap: wrap;
 }
 .item-edit input, .add-item input { width: 33.33%; }
+.item-edit input:nth-child(2), .add-item input:nth-child(2) { width: 66.6%; }
 .item-edit select, .add-item select { width: 66.66%; }
 .item-edit input,
 .item-edit select,

@@ -45,6 +45,11 @@ class Inventory extends Component {
       <div className="item-edit" key={key}>
         <input type="text" name="name" value={item.name} placeholder="Marka produktu" onChange={(e) => this.handleChange(e, key)}/>
         <input type="text" name="model" value={item.model} placeholder="Nazwa modelu" onChange={(e) => this.handleChange(e, key)}/>
+        <select type="text" name="year" value={item.year} placeholder="Rocznik" onChange={(e) => this.handleChange(e, key)}>
+          <option value="2018">2018</option>
+          <option value="2017">2017</option>
+          <option value="2016">2016</option>
+        </select>
         <input type="text" name="price" value={item.price} placeholder="Cena produktu" onChange={(e) => this.handleChange(e, key)}/>
         <select type="text" name="discountStatus" value={item.discountStatus} placeholder="Status promocji" onChange={(e) => this.handleChange(e, key)}>
           <option value="on">Promocja włączona</option>

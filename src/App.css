@@ -1,32 +1,34 @@
 * {
   box-sizing: border-box;
 }
+html, body {
+  overflow: hidden;
+}
 .App {
   text-align: center;
 }
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  flex-basis: 50%;
-  flex-shrink: 0;
+  height: 60px;
+  width: 60px;
   margin-top: 20px;
 }
 
 .App-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
   background-color: #222;
-  height: 22vh;
+  height: 24vh;
   min-height: 100px;
   color: white;
 }
-
+.App-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
 .wrapper {
 	margin: 0;
 	padding: 0;
-  height: 68vh;
+  height: 66vh;
 	display: flex;
 }
 

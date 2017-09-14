@@ -1,25 +1,28 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "../styles/Pricetag.css";
+import formatParagraphs from "../helpers/formatParagraphs";
 
 const Pricetag = ({details}) => {
+  const name = details.name.toUpperCase();
+  const model = formatParagraphs(details.model.toUpperCase());
   const onDiscount = details.discountStatus === "on";
-  const discountPrice = onDiscount ? <p>{details.discountPrice},-</p> : "";
+  const discountPrice = onDiscount ? <p className="after-discount">{details.discountPrice},-</p> : "";
   return (
       <div>
         <div className="half-tag">
           <div className="text-content">
-            <h2>{details.name.toUpperCase()}</h2>
-            <h4>{details.model.toUpperCase()}</h4>
-            <p className={onDiscount ? "before-discount" : ""}>{details.price},-</p>
+            <h3>{name}</h3>
+            {model}
+            <p className={onDiscount ? "before-discount" : "after-discount"}>{details.price},-</p>
             {discountPrice}
           </div>
         </div>
         <div className="half-tag">
           <div className="text-content">
-            <h2>{details.name.toUpperCase()}</h2>
-            <h4>{details.model.toUpperCase()}</h4>
-            <p className={onDiscount ? "before-discount" : ""}>{details.price},-</p>
+            <h3>{name}</h3>
+            {model}
+            <p className={onDiscount ? "before-discount" : "after-discount"}>{details.price},-</p>
             {discountPrice}
           </div>
         </div>

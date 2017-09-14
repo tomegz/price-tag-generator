@@ -8,7 +8,7 @@ const Item = ({details, index, addToOrder}) => {
         <div>
           <div className="desc">  
             <h5><strong>{`${details.name} ${details.model}`}</strong></h5>
-            <p><i className="fa fa-calendar" /> {`${details.year}`}</p>
+            <p><i className="fa fa-calendar" /> {`${details.year || "-"}`}</p>
             <p>
               <i className="fa fa-money" />
               <span className={isOnDiscount ? "price" : ""}> {details.price} </span>

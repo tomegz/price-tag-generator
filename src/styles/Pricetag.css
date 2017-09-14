@@ -5,28 +5,10 @@
     width: 50%;
 }
 
-.half-tag:nth-child(even) .text-content{ 
-    /* Position */
-	position: relative;
-    top: 1cm;
-    /*left: 1cm;*/
-
-    /* Safari */
-    -webkit-transform: rotate(-90deg);
-    /* Firefox */
-    -moz-transform: rotate(-90deg);
-    /* IE */
-    -ms-transform: rotate(-90deg);
-    /* Opera */
-    -o-transform: rotate(-90deg);
-}
-
 .half-tag:nth-child(odd) .text-content{ 
+    //border: 1px dashed blue;
     /* Position */
-	position: relative;
-    top: 1cm;
-    /*right: 1cm;*/
-
+    left: 1cm;
     /* Safari */
     -webkit-transform: rotate(90deg);
     /* Firefox */
@@ -37,12 +19,28 @@
     -o-transform: rotate(90deg);
 }
 
+.half-tag:nth-child(even) .text-content{ 
+    /* Position */
+    right: 1cm;
+    //border: 1px dashed red;
+    /* Safari */
+    -webkit-transform: rotate(-90deg);
+    /* Firefox */
+    -moz-transform: rotate(-90deg);
+    /* IE */
+    -ms-transform: rotate(-90deg);
+    /* Opera */
+    -o-transform: rotate(-90deg);
+}
+
 .text-content { 
+    position: relative;
+    max-height: calc(21cm / 2);
     font-family: "Times New Roman", serif;
     text-align: center; 
-}
-.text-content p {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    line-height: 0;
 }
 
 .before-discount { text-decoration: line-through; }
+.after-discount { font-size: 2rem; }

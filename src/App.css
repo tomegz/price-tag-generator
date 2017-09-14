@@ -55,14 +55,18 @@
 
 @media print {
 
-    html, body {
+    html, body, .pricetag-list {
         width: 210mm;
         height: 297mm;
-    }
-    .App-header, .wrapper, .App-footer { display: none; }
-    .pricetag-list {
         display: initial;
         margin: 0;
+        padding: 0;
+    }
+    .App-header, .wrapper, .App-footer { display: none; }
+    /*.pricetag-list {
+        display: initial;
+        margin: 0;
+        padding: 0;
         border: initial;
         border-radius: initial;
         width: initial;
@@ -70,6 +74,6 @@
         box-shadow: initial;
         background: initial;
         page-break-after: always;
-    }
+    }*/
 
 }

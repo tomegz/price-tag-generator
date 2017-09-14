@@ -37,11 +37,10 @@ class Order extends Component {
                                 transitionName="count"
                                 transitionEnterTimeout={250}
                                 transitionLeaveTimeout={250}>
-              <span key={count}>{count}</span>
+              <span key={count}>{count}szt. </span>
             </CSSTransitionGroup>
-            szt.
           </strong> 
-        {item.name} {item.model}
+         {item.name} {item.model}
         </span>
         {removeButton}
       </li>

@@ -1,9 +1,6 @@
 * {
   box-sizing: border-box;
 }
-html, body {
-  overflow: hidden;
-}
 .App {
   text-align: center;
 }

@@ -62,18 +62,19 @@
         margin: 0;
         padding: 0;
     }
+
     .App-header, .wrapper, .App-footer { display: none; }
-    /*.pricetag-list {
-        display: initial;
-        margin: 0;
-        padding: 0;
-        border: initial;
-        border-radius: initial;
-        width: initial;
-        min-height: initial;
-        box-shadow: initial;
-        background: initial;
-        page-break-after: always;
-    }*/
+    
+    .text-content h3 {
+      font-size: 29px;
+    }
+
+    .text-content p {
+      font-size: 25px;
+    }
+
+    .after-discount {
+      font-size: 32px;
+    }
 
 }

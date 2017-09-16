@@ -1,9 +1,20 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-const Item = ({details, index, addToOrder}) => {
-  const isOnDiscount = details.discountStatus === "on";
-  return (
+class Item extends Component {
+  constructor() {
+    super();
+    this.state = { count: 1 };
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(e) {
+    const count = Number(e.target.value);
+    this.setState({ count });
+  }
+  render() {
+    const { details, index, addToOrder } = this.props;
+    const isOnDiscount = details.discountStatus === "on";
+    return (
       <li className="menu-item">
         <div>
           <div className="desc">  
@@ -16,12 +27,19 @@ const Item = ({details, index, addToOrder}) => {
             </p>
           </div>
           <div className="adding-section">
-            <button onClick={() => addToOrder(index)}>+</button>
+            <input className="item-amount" type="number" defaultValue="1"
+                                                         min="0"
+                                                         max="99"
+                                                         onChange={this.handleChange} />
+            <button onClick={() => addToOrder(index, this.state.count)}>
+              <i className="fa fa-plus" aria-hidden="true" />
+            </button>
           </div>
         </div>
       </li>
-  );
-};
+    );
+  }
+}
 
 Item.propTypes = {
   details: PropTypes.object.isRequired,

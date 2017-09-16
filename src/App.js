@@ -78,9 +78,10 @@ class App extends Component {
     const searchQuery = text.toLowerCase();
     this.setState({ searchQuery });
   }
-  addToOrder(key) {
+  addToOrder(key, count) {
+    if(typeof count !== "number") return;
     const order = {...this.state.order};
-    order[key] = order[key] + 1 || 1;
+    order[key] = order[key] + count || count;
     this.setState({ order });
   }
   removeFromOrder(key) {

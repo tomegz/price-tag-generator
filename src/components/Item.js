@@ -27,8 +27,8 @@ class Item extends Component {
             </p>
           </div>
           <div className="adding-section">
-            <input className="item-amount" type="number" defaultValue="1"
-                                                         min="0"
+            <input className="item-amount" type="number" defaultValue={this.state.count}
+                                                         min="1"
                                                          max="99"
                                                          onChange={this.handleChange} />
             <button onClick={() => addToOrder(index, this.state.count)}>

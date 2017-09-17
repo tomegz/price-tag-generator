@@ -12,7 +12,7 @@ const formatParagraphs = (model) => {
   }
   return (
     <div>
-      {paragraphs.map(paragraph => <p>{paragraph}</p>)}
+      {paragraphs.map((paragraph, i) => <p key={i}>{paragraph}</p>)}
     </div>
   );
 }

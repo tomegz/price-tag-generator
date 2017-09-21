@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
+import Tabs from "./Tabs";
+import Pane from "./Pane";
 import AddItemForm from "./AddItemForm";
+import AddPromotionForm from "./AddPromotionForm";
 import "../styles/Inventory.css";
 import firebase from "firebase";
 
@@ -115,7 +118,14 @@ class Inventory extends Component {
     return (
       <div className="inventory">
         {logout}
-        <AddItemForm addItem={this.props.addItem} />
+        <Tabs>
+          <Pane label="Dodaj przedmiot">
+            <AddItemForm addItem={this.props.addItem} />
+          </Pane>
+          <Pane label="Oblicz promocję">
+            <AddPromotionForm />
+          </Pane>
+        </Tabs>
         <h4>Edytuj ceny</h4>
         {itemsToRender.map(this.renderItem)}
       </div>

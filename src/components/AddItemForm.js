@@ -20,7 +20,7 @@ const AddItemForm = ({addItem}) => {
         <h4>Dodaj nową cenę</h4>
         <form ref={(input) => this.itemForm = input} className="add-item" onSubmit={createItem}>
           <input ref={(input) => this.name = input} type="text" placeholder="Marka" required />
-          <input ref={(input) => this.model = input} type="text" placeholder="Model" required  />
+          <input ref={(input) => this.model = input} type="text" placeholder="Model" required />
           <select ref={(input) => this.year = input}>
             <option value="2018">2018</option>
             <option value="2017">2017</option>

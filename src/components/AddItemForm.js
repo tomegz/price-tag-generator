@@ -7,9 +7,9 @@ const AddItemForm = ({addItem}) => {
     const item = {
       name: this.name.value,
       model: this.model.value,
-      price: this.price.value,
+      price: Number(this.price.value),
       year: this.year.value,
-      discountPrice: this.discountPrice.value,
+      discountPrice: Number(this.discountPrice.value),
       discountStatus: this.discountStatus.value
     };
     addItem(item);

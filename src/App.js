@@ -104,10 +104,9 @@ class App extends Component {
     const keys = this.filterItems();
     keys.forEach(key => {
       const item = this.state.items[key];
-      const itemPrice = Number(item.price);
       const updatedItem = {
         ...item,
-        discountPrice: formatPrice(itemPrice, options)
+        discountPrice: formatPrice(item.price, options)
       };
       this.updateItem(key, updatedItem);
     });

@@ -35,9 +35,11 @@ class Inventory extends Component {
   }
   handleChange(e, key) {
     const item = this.props.items[key];
+    const name = e.target.name;
+    const value = e.target.value;
     const updatedItem = {
       ...item,
-      [e.target.name]: e.target.value
+      [name]: ["price", "discountPrice"].includes(name) ? Number(value) : value
     }
     this.props.updateItem(key, updatedItem);
   }

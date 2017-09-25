@@ -69,6 +69,9 @@ input:required {
 .add-item input,
 .add-item select,
 .add-item button,
+.add-promotion button,
+.add-promotion input[type="number"],
+.check-div,
 .login input,
 .login button {
   padding: 10px;
@@ -82,17 +85,45 @@ input:required {
   border-radius: 0;
   background: #fff;
 }
-.login input, .login button {
+.login input, .login button, .add-promotion button {
   border-left: 1px solid #000;
 }
-.login input:first-of-type {
+.login input:first-of-type, .check-div {
   border-top: 1px solid #000;
 }
-.add-item button {
+.add-promotion input[type="number"] {
+  border: 0;
+}
+.check-div {
+  width: 50%;
+  height: 36px;
+}
+.check-div {
+  display: inline-block;
+  position: relative;
+  top: 8px;
+  background: #fff;
+  text-align: left;
+}
+.check-div > * {
+  position: relative;
+  bottom: 5px;
+}
+.percentage-input {
+  background: #fff;
+  display: inline-block;
+  height: 36px;
+  width: 50%;
+  border: 1px solid #000;
+}
+.percentage-input input {
+  border: 0;
+}
+.add-item button, .add-promotion button {
   width: 100%;
   cursor: pointer;
 }
-.add-item button:hover, .login button:hover {
+.add-item button:hover, .login button:hover, .add-promotion button:hover {
   background: #000;
   color: #FFF;
 }
@@ -100,11 +131,13 @@ input:required {
 .item-edit select:focus,
 .add-item input:focus,
 .add-item select:focus,
-.login input:focus {
+.login input:focus,
+.add-promotion input:focus {
   outline: 0;
   background: #fef2de;
 }
-.item-edit select:-moz-focusring, .add-item select:-moz-focusring, .add-item button:-moz-focusring {
+.item-edit select:-moz-focusring, .add-item select:-moz-focusring, .add-item button:-moz-focusring,
+.add-promotion button:-moz-focusring {
     color: transparent;
     text-shadow: 0 0 0 #000;
 }

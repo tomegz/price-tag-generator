@@ -16,7 +16,7 @@ const formatPrice = (price, options) => {
   const mult = 1 - (percent/100);
   let result = Math.round(price * mult);
   if(options.roundDown) {
-    result = (Math.round(result / 100) * 100) - 1;
+    result = Number(Math.floor(result / 10).toString() + "9");
   }
   return result;
 }

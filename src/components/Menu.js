@@ -5,16 +5,7 @@ import Item from "./Item";
 import FindItemBar from "./FindItemBar";
 import "../styles/Menu.css";
 
-const Menu = ({items, setSearchQuery, searchQuery, addToOrder}) => {
-  const filterItems = (keys) => {
-    const filteredItems = keys.filter( key => {
-      const isNameValid = items[key].name.toLowerCase().indexOf(searchQuery) !== -1;
-      const isModelValid = items[key].model.toLowerCase().indexOf(searchQuery) !== -1;
-      return isNameValid || isModelValid;
-    });
-    return filteredItems;
-  };
-  const itemsToRender = filterItems(Object.keys(items));
+const Menu = ({items, itemsToRender, setSearchQuery, searchQuery, addToOrder}) => {
   return (
       <div className="menu">
         <h2>Menu</h2>
@@ -28,6 +19,7 @@ const Menu = ({items, setSearchQuery, searchQuery, addToOrder}) => {
 
 Menu.propTypes = {
   items: PropTypes.object.isRequired,
+  itemsToRender: PropTypes.array.isRequired,
   setSearchQuery: PropTypes.func.isRequired,
   searchQuery: PropTypes.string.isRequired,
   addToOrder: PropTypes.func.isRequired

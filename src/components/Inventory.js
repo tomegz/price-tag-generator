@@ -12,7 +12,6 @@ class Inventory extends Component {
   constructor() {
     super();
     this.renderItem = this.renderItem.bind(this);
-    this.filterItems = this.filterItems.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
     this.authenticate = this.authenticate.bind(this);
     this.authHandler = this.authHandler.bind(this);
@@ -62,15 +61,6 @@ class Inventory extends Component {
       </div>
     );
   }
-  filterItems(keys) {
-    const { items, searchQuery } = this.props;
-    const filteredItems = keys.filter( key => {
-      const isNameValid = items[key].name.toLowerCase().indexOf(searchQuery) !== -1;
-      const isModelValid = items[key].model.toLowerCase().indexOf(searchQuery) !== -1;
-      return isNameValid || isModelValid;
-    });
-    return filteredItems;
-  }
   authenticate(e) {
     e.preventDefault();
     const email = this.emailInput.value; 
@@ -110,20 +100,19 @@ class Inventory extends Component {
   }
   render() {
     const logout = <button className="btn-logout" onClick={() => this.logout()}><i className="fa fa-sign-out fa-3x" /></button>;
-    const { items } = this.props;
+    const { itemsToRender, addItem, addPromotion } = this.props;
     if(!this.state.uid) {
       return <div className="inventory">{this.renderLogin()}</div>;
     }
-    const itemsToRender = this.filterItems(Object.keys(items));
     return (
       <div className="inventory">
         {logout}
         <Tabs>
           <Pane label="Dodaj przedmiot">
-            <AddItemForm addItem={this.props.addItem} />
+            <AddItemForm addItem={addItem} />
           </Pane>
           <Pane label="Oblicz promocję">
-            <AddPromotionForm />
+            <AddPromotionForm addPromotion={addPromotion}/>
           </Pane>
         </Tabs>
         <h4>Edytuj ceny</h4>
@@ -135,6 +124,7 @@ class Inventory extends Component {
 
 Inventory.propTypes = {
   items: PropTypes.object.isRequired,
+  itemsToRender: PropTypes.array.isRequired,
   searchQuery: PropTypes.string.isRequired,
   addItem: PropTypes.func.isRequired,
   updateItem: PropTypes.func.isRequired,

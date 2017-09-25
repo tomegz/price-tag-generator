@@ -9,6 +9,7 @@ import Pricetag from "./components/Pricetag";
 
 import firebase from "firebase";
 import base from "./base";
+import formatPrice from "./helpers/formatPrice";
 
 
 class App extends Component {
@@ -16,9 +17,11 @@ class App extends Component {
     super();
     this.addItem = this.addItem.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
+    this.addPromotion = this.addPromotion.bind(this);
     this.removeFromOrder = this.removeFromOrder.bind(this);
     this.removeWholeOrder = this.removeWholeOrder.bind(this);
     this.updateItem = this.updateItem.bind(this);
+    this.filterItems = this.filterItems.bind(this);
     this.setSearchQuery = this.setSearchQuery.bind(this);
     this.getItems = this.getItems.bind(this);
     this.authorize = this.authorize.bind(this);
@@ -74,6 +77,16 @@ class App extends Component {
     items[key] = updatedItem;
     this.setState({ items });
   }
+  filterItems() {
+    const { items, searchQuery } = this.state;
+    const keys = Object.keys(items);
+    const filteredItems = keys.filter( key => {
+      const isNameValid = items[key].name.toLowerCase().indexOf(searchQuery) !== -1;
+      const isModelValid = items[key].model.toLowerCase().indexOf(searchQuery) !== -1;
+      return isNameValid || isModelValid;
+    });
+    return filteredItems;
+  }
   setSearchQuery(text) {
     const searchQuery = text.toLowerCase();
     this.setState({ searchQuery });
@@ -84,6 +97,20 @@ class App extends Component {
     const order = {...this.state.order};
     order[key] = order[key] + count || count;
     this.setState({ order });
+  }
+  addPromotion(options) {
+    /* get items to update, update every price and set items state without deleting anything */
+    //get keys of items to update
+    const keys = this.filterItems();
+    keys.forEach(key => {
+      const item = this.state.items[key];
+      const itemPrice = Number(item.price);
+      const updatedItem = {
+        ...item,
+        discountPrice: formatPrice(itemPrice, options)
+      };
+      this.updateItem(key, updatedItem);
+    });
   }
   removeFromOrder(key) {
     const order = {...this.state.order};
@@ -99,6 +126,7 @@ class App extends Component {
   }
   render() {
     const { items, order, searchQuery } = this.state;
+    const itemsToRender = this.filterItems();
     const pricetags = [];
     Object.keys(order)
         .forEach(key => {
@@ -115,6 +143,7 @@ class App extends Component {
         </div>
         <div className="wrapper">
           <Menu items={items} 
+                itemsToRender={itemsToRender}
                 searchQuery={searchQuery}
                 addToOrder={this.addToOrder}
                 setSearchQuery={this.setSearchQuery} />
@@ -123,10 +152,11 @@ class App extends Component {
                  removeFromOrder={this.removeFromOrder}
                  removeWholeOrder={this.removeWholeOrder} />
           <Inventory items={items} 
+                     itemsToRender={itemsToRender}
                      searchQuery={searchQuery}
                      addItem={this.addItem} 
                      updateItem={this.updateItem} 
-                     /*storeId={this.props.match.params.storeId}*/
+                     addPromotion={this.addPromotion}
                      authorize={this.authorize} 
                      removeBinding={this.removeBinding} />
         </div>

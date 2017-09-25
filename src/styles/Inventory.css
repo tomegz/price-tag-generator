@@ -13,13 +13,16 @@ input:required {
 .login button {
   cursor: pointer;
 }
-.add-item-wrapper {    
+.add-item-wrapper, .add-promotion-wrapper {    
   -webkit-appearance: none;
        -moz-appearance: none;
             appearance: none;
   border-top: 2px dashed #222;
   border-bottom: 2px dashed #222;
   margin: 20px 0;
+}
+.add-promotion-wrapper {
+  padding-bottom: 20px;
 }
 .btn-logout {
   background: transparent;
@@ -29,6 +32,22 @@ input:required {
 }
 .btn-logout:hover {
   color: #000;
+}
+.tabs__labels {
+  list-style: none;
+}
+.tabs__labels > * {
+  display: inline-block;
+  margin-right: 5px;
+}
+.tabs__labels li button {
+  border: none;
+  border-bottom: 1px solid black;
+  background: inherit;
+  cursor: pointer;
+}
+.tabs__labels li button.active {
+  border-bottom: 1px solid red;
 }
 .item-edit, .add-item {
   margin-bottom: 20px;

@@ -10,6 +10,7 @@
 input:required {
     box-shadow:none;
 }
+button::-moz-focus-inner { border: 0; }
 .login button {
   cursor: pointer;
 }
@@ -35,19 +36,23 @@ input:required {
 }
 .tabs__labels {
   list-style: none;
+  margin-right: 10px;
 }
 .tabs__labels > * {
   display: inline-block;
-  margin-right: 5px;
+}
+.tabs__labels li:hover button{
+  color: #000;
 }
 .tabs__labels li button {
   border: none;
-  border-bottom: 1px solid black;
   background: inherit;
   cursor: pointer;
+  font-size: 16px;
 }
 .tabs__labels li button.active {
-  border-bottom: 1px solid red;
+  border-bottom: 1px solid #000;
+  color: #000;
 }
 .item-edit, .add-item {
   margin-bottom: 20px;
@@ -137,7 +142,7 @@ input:required {
   background: #fef2de;
 }
 .item-edit select:-moz-focusring, .add-item select:-moz-focusring, .add-item button:-moz-focusring,
-.add-promotion button:-moz-focusring {
+.add-promotion button:-moz-focusring, .tabs__labels button:-moz-focusring {
     color: transparent;
     text-shadow: 0 0 0 #000;
 }

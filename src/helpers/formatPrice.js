@@ -1,6 +1,6 @@
 /*
   Function expects options object
-  ex. formatPrice({ price: 2499, percent: 15, downTo99: true });
+  ex. formatPrice(2499, { percent: 15, roundDown: true });
 */
 const formatPrice = (price, options) => {
   const { percent, roundDown } = options;

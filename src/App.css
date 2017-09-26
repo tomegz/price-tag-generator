@@ -66,11 +66,11 @@
     .App-header, .wrapper, .App-footer { display: none; }
     
     .text-content h3 {
-      font-size: 30px;
+      font-size: 29px;
     }
 
     .text-content p {
-      font-size: 28px;
+      font-size: 25px;
     }
 
     .text-content p.after-discount {

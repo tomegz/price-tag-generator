@@ -6,7 +6,6 @@
 }
 
 .half-tag:nth-child(odd) .text-content{ 
-    //border: 1px dashed blue;
     /* Position */
     left: 1cm;
     /* Safari */
@@ -22,7 +21,6 @@
 .half-tag:nth-child(even) .text-content{ 
     /* Position */
     right: 1cm;
-    //border: 1px dashed red;
     /* Safari */
     -webkit-transform: rotate(-90deg);
     /* Firefox */
@@ -38,9 +36,8 @@
     max-height: calc(21cm / 2);
     font-family: "Times New Roman", serif;
     text-align: center; 
-    font-size: 1.6rem;
+    font-size: 24px;
     line-height: 0;
 }
 
 .before-discount { text-decoration: line-through; }
-.after-discount { font-size: 2rem; }

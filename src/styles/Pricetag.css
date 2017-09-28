@@ -7,7 +7,7 @@
 
 .half-tag:nth-child(odd) .text-content{ 
     /* Position */
-    left: 1cm;
+    left: 38px;
     /* Safari */
     -webkit-transform: rotate(90deg);
     /* Firefox */
@@ -20,7 +20,7 @@
 
 .half-tag:nth-child(even) .text-content{ 
     /* Position */
-    right: 1cm;
+    right: 38px;
     /* Safari */
     -webkit-transform: rotate(-90deg);
     /* Firefox */
@@ -33,11 +33,24 @@
 
 .text-content { 
     position: relative;
+    top: 36px;
     max-height: calc(21cm / 2);
     font-family: "Times New Roman", serif;
     text-align: center; 
-    font-size: 24px;
     line-height: 0;
+}
+
+.text-content h3 {
+    font-size: 28px;
+}
+.text-content h3.smaller {
+    font-size: 24px;
+}
+.text-content p {
+    font-size: 27px;
+}
+p.after-discount {
+    font-size: 32px;
 }
 
 .before-discount { text-decoration: line-through; }

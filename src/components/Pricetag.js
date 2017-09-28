@@ -8,11 +8,12 @@ const Pricetag = ({details}) => {
   const model = formatParagraphs(details.model.toUpperCase());
   const onDiscount = details.discountStatus === "on";
   const discountPrice = onDiscount ? <p className="after-discount">{details.discountPrice},-</p> : "";
+  const smallHeader = name.length > 7 ? "smaller" : "";
   return (
       <div>
         <div className="half-tag">
           <div className="text-content">
-            <h3>{name}</h3>
+            <h3 className={smallHeader}>{name}</h3>
             {model}
             <p className={onDiscount ? "before-discount" : "after-discount"}>{details.price},-</p>
             {discountPrice}
@@ -20,7 +21,7 @@ const Pricetag = ({details}) => {
         </div>
         <div className="half-tag">
           <div className="text-content">
-            <h3>{name}</h3>
+            <h3 className={smallHeader}>{name}</h3>
             {model}
             <p className={onDiscount ? "before-discount" : "after-discount"}>{details.price},-</p>
             {discountPrice}

@@ -64,17 +64,5 @@
     }
 
     .App-header, .wrapper, .App-footer { display: none; }
-    
-    .text-content h3 {
-      font-size: 30px;
-    }
-
-    .text-content p {
-      font-size: 28px;
-    }
-
-    .text-content p.after-discount {
-      font-size: 32px;
-    }
 
 }

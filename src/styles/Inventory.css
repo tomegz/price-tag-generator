@@ -10,6 +10,9 @@
 input:required {
     box-shadow:none;
 }
+input[type=number]::-webkit-inner-spin-button {
+  opacity: 1;
+}
 button::-moz-focus-inner { border: 0; }
 .login button {
   cursor: pointer;
@@ -105,8 +108,7 @@ button::-moz-focus-inner { border: 0; }
 }
 .check-div {
   display: inline-block;
-  position: relative;
-  top: 8px;
+  float: left;
   background: #fff;
   text-align: left;
 }
@@ -117,12 +119,15 @@ button::-moz-focus-inner { border: 0; }
 .percentage-input {
   background: #fff;
   display: inline-block;
+  float: left;
   height: 36px;
   width: 50%;
   border: 1px solid #000;
 }
-.percentage-input input {
+#percent {
   border: 0;
+  height: 34px;
+  width: 50%;
 }
 .add-item button, .add-promotion button {
   width: 100%;

@@ -16,8 +16,8 @@ class Item extends Component {
     const isOnDiscount = details.discountStatus === "on";
     return (
       <li className="menu-item">
-        <div>
-          <div className="desc">  
+        <div className="menu-item-inner">
+          <div className="desc">
             <h5><strong>{`${details.name} ${details.model}`}</strong></h5>
             <p><i className="fa fa-calendar" /> {`${details.year || "-"}`}</p>
             <p>

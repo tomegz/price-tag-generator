@@ -36,10 +36,29 @@
   font-family: Roboto, sans-serif;
   flex-basis: 70%;
 }
+
+.desc:hover .remove-icon {
+  visibility: visible;
+  opacity: 1;
+}
+
 .desc h5 {
   font-size: 0.9rem;
+  margin: 0 10px 0 0;
+}
+
+.desc-header {
+  display: flex;
   margin-bottom: 5px;
 }
+
+.remove-icon {
+  cursor: pointer;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.66s;
+}
+
 .desc > * {
   margin: 0;
 }

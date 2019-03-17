@@ -5,13 +5,13 @@ import Item from "./Item";
 import FindItemBar from "./FindItemBar";
 import "../styles/Menu.css";
 
-const Menu = ({items, itemsToRender, setSearchQuery, searchQuery, addToOrder}) => {
+const Menu = ({items, itemsToRender, setSearchQuery, searchQuery, addToOrder, removeItem}) => {
   return (
       <div className="menu">
         <h2>Menu</h2>
         <FindItemBar setSearchQuery={setSearchQuery} />
         <ul className="list-of-items">
-          {itemsToRender.map((key) => <Item key={key} index={key} details={items[key]} addToOrder={addToOrder} />)}
+          {itemsToRender.map((key) => <Item key={key} index={key} details={items[key]} addToOrder={addToOrder} removeItem={removeItem} />)}
         </ul>
       </div>
   );
@@ -22,7 +22,8 @@ Menu.propTypes = {
   itemsToRender: PropTypes.array.isRequired,
   setSearchQuery: PropTypes.func.isRequired,
   searchQuery: PropTypes.string.isRequired,
-  addToOrder: PropTypes.func.isRequired
+  addToOrder: PropTypes.func.isRequired,
+  removeItem: PropTypes.func.isRequired,
 }
 
 export default Menu;

@@ -7,18 +7,37 @@ class Item extends Component {
     this.state = { count: 1 };
     this.handleChange = this.handleChange.bind(this);
   }
+
+  getNameAndModel = () => {
+    const { details: { name, model } } = this.props;
+    return `${name} ${model}`;
+  }
+
   handleChange(e) {
     const count = Number(e.target.value);
     this.setState({ count });
   }
+
+  handleItemRemove = () => {
+    const { index: id, removeItem } = this.props;
+    const itemName = this.getNameAndModel();
+    const confirmed = window.confirm(`Czy na pewno chcesz usunąć ${itemName} z bazy cen?`);
+    if (confirmed) {
+      removeItem(id);
+    }
+  }
+
   render() {
     const { details, index, addToOrder } = this.props;
     const isOnDiscount = details.discountStatus === "on";
     return (
       <li className="menu-item">
-        <div>
-          <div className="desc">  
-            <h5><strong>{`${details.name} ${details.model}`}</strong></h5>
+        <div className="menu-item-inner">
+          <div className="desc">
+            <div className="desc-header">
+              <h5><strong>{this.getNameAndModel()}</strong></h5>
+              <i className="remove-icon fa fa-trash" onClick={this.handleItemRemove} />
+            </div>
             <p><i className="fa fa-calendar" /> {`${details.year || "-"}`}</p>
             <p>
               <i className="fa fa-money" />
@@ -44,7 +63,8 @@ class Item extends Component {
 Item.propTypes = {
   details: PropTypes.object.isRequired,
   index: PropTypes.string.isRequired,
-  addToOrder: PropTypes.func.isRequired
+  addToOrder: PropTypes.func.isRequired,
+  removeItem: PropTypes.func.isRequired,
 }
 
 export default Item;

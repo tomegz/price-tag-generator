@@ -21,6 +21,7 @@ class App extends Component {
     this.removeFromOrder = this.removeFromOrder.bind(this);
     this.removeWholeOrder = this.removeWholeOrder.bind(this);
     this.updateItem = this.updateItem.bind(this);
+    this.removeItem = this.removeItem.bind(this);
     this.filterItems = this.filterItems.bind(this);
     this.setSearchQuery = this.setSearchQuery.bind(this);
     this.getItems = this.getItems.bind(this);
@@ -63,7 +64,7 @@ class App extends Component {
     this.removeBinding();
   }
   componentWillUpdate(nextProps, nextState) {
-    localStorage.setItem(`order-profi-bike`, 
+    localStorage.setItem(`order-profi-bike`,
       JSON.stringify(nextState.order));
   }
   addItem(item) {
@@ -76,6 +77,10 @@ class App extends Component {
     const items = {...this.state.items};
     items[key] = updatedItem;
     this.setState({ items });
+  }
+  removeItem(id) {
+    const itemRef = firebase.database().ref(`profi-bike/items/${id}`);
+    itemRef.remove()
   }
   filterItems() {
     const { items, searchQuery } = this.state;
@@ -130,7 +135,7 @@ class App extends Component {
     Object.keys(order)
         .forEach(key => {
           for(var i=0; i<order[key]; i++) {
-            pricetags.push(<Pricetag key={`${key}-${i}`} 
+            pricetags.push(<Pricetag key={`${key}-${i}`}
                                       details={items[key]} />);
           }
         });
@@ -141,22 +146,23 @@ class App extends Component {
           <h2>Profi Bike - Drukowanie cen</h2>
         </div>
         <div className="wrapper">
-          <Menu items={items} 
+          <Menu items={items}
                 itemsToRender={itemsToRender}
                 searchQuery={searchQuery}
                 addToOrder={this.addToOrder}
-                setSearchQuery={this.setSearchQuery} />
-          <Order items={items} 
+                setSearchQuery={this.setSearchQuery}
+                removeItem={this.removeItem} />
+          <Order items={items}
                  order={order}
                  removeFromOrder={this.removeFromOrder}
                  removeWholeOrder={this.removeWholeOrder} />
-          <Inventory items={items} 
+          <Inventory items={items}
                      itemsToRender={itemsToRender}
                      searchQuery={searchQuery}
-                     addItem={this.addItem} 
-                     updateItem={this.updateItem} 
+                     addItem={this.addItem}
+                     updateItem={this.updateItem}
                      addPromotion={this.addPromotion}
-                     authorize={this.authorize} 
+                     authorize={this.authorize}
                      removeBinding={this.removeBinding} />
         </div>
         <footer className="App-footer"></footer>

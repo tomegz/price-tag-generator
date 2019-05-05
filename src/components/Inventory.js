@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
+import firebase from "firebase";
 
 import Tabs from "./Tabs";
 import Pane from "./Pane";
 import AddItemForm from "./AddItemForm";
 import AddPromotionForm from "./AddPromotionForm";
+import YearDropdown from "./YearDropdown";
+
 import "../styles/Inventory.css";
-import firebase from "firebase";
 
 class Inventory extends Component {
   constructor() {
@@ -49,11 +51,7 @@ class Inventory extends Component {
       <div className="item-edit" key={key}>
         <input type="text" name="name" value={item.name} placeholder="Marka produktu" onChange={(e) => this.handleChange(e, key)}/>
         <input type="text" name="model" value={item.model} placeholder="Nazwa modelu" onChange={(e) => this.handleChange(e, key)}/>
-        <select type="text" name="year" value={item.year} placeholder="Rocznik" onChange={(e) => this.handleChange(e, key)}>
-          <option value="2018">2018</option>
-          <option value="2017">2017</option>
-          <option value="2016">2016</option>
-        </select>
+        <YearDropdown value={item.year} onChange={(e) => this.handleChange(e, key)} />
         <input type="text" name="price" value={item.price} placeholder="Cena produktu" onChange={(e) => this.handleChange(e, key)}/>
         <select type="text" name="discountStatus" value={item.discountStatus} placeholder="Status promocji" onChange={(e) => this.handleChange(e, key)}>
           <option value="on">Promocja włączona</option>
@@ -65,7 +63,7 @@ class Inventory extends Component {
   }
   authenticate(e) {
     e.preventDefault();
-    const email = this.emailInput.value; 
+    const email = this.emailInput.value;
     const password = this.passwordInput.value;
     firebase.auth().signInWithEmailAndPassword(email, password)
                    .then(this.authHandler)

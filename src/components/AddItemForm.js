@@ -1,31 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const getCurrentYear = () => {
-  return new Date().getFullYear();
-};
-
-const CURRENT_YEAR = getCurrentYear();
-
-const getAvailableYears = () => {
-  return [
-    CURRENT_YEAR - 3,
-    CURRENT_YEAR - 2,
-    CURRENT_YEAR -1,
-    CURRENT_YEAR,
-    CURRENT_YEAR + 1,
-  ];
-};
-
-const AVAILABLE_YEARS = getAvailableYears();
-const AVAILABLE_OPTIONS = ['-', ...AVAILABLE_YEARS];
+import YearDropdown, { getCurrentYear } from './YearDropdown';
 
 const initialState = {
   name: '',
   price: '',
   model: '',
   discountPrice: '',
-  year: CURRENT_YEAR,
+  year: getCurrentYear(),
   discountStatus: '',
 }
 
@@ -77,9 +60,7 @@ class AddItemForm extends React.Component {
           <form className="add-item" onSubmit={this.createItem}>
             <input name="name" value={name} onChange={this.handleChange} type="text" placeholder="Marka" required />
             <input name="model" value={model} onChange={this.handleChange} type="text" placeholder="Model" required />
-            <select name="year" value={year} onChange={this.handleChange}>
-              {AVAILABLE_OPTIONS.map(year => <option key={year} value={year}>{year}</option>)}
-            </select>
+            <YearDropdown value={year} onChange={this.handleChange} />
             <input name="price" value={price} onChange={this.handleChange} type="text" placeholder="Cena" required />
             <select name="discountStatus" value={discountStatus} onChange={this.handleChange}>
               <option value="on">Promocja włączona</option>

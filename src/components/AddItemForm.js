@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import YearDropdown, { getCurrentYear } from './YearDropdown';
+import DiscountStatusDropdown, { DiscountStatuses } from './DiscountStatusDropdown';
 
 const initialState = {
   name: '',
@@ -9,7 +10,7 @@ const initialState = {
   model: '',
   discountPrice: '',
   year: getCurrentYear(),
-  discountStatus: '',
+  discountStatus: DiscountStatuses.OFF,
 }
 
 class AddItemForm extends React.Component {
@@ -62,10 +63,7 @@ class AddItemForm extends React.Component {
             <input name="model" value={model} onChange={this.handleChange} type="text" placeholder="Model" required />
             <YearDropdown value={year} onChange={this.handleChange} />
             <input name="price" value={price} onChange={this.handleChange} type="text" placeholder="Cena" required />
-            <select name="discountStatus" value={discountStatus} onChange={this.handleChange}>
-              <option value="on">Promocja włączona</option>
-              <option value="off">Promocja wyłączona</option>
-            </select>
+            <DiscountStatusDropdown value={discountStatus} onChange={this.handleChange} />
             <input name="discountPrice" value={discountPrice} onChange={this.handleChange} type="text" placeholder="Cena promocyjna" required />
             <button type="submit"><strong>+ DODAJ</strong></button>
           </form>

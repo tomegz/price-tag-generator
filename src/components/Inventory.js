@@ -7,6 +7,7 @@ import Pane from "./Pane";
 import AddItemForm from "./AddItemForm";
 import AddPromotionForm from "./AddPromotionForm";
 import YearDropdown from "./YearDropdown";
+import DiscountStatusDropdown from './DiscountStatusDropdown';
 
 import "../styles/Inventory.css";
 
@@ -53,10 +54,7 @@ class Inventory extends Component {
         <input type="text" name="model" value={item.model} placeholder="Nazwa modelu" onChange={(e) => this.handleChange(e, key)}/>
         <YearDropdown value={item.year} onChange={(e) => this.handleChange(e, key)} />
         <input type="text" name="price" value={item.price} placeholder="Cena produktu" onChange={(e) => this.handleChange(e, key)}/>
-        <select type="text" name="discountStatus" value={item.discountStatus} placeholder="Status promocji" onChange={(e) => this.handleChange(e, key)}>
-          <option value="on">Promocja włączona</option>
-          <option value="off">Promocja wyłączona</option>
-        </select>
+        <DiscountStatusDropdown value={item.discountStatus} onChange={(e) => this.handleChange(e, key)} />
         <input type="text" name="discountPrice" value={item.discountPrice} placeholder="Cena promocyjna" onChange={(e) => this.handleChange(e, key)}/>
       </div>
     );

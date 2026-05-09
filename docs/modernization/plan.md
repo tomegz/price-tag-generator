@@ -60,7 +60,7 @@ optional shared dev:
 | 2 | Done | [Firebase Emulator Local Development](milestones/02-firebase-emulator-local-development.md) | Make local development emulator-first and prod-safe. |
 | 3 | Done | [Modern App Scaffold](milestones/03-modern-app-scaffold.md) | Replace CRA/React 15 shell with Vite/React/TypeScript/pnpm. |
 | 4 | Done | [Domain Model And Tests](milestones/04-domain-model-and-tests.md) | Extract and test catalog, pricing, print queue, print tag rendering, and storage behavior. |
-| 5 | Planned | [Firebase Modular Service Layer](milestones/05-firebase-modular-service-layer.md) | Isolate Firebase access behind typed services. |
+| 5 | Done | [Firebase Modular Service Layer](milestones/05-firebase-modular-service-layer.md) | Isolate Firebase access behind typed services. |
 | 6 | Planned | [Catalog And Auth Parity](milestones/06-catalog-and-auth-parity.md) | Rebuild the existing catalog/auth workflows without redesign. |
 | 7 | Planned | [Print Queue And Price Tags](milestones/07-print-queue-and-price-tags.md) | Rebuild printing and verify physical-layout behavior. |
 | 8 | Planned | [Production Cutover](milestones/08-production-cutover.md) | Deploy the modern app safely against the hardened prod DB. |
@@ -98,6 +98,17 @@ Completed on `develop`.
 - Renamed active UI components and props to use Catalog, Print Queue, and Print Tag vocabulary.
 - Added unit tests for legacy catalog parsing/filtering, discount calculation, print queue behavior, print queue storage, and print tag render expansion.
 - Kept the production Realtime Database field names unchanged.
+
+### Milestone 5
+
+Completed on `develop`.
+
+- Split Firebase setup into config/app initialization, Auth service, and Catalog repository modules.
+- Kept React components away from direct Firebase SDK imports.
+- Removed client-side owner-list checks from the app flow; Firebase rules are the access boundary.
+- Added repository/config tests for env validation, path centralization, write validation, and permission-error normalization.
+- Added emulator-backed repository integration tests for owner access and non-owner denial.
+- Preserved the legacy Realtime Database schema for reads and writes.
 
 ## Execution Principles
 

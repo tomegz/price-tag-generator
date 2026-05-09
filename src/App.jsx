@@ -20,11 +20,8 @@ import {
 } from "./domains/storage/printQueueStorage";
 import { buildPrintTagRenderQueue } from "./domains/printTagRendering/printTagRendering";
 import {
-  deleteItem,
-  getOwners,
-  isOwner,
-  setItem,
-  subscribeToItems
+  catalogRepository,
+  isPermissionDenied
 } from "./services/firebase";
 
 
@@ -41,30 +38,37 @@ class App extends Component {
     this.getVisibleCatalogItemIds = this.getVisibleCatalogItemIds.bind(this);
     this.setSearchQuery = this.setSearchQuery.bind(this);
     this.getCatalogItems = this.getCatalogItems.bind(this);
-    this.authorize = this.authorize.bind(this);
+    this.connectCatalogForUser = this.connectCatalogForUser.bind(this);
     this.removeBinding = this.removeBinding.bind(this);
+    this.handleCatalogError = this.handleCatalogError.bind(this);
     this.state = {
       catalogItems: {},
       printQueue: {},
-      searchQuery: ""
+      searchQuery: "",
+      catalogError: ""
     };
   }
   getCatalogItems() {
+    if(this.ref) return;
     /* Since there's only one store, it is hardcoded for now */
-    this.ref = subscribeToItems((catalogItems) => {
-      this.setState({ catalogItems });
+    this.ref = catalogRepository.subscribeCatalogItems({
+      next: (catalogItems) => {
+        this.setState({ catalogItems, catalogError: "" });
+      },
+      error: (error) => {
+        this.ref = null;
+        this.handleCatalogError(error);
+      }
     });
 
     this.setState({
       printQueue: loadPrintQueueFromStorage(localStorage)
     });
   }
-  authorize(user) {
-    getOwners().then((owners) => {
-      if(isOwner(owners, user)) {
-        this.getCatalogItems();
-      }
-    });
+  connectCatalogForUser(user) {
+    if(user) {
+      this.getCatalogItems();
+    }
   }
   componentWillUnmount() {
     this.removeBinding();
@@ -79,16 +83,16 @@ class App extends Component {
     const key = `item${timestamp}`;
     catalogItems[key] = item;
     this.setState({ catalogItems });
-    setItem(key, item);
+    catalogRepository.saveCatalogItem(key, item).catch(this.handleCatalogError);
   }
   updateCatalogItem(key, updatedItem) {
     const catalogItems = {...this.state.catalogItems};
     catalogItems[key] = updatedItem;
     this.setState({ catalogItems });
-    setItem(key, updatedItem);
+    catalogRepository.saveCatalogItem(key, updatedItem).catch(this.handleCatalogError);
   }
   removeCatalogItem(id) {
-    deleteItem(id);
+    catalogRepository.deleteCatalogItem(id).catch(this.handleCatalogError);
   }
   getVisibleCatalogItemIds() {
     const { catalogItems, searchQuery } = this.state;
@@ -123,6 +127,12 @@ class App extends Component {
   clearPrintQueue() {
     this.setState({ printQueue: clearPrintQueueState() });
   }
+  handleCatalogError(error) {
+    const catalogError = isPermissionDenied(error)
+      ? "Brak dostępu do katalogu. Zalogowany użytkownik nie ma uprawnień do tej bazy."
+      : "Nie udało się zapisać lub pobrać danych katalogu.";
+    this.setState({ catalogError });
+  }
   removeBinding() {
     if(this.ref) {
       this.ref();
@@ -130,7 +140,7 @@ class App extends Component {
     }
   }
   render() {
-    const { catalogItems, printQueue, searchQuery } = this.state;
+    const { catalogItems, printQueue, searchQuery, catalogError } = this.state;
     const catalogItemIds = this.getVisibleCatalogItemIds();
     const printTags = buildPrintTagRenderQueue(catalogItems, printQueue)
       .map(({ key, item }) => <PrintTag key={key} item={item} />);
@@ -157,7 +167,8 @@ class App extends Component {
                    addCatalogItem={this.addCatalogItem}
                    updateCatalogItem={this.updateCatalogItem}
                    addPromotion={this.addPromotion}
-                   authorize={this.authorize}
+                   catalogError={catalogError}
+                   connectCatalogForUser={this.connectCatalogForUser}
                    removeBinding={this.removeBinding} />
         </div>
         <footer className="App-footer"></footer>

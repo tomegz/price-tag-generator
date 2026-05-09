@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   filterCatalogItemIds,
+  parseLegacyCatalogBrands,
   parseLegacyCatalogItem,
   parseLegacyCatalogItems
 } from './catalog';
@@ -110,5 +111,15 @@ describe('filterCatalogItemIds', () => {
 
   it('matches catalog items by model', () => {
     expect(filterCatalogItemIds(items, 'level')).toEqual(['item2']);
+  });
+});
+
+describe('parseLegacyCatalogBrands', () => {
+  it('keeps valid brand names from the legacy brands array', () => {
+    expect(parseLegacyCatalogBrands(['Kross', '', 'Giant', 123])).toEqual(['Kross', 'Giant']);
+  });
+
+  it('returns an empty array for invalid brand data', () => {
+    expect(parseLegacyCatalogBrands({ Kross: true })).toEqual([]);
   });
 });

@@ -172,7 +172,7 @@ When implementing emulator support, make it difficult to accidentally write to p
 
 Use pnpm for the modernized app. Pin the package manager through the `packageManager` field and commit `pnpm-lock.yaml`. Do not keep both `package-lock.json` and `pnpm-lock.yaml` after the package-manager migration is complete.
 
-Milestones 02, 03, and 04 are complete on `develop`. The current scaffold intentionally preserves the visual UI while using current domain vocabulary in code: Catalog, Print Queue, Print Tag Rendering, Pricing, and Storage.
+Milestones 02, 03, 04, and 05 are complete on `develop`. The current scaffold intentionally preserves the visual UI while using current domain vocabulary in code: Catalog, Print Queue, Print Tag Rendering, Pricing, Storage, and Firebase service repositories.
 
 ## Modernization Implementation Notes
 
@@ -180,17 +180,21 @@ Prefer this architecture:
 
 ```text
 src/
-  app/
-  features/
+  domains/
     catalog/
+    pricing/
     printQueue/
     printTagRendering/
-    pricing/
-    print/
+    storage/
   services/
     firebase/
-  shared/
+      app.ts
+      authService.ts
+      catalogRepository.ts
+      config.ts
 ```
+
+React components must not import Firebase SDK modules directly. Use `authService` for authentication and `catalogRepository` for Realtime Database access.
 
 Core model direction:
 
@@ -221,6 +225,12 @@ At minimum, add tests for:
 - Catalog form validation
 - Firebase rules access checks
 - Print queue and print layout rendering
+
+Rules and repository integration tests live under `tests/` and use `vitest.rules.config.ts`. With the Docker Firebase emulator running, use:
+
+```sh
+pnpm exec vitest run --config vitest.rules.config.ts
+```
 
 Use Playwright for the print workflow once the modern app runs locally.
 

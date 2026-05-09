@@ -4,6 +4,13 @@
 	flex: 1;
 	overflow-y: scroll;
 }
+
+.catalog-error {
+  color: #b00020;
+  font-size: 0.85rem;
+  padding: 0 15px;
+}
+
 .login input, .login button {
   width: 80%;
 }

@@ -18,7 +18,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:rules": "firebase emulators:exec --only database \"vitest run tests/database.rules.test.js\"",
+    "test:rules": "firebase emulators:exec --only database \"vitest run --config vitest.rules.config.ts\"",
     "typecheck": "tsc -b",
     "lint": "eslint .",
     "emulators:start": "firebase emulators:start --import=./emulator-data --export-on-exit=./emulator-data",

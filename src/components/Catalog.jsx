@@ -7,7 +7,7 @@ import AddCatalogItemForm from "./AddCatalogItemForm";
 import AddPromotionForm from "./AddPromotionForm";
 import YearDropdown from "./YearDropdown";
 import DiscountStatusDropdown from './DiscountStatusDropdown';
-import { observeAuth, signIn, signOutUser } from "../services/firebase";
+import { authService } from "../services/firebase";
 
 import "../styles/Catalog.css";
 
@@ -25,12 +25,12 @@ class Catalog extends Component {
     }
   }
   componentDidMount() {
-    this.unsubscribeAuth = observeAuth((user) => {
+    this.unsubscribeAuth = authService.observeAuth((user) => {
       if (user) {
         this.setState({
           uid: user.uid
         });
-        this.props.authorize(user.uid);
+        this.props.connectCatalogForUser(user.uid);
       } else {
         this.setState({ uid: null });
       }
@@ -68,27 +68,17 @@ class Catalog extends Component {
     e.preventDefault();
     const email = this.emailInput.value;
     const password = this.passwordInput.value;
-    signIn(email, password)
+    authService.signIn(email, password)
       .then(this.authHandler)
       .catch((e) => console.log(e.message));
   }
   authHandler(authData) {
-    /*base.fetch(this.props.storeId, {
-      context: this
-    })
-    .then((data) => {
-      this.setState({
-        uid: authData.uid,
-      });
-      this.props.authorize(authData.uid);
-    })
-    .catch((err) => console.log(err.message));*/
     const uid = authData.user ? authData.user.uid : authData.uid;
     this.setState({ uid });
-    this.props.authorize(uid);
+    this.props.connectCatalogForUser(uid);
   }
   logout() {
-    signOutUser();
+    authService.signOut();
     this.props.removeBinding();
   }
   renderLogin() {
@@ -103,13 +93,14 @@ class Catalog extends Component {
   }
   render() {
     const logout = <button className="btn-logout" onClick={() => this.logout()}><i className="fa fa-sign-out fa-3x" /></button>;
-    const { catalogItemIds, addCatalogItem, addPromotion } = this.props;
+    const { catalogItemIds, addCatalogItem, addPromotion, catalogError } = this.props;
     if(!this.state.uid) {
       return <div className="catalog">{this.renderLogin()}</div>;
     }
     return (
       <div className="catalog">
         {logout}
+        {catalogError ? <p className="catalog-error">{catalogError}</p> : null}
         <Tabs>
           <Pane label="Dodaj przedmiot">
             <AddCatalogItemForm addCatalogItem={addCatalogItem} />
@@ -132,7 +123,8 @@ Catalog.propTypes = {
   addCatalogItem: PropTypes.func.isRequired,
   updateCatalogItem: PropTypes.func.isRequired,
   addPromotion: PropTypes.func.isRequired,
-  authorize: PropTypes.func.isRequired,
+  catalogError: PropTypes.string.isRequired,
+  connectCatalogForUser: PropTypes.func.isRequired,
   removeBinding: PropTypes.func.isRequired
 }
 

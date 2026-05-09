@@ -1,5 +1,20 @@
 # Milestone 5: Firebase Modular Service Layer
 
+## Status
+
+Done on `develop`.
+
+The app now uses `src/services/firebase/` for Firebase config, app initialization, auth, and catalog repository access. React components do not import Firebase SDK modules directly.
+
+Verification:
+
+- `pnpm typecheck` passes.
+- `pnpm test` passes with service-layer tests.
+- `pnpm lint` passes with two existing non-blocking Fast Refresh warnings.
+- `pnpm build` passes.
+- `pnpm exec vitest run --config vitest.rules.config.ts` passes against the Docker Firebase emulator.
+- Browser smoke against the Docker Firebase emulator passes with the seeded owner user.
+
 ## Objective
 
 Replace direct Firebase access in components with typed services using the Firebase modular SDK.

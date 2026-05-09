@@ -3,12 +3,15 @@ import {
   signInWithEmailAndPassword,
   signOut,
   type Auth,
-  type User
+  type User,
+  type UserCredential
 } from 'firebase/auth';
+
+export type AuthSignInResult = UserCredential;
 
 export type AuthService = {
   observeAuth(callback: (user: User | null) => void): () => void;
-  signIn(email: string, password: string): Promise<unknown>;
+  signIn(email: string, password: string): Promise<AuthSignInResult>;
   signOut(): Promise<void>;
 };
 

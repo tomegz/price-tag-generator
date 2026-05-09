@@ -1,18 +1,24 @@
-import React from 'react';
-import PropTypes from "prop-types";
-
 import CatalogItem from "./CatalogItem";
 import CatalogSearchBar from "./CatalogSearchBar";
+import type { CatalogItemsById } from "../domains/catalog/catalog";
 import "../styles/CatalogMenu.css";
+
+type CatalogMenuProps = {
+  catalogItems: CatalogItemsById;
+  catalogItemIds: string[];
+  setSearchQuery(text: string): void;
+  searchQuery: string;
+  enqueuePrintTags(itemId: string, quantity: number): void;
+  removeCatalogItem(itemId: string): void;
+};
 
 const CatalogMenu = ({
   catalogItems,
   catalogItemIds,
   setSearchQuery,
-  searchQuery,
   enqueuePrintTags,
   removeCatalogItem
-}) => {
+}: CatalogMenuProps) => {
   return (
       <div className="catalog-menu">
         <h2>Menu</h2>
@@ -29,14 +35,5 @@ const CatalogMenu = ({
       </div>
   );
 };
-
-CatalogMenu.propTypes = {
-  catalogItems: PropTypes.object.isRequired,
-  catalogItemIds: PropTypes.array.isRequired,
-  setSearchQuery: PropTypes.func.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  enqueuePrintTags: PropTypes.func.isRequired,
-  removeCatalogItem: PropTypes.func.isRequired,
-}
 
 export default CatalogMenu;

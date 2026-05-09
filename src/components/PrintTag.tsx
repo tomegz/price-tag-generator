@@ -1,9 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
 import "../styles/PrintTag.css";
 import formatParagraphs from "../helpers/formatParagraphs";
+import type { LegacyCatalogItem } from "../domains/catalog/catalog";
 
-const PrintTag = ({item}) => {
+type PrintTagProps = {
+  item?: LegacyCatalogItem;
+};
+
+const defaultPrintTagItem: LegacyCatalogItem = {
+  name: "default",
+  model: "default",
+  price: 999,
+  discountPrice: 999,
+  discountStatus: "off",
+  year: "-"
+};
+
+const PrintTag = ({ item = defaultPrintTagItem }: PrintTagProps) => {
   const name = item.name.toUpperCase();
   const model = formatParagraphs(item.model.toUpperCase());
   const onDiscount = item.discountStatus === "on";
@@ -30,23 +42,5 @@ const PrintTag = ({item}) => {
       </div>
   );
 };
-
-PrintTag.propTypes = {
-  item: PropTypes.object.isRequired
-}
-
-/* Fixes issue that PrintTags are rendered after print queue is initialized, but catalog
-   items are not yet initialized, causing React trying to render PrintTag with item of
-   undefined */
-
-PrintTag.defaultProps = {
-  item: {
-    name: "default",
-    model: "default",
-    price: 999,
-    discountPrice: 999,
-    discountStatus: "off"
-  }
-}
 
 export default PrintTag;

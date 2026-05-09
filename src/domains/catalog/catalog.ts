@@ -1,5 +1,10 @@
 export type DiscountStatus = 'on' | 'off';
 
+export const DiscountStatuses = {
+  ON: 'on',
+  OFF: 'off'
+} as const satisfies Record<string, DiscountStatus>;
+
 export type LegacyCatalogItem = {
   name: string;
   model: string;

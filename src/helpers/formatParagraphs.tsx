@@ -1,12 +1,12 @@
-import React from "react";
+import type { ReactElement } from "react";
 
-const formatParagraphs = (model) => {
+const formatParagraphs = (model: string): ReactElement => {
   const words = model.split(" ");
-  const paragraphs = [];
+  const paragraphs: string[] = [];
   while(words.length > 0) {
     let paragraph = "";
     do {
-      paragraph += words.shift() + " ";
+      paragraph += `${words.shift() ?? ""} `;
     } while(typeof words[0] !== "undefined" && paragraph.length + words[0].length <= 9)
     paragraphs.push(paragraph);
   }

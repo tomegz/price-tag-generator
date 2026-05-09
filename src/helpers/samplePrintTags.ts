@@ -1,4 +1,4 @@
-const samplePrintTags = {
+const samplePrintTags: Record<string, unknown> = {
   item1: {
     name: "Kross",
     model: "Trans Siberian",

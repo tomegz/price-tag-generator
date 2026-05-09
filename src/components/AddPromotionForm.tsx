@@ -1,10 +1,19 @@
-import React, { useRef } from "react";
+import { useRef, type FormEvent } from "react";
 
-const AddPromotionForm = ({ addPromotion }) => {
-  const percent = useRef(null);
-  const roundDown = useRef(null);
-  const handleSubmit = (e) => {
+import type { DiscountOptions } from "../domains/pricing/discount";
+
+type AddPromotionFormProps = {
+  addPromotion(options: DiscountOptions): void;
+};
+
+const AddPromotionForm = ({ addPromotion }: AddPromotionFormProps) => {
+  const percent = useRef<HTMLInputElement>(null);
+  const roundDown = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!percent.current || !roundDown.current) return;
+
     const options = {
       percent: Number(percent.current.value),
       roundDown: roundDown.current.checked

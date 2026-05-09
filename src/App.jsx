@@ -7,9 +7,14 @@ import Order from "./components/Order";
 import Inventory from "./components/Inventory";
 import Pricetag from "./components/Pricetag";
 
-import firebase from "firebase";
-import base from "./base";
 import formatPrice from "./helpers/formatPrice";
+import {
+  deleteItem,
+  getOwners,
+  isOwner,
+  setItem,
+  subscribeToItems
+} from "./services/firebase";
 
 
 class App extends Component {
@@ -36,58 +41,63 @@ class App extends Component {
   getItems() {
     /* Since there's only one store, it is hardcoded for now */
     const storeId = "profi-bike";
-    this.ref = base.syncState(`${storeId}/items`, {
-      context: this,
-      state: "items"
+    this.ref = subscribeToItems((items) => {
+      this.setState({ items });
     });
 
     const localStorageRef = localStorage.getItem(`order-${storeId}`);
     if(localStorageRef) {
-      this.setState({
-        order: JSON.parse(localStorageRef)
-      });
+      try {
+        this.setState({
+          order: JSON.parse(localStorageRef)
+        });
+      } catch (error) {
+        localStorage.removeItem(`order-${storeId}`);
+      }
     }
 
   }
   authorize(user) {
-    firebase.database()
-            .ref("profi-bike/owners")
-            .once("value")
-            .then((snapshot) => {
-                const owners = snapshot.val();
-                if(owners.includes(user)) {
-                  this.getItems();
-                }
-            });
+    getOwners().then((owners) => {
+      if(isOwner(owners, user)) {
+        this.getItems();
+      }
+    });
   }
   componentWillUnmount() {
     this.removeBinding();
   }
-  componentWillUpdate(nextProps, nextState) {
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.order === this.state.order) return;
     localStorage.setItem(`order-profi-bike`,
-      JSON.stringify(nextState.order));
+      JSON.stringify(this.state.order));
   }
   addItem(item) {
     const items = {...this.state.items};
     const timestamp = Date.now();
-    items[`item${timestamp}`] = item;
+    const key = `item${timestamp}`;
+    items[key] = item;
     this.setState({ items });
+    setItem(key, item);
   }
   updateItem(key, updatedItem) {
     const items = {...this.state.items};
     items[key] = updatedItem;
     this.setState({ items });
+    setItem(key, updatedItem);
   }
   removeItem(id) {
-    const itemRef = firebase.database().ref(`profi-bike/items/${id}`);
-    itemRef.remove()
+    deleteItem(id);
   }
   filterItems() {
     const { items, searchQuery } = this.state;
     const keys = Object.keys(items);
     const filteredItems = keys.filter( key => {
-      const isNameValid = items[key].name.toLowerCase().indexOf(searchQuery) !== -1;
-      const isModelValid = items[key].model.toLowerCase().indexOf(searchQuery) !== -1;
+      const item = items[key] || {};
+      const name = item.name || "";
+      const model = item.model || "";
+      const isNameValid = name.toLowerCase().indexOf(searchQuery) !== -1;
+      const isModelValid = model.toLowerCase().indexOf(searchQuery) !== -1;
       return isNameValid || isModelValid;
     });
     return filteredItems;
@@ -126,7 +136,10 @@ class App extends Component {
     this.setState({ order });
   }
   removeBinding() {
-    base.removeBinding(this.ref);
+    if(this.ref) {
+      this.ref();
+      this.ref = null;
+    }
   }
   render() {
     const { items, order, searchQuery } = this.state;
@@ -134,6 +147,7 @@ class App extends Component {
     const pricetags = [];
     Object.keys(order)
         .forEach(key => {
+          if(!items[key]) return;
           for(var i=0; i<order[key]; i++) {
             pricetags.push(<Pricetag key={`${key}-${i}`}
                                       details={items[key]} />);

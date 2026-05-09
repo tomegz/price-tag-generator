@@ -1,0 +1,48 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "profi-bike": {
+      "brands": {
+        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
+        ".write": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true"
+      },
+      "items": {
+        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
+        ".write": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
+        "$itemId": {
+          ".validate": "newData.hasChildren(['name', 'model', 'price', 'discountPrice', 'discountStatus', 'year'])",
+          "name": {
+            ".validate": "newData.isString() && newData.val().length > 0"
+          },
+          "model": {
+            ".validate": "newData.isString()"
+          },
+          "price": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "discountPrice": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "discountStatus": {
+            ".validate": "newData.val() === 'on' || newData.val() === 'off'"
+          },
+          "year": {
+            ".validate": "newData.isNumber() || newData.isString()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "owners": {
+        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
+        ".write": false
+      },
+      "ownerUids": {
+        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
+        ".write": false
+      }
+    }
+  }
+}

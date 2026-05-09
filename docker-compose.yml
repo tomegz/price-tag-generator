@@ -1,0 +1,16 @@
+services:
+  firebase-emulators:
+    build:
+      context: .
+      dockerfile: docker/firebase-emulators.Dockerfile
+    working_dir: /workspace
+    ports:
+      - "4000:4000"
+      - "9000:9000"
+      - "9099:9099"
+    volumes:
+      - ./:/workspace
+      - firebase-emulator-cache:/root/.cache/firebase/emulators
+
+volumes:
+  firebase-emulator-cache:

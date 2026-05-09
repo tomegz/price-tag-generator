@@ -1,4 +1,4 @@
-module.exports = {
+const samplePricetags = {
   item1: {
     name: "Kross",
     model: "Trans Siberian",
@@ -84,3 +84,5 @@ module.exports = {
     discountStatus: "on"
   }
 };
+
+export default samplePricetags;

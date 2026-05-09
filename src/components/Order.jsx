@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
 import "../styles/Order.css";
-import { CSSTransitionGroup } from "react-transition-group";
 
 class Order extends Component {
   constructor() {
@@ -32,13 +31,7 @@ class Order extends Component {
       <li key={key}>
         <span>
           <strong>
-            <CSSTransitionGroup component="span"
-                                className="count"
-                                transitionName="count"
-                                transitionEnterTimeout={250}
-                                transitionLeaveTimeout={250}>
-              <span key={count}>{count}szt. </span>
-            </CSSTransitionGroup>
+            <span className="count">{count}szt. </span>
           </strong> 
          {item.name} {item.model}
         </span>
@@ -56,13 +49,9 @@ class Order extends Component {
     return (
       <div className="order" ref={(c) => this._orderList = c}>
         <h2>Ceny do druku</h2>
-        <CSSTransitionGroup className="order-list" 
-                            component="ul" 
-                            transitionName="order"
-                            transitionEnterTimeout={500}
-                            transitionLeaveTimeout={500}>
+        <ul className="order-list">
           {orderIds.map(this.renderOrder)}
-        </CSSTransitionGroup>
+        </ul>
         <button className="print-button" onClick={() => window.print()}><i className="fa fa-print fa-2x" /></button>
         <button className="remove-button" onClick={this.props.removeWholeOrder}><i className="fa fa-remove fa-2x" /></button>
         <p className="total"><strong>Ilość cen do druku: </strong>{total}</p>

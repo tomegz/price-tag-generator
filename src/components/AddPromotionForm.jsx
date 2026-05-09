@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useRef } from "react";
 
 const AddPromotionForm = ({ addPromotion }) => {
+  const percent = useRef(null);
+  const roundDown = useRef(null);
   const handleSubmit = (e) => {
     e.preventDefault();
     const options = {
-      percent: Number(this.percent.value),
-      roundDown: this.roundDown.checked
+      percent: Number(percent.current.value),
+      roundDown: roundDown.current.checked
     }
     addPromotion(options);
   }
@@ -14,10 +16,10 @@ const AddPromotionForm = ({ addPromotion }) => {
       <h4>Oblicz promocję</h4>
       <form className="add-promotion" onSubmit={(e) => handleSubmit(e)}>
         <div className="percentage-input">
-          %<input type="number" min="1" max="30" id="percent" ref={(input) => this.percent = input} required/>
+          %<input type="number" min="1" max="30" id="percent" ref={percent} required/>
         </div>
         <div className="check-div">
-          <input type="checkbox" id="promotion" ref={(input) => this.roundDown = input} defaultChecked />
+          <input type="checkbox" id="promotion" ref={roundDown} defaultChecked />
           <label htmlFor="promotion">Zaokrąglij</label>
         </div>
         <button type="submit">Oblicz promocję</button>

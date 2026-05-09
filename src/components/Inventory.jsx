@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
-import firebase from "firebase";
 
 import Tabs from "./Tabs";
 import Pane from "./Pane";
@@ -8,6 +7,7 @@ import AddItemForm from "./AddItemForm";
 import AddPromotionForm from "./AddPromotionForm";
 import YearDropdown from "./YearDropdown";
 import DiscountStatusDropdown from './DiscountStatusDropdown';
+import { observeAuth, signIn, signOutUser } from "../services/firebase";
 
 import "../styles/Inventory.css";
 
@@ -25,16 +25,21 @@ class Inventory extends Component {
     }
   }
   componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
+    this.unsubscribeAuth = observeAuth((user) => {
       if (user) {
         this.setState({
           uid: user.uid
         });
-        this.props.authorize(this.state.uid);
+        this.props.authorize(user.uid);
       } else {
         this.setState({ uid: null });
       }
     });
+  }
+  componentWillUnmount() {
+    if(this.unsubscribeAuth) {
+      this.unsubscribeAuth();
+    }
   }
   handleChange(e, key) {
     const item = this.props.items[key];
@@ -63,9 +68,9 @@ class Inventory extends Component {
     e.preventDefault();
     const email = this.emailInput.value;
     const password = this.passwordInput.value;
-    firebase.auth().signInWithEmailAndPassword(email, password)
-                   .then(this.authHandler)
-                   .catch((e) => console.log(e.message));
+    signIn(email, password)
+      .then(this.authHandler)
+      .catch((e) => console.log(e.message));
   }
   authHandler(authData) {
     /*base.fetch(this.props.storeId, {
@@ -78,12 +83,12 @@ class Inventory extends Component {
       this.props.authorize(authData.uid);
     })
     .catch((err) => console.log(err.message));*/
-    const uid = authData.uid;
+    const uid = authData.user ? authData.user.uid : authData.uid;
     this.setState({ uid });
     this.props.authorize(uid);
   }
   logout() {
-    firebase.auth().signOut();
+    signOutUser();
     this.props.removeBinding();
   }
   renderLogin() {
@@ -126,6 +131,8 @@ Inventory.propTypes = {
   searchQuery: PropTypes.string.isRequired,
   addItem: PropTypes.func.isRequired,
   updateItem: PropTypes.func.isRequired,
+  addPromotion: PropTypes.func.isRequired,
+  authorize: PropTypes.func.isRequired,
   removeBinding: PropTypes.func.isRequired
 }
 

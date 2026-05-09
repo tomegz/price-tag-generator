@@ -4,6 +4,57 @@ Personal project to automate the most repetitive task in ~~every retail store~~ 
 * React
 * Firebase
 * LocalStorage
+* pnpm
+
+# Local development
+
+Local development uses Firebase emulators so testing does not write to production.
+
+## Docker emulator path
+
+Use this path if you do not want to install Java locally. Docker runs the Firebase Auth and Realtime Database emulators, while Vite runs on your host machine.
+
+```bash
+pnpm install
+pnpm emulators:docker:build
+pnpm emulators:seed
+pnpm emulators:docker
+```
+
+In a second terminal:
+
+```bash
+pnpm dev
+```
+
+Then open:
+
+```text
+http://localhost:5173/price-tag-generator/
+```
+
+Seeded local login:
+
+```text
+owner@example.test
+password123
+```
+
+Emulator UI:
+
+```text
+http://localhost:4000
+```
+
+## Native emulator path
+
+This path requires a local JDK because the Realtime Database emulator runs on Java.
+
+```bash
+pnpm emulators:seed
+pnpm emulators:start
+```
+
 # License
 * This project is licensed under the MIT License.
 

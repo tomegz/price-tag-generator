@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-class Item extends Component {
+class CatalogItem extends Component {
   constructor() {
     super();
     this.state = { count: 1 };
@@ -9,7 +9,7 @@ class Item extends Component {
   }
 
   getNameAndModel = () => {
-    const { details: { name, model } } = this.props;
+    const { item: { name, model } } = this.props;
     return `${name} ${model}`;
   }
 
@@ -19,30 +19,30 @@ class Item extends Component {
   }
 
   handleItemRemove = () => {
-    const { index: id, removeItem } = this.props;
+    const { index: id, removeCatalogItem } = this.props;
     const itemName = this.getNameAndModel();
     const confirmed = window.confirm(`Czy na pewno chcesz usunąć ${itemName} z bazy cen?`);
     if (confirmed) {
-      removeItem(id);
+      removeCatalogItem(id);
     }
   }
 
   render() {
-    const { details, index, addToOrder } = this.props;
-    const isOnDiscount = details.discountStatus === "on";
+    const { item, index, enqueuePrintTags } = this.props;
+    const isOnDiscount = item.discountStatus === "on";
     return (
-      <li className="menu-item">
-        <div className="menu-item-inner">
+      <li className="catalog-menu-item">
+        <div className="catalog-menu-item-inner">
           <div className="desc">
             <div className="desc-header">
               <h5><strong>{this.getNameAndModel()}</strong></h5>
               <i className="remove-icon fa fa-trash" onClick={this.handleItemRemove} />
             </div>
-            <p><i className="fa fa-calendar" /> {`${details.year || "-"}`}</p>
+            <p><i className="fa fa-calendar" /> {`${item.year || "-"}`}</p>
             <p>
               <i className="fa fa-money" />
-              <span className={isOnDiscount ? "price" : ""}> {details.price} </span>
-              {isOnDiscount ? <span>{details.discountPrice}</span> : ""}
+              <span className={isOnDiscount ? "price" : ""}> {item.price} </span>
+              {isOnDiscount ? <span>{item.discountPrice}</span> : ""}
             </p>
           </div>
           <div className="adding-section">
@@ -50,7 +50,7 @@ class Item extends Component {
                                                          min="1"
                                                          max="99"
                                                          onChange={this.handleChange} />
-            <button onClick={() => addToOrder(index, this.state.count)}>
+            <button onClick={() => enqueuePrintTags(index, this.state.count)}>
               <i className="fa fa-plus" aria-hidden="true" />
             </button>
           </div>
@@ -60,11 +60,11 @@ class Item extends Component {
   }
 }
 
-Item.propTypes = {
-  details: PropTypes.object.isRequired,
+CatalogItem.propTypes = {
+  item: PropTypes.object.isRequired,
   index: PropTypes.string.isRequired,
-  addToOrder: PropTypes.func.isRequired,
-  removeItem: PropTypes.func.isRequired,
+  enqueuePrintTags: PropTypes.func.isRequired,
+  removeCatalogItem: PropTypes.func.isRequired,
 }
 
-export default Item;
+export default CatalogItem;

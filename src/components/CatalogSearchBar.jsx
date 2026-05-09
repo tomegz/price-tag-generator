@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const FindItemBar = ({setSearchQuery}) => {
+const CatalogSearchBar = ({setSearchQuery}) => {
   return (
     <input type="text" placeholder="Szukaj produktu" onChange={(e) => setSearchQuery(e.target.value)} />
   );
 };
 
-FindItemBar.propTypes = {
+CatalogSearchBar.propTypes = {
   setSearchQuery: PropTypes.func.isRequired
 }
-export default FindItemBar;
+export default CatalogSearchBar;

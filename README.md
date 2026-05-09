@@ -59,4 +59,4 @@ pnpm emulators:start
 * This project is licensed under the MIT License.
 
 [1]: https://github.com/tomegz/price-tag-generator/blob/master/example.pdf
-[2]: https://github.com/tomegz/price-tag-generator/blob/master/src/styles/Pricetag.css
+[2]: https://github.com/tomegz/price-tag-generator/blob/master/src/styles/PrintTag.css

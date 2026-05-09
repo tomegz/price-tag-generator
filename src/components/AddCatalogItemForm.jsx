@@ -13,7 +13,7 @@ const initialState = {
   discountStatus: DiscountStatuses.OFF,
 }
 
-class AddItemForm extends React.Component {
+class AddCatalogItemForm extends React.Component {
   state = {
     ...initialState,
   };
@@ -27,9 +27,9 @@ class AddItemForm extends React.Component {
   };
 
   createItem = (e) => {
-    const { addItem } = this.props;
+    const { addCatalogItem } = this.props;
 
-    addItem({
+    addCatalogItem({
       name: this.state.name,
       model: this.state.model,
       price: Number(this.state.price),
@@ -72,8 +72,8 @@ class AddItemForm extends React.Component {
   }
 }
 
-AddItemForm.propTypes = {
-  addItem: PropTypes.func.isRequired
+AddCatalogItemForm.propTypes = {
+  addCatalogItem: PropTypes.func.isRequired
 }
 
-export default AddItemForm;
+export default AddCatalogItemForm;

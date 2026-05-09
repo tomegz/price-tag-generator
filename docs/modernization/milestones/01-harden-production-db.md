@@ -42,7 +42,7 @@ Fix the insecure Realtime Database rules while keeping the current production ap
 
 5. Production smoke test.
    - Sign in as the production user.
-   - Load inventory.
+   - Load catalog.
    - Edit a harmless item field and revert it, or create/delete a temporary item.
    - Confirm print queue still works.
    - Confirm Firebase warning is resolved or no longer reports broad authenticated access.

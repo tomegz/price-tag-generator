@@ -15,6 +15,7 @@ import {
   remove,
   set
 } from 'firebase/database';
+import { parseLegacyCatalogItems } from '../domains/catalog/catalog';
 
 const defaultProjectId = 'demo-price-tag-generator';
 
@@ -67,7 +68,7 @@ export function signOutUser() {
 export function subscribeToItems(callback) {
   const itemsRef = ref(database, 'profi-bike/items');
   return onValue(itemsRef, snapshot => {
-    callback(snapshot.val() || {});
+    callback(parseLegacyCatalogItems(snapshot.val()));
   });
 }
 

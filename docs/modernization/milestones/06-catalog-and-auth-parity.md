@@ -1,13 +1,13 @@
-# Milestone 6: Inventory And Auth Parity
+# Milestone 6: Catalog And Auth Parity
 
 ## Objective
 
-Rebuild the existing auth and inventory workflows in the modern app without UI redesign.
+Rebuild the existing auth and catalog workflows in the modern app without UI redesign.
 
 ## Prerequisites
 
 - Milestone 5 service layer works against emulator.
-- Domain model and order tests pass.
+- Domain model and print queue tests pass.
 - Current workflow notes from Milestone 0 are available.
 
 ## Scope Rule
@@ -23,10 +23,10 @@ Preserve behavior and visual intent. Do not introduce a new layout, design syste
    - Access-denied state for authenticated non-owner.
    - No client-side security assumptions.
 
-2. Rebuild inventory listing.
+2. Rebuild catalog listing.
    - Load items from repository.
    - Show item brand/name, model, year, price, discount price, discount status.
-   - Preserve searchable inventory behavior.
+   - Preserve searchable catalog behavior.
    - Handle empty and loading states.
    - Handle permission and network errors.
 
@@ -45,14 +45,14 @@ Preserve behavior and visual intent. Do not introduce a new layout, design syste
 
 5. Add component tests.
    - Login state rendering.
-   - Inventory list rendering.
+   - Catalog list rendering.
    - Search behavior.
    - Add/edit/delete submission behavior with mocked repository.
    - Bulk promotion triggers expected updates.
 
 ## Verification
 
-- Brother's main inventory workflow can be completed against emulator data.
+- Brother's main catalog workflow can be completed against emulator data.
 - Component tests pass.
 - No production database is required for local verification.
 - No intentional UI redesign was introduced.
@@ -69,4 +69,4 @@ Preserve behavior and visual intent. Do not introduce a new layout, design syste
 
 ## Done Criteria
 
-- Auth and inventory behavior reach parity with the old app against emulator data.
+- Auth and catalog behavior reach parity with the old app against emulator data.

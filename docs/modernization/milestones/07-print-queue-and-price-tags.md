@@ -6,8 +6,8 @@ Rebuild the print queue and physical price-tag output with parity to the current
 
 ## Prerequisites
 
-- Milestone 6 inventory workflow works.
-- Order domain logic is tested.
+- Milestone 6 catalog workflow works.
+- Print Queue domain logic is tested.
 - Current print output reference exists, such as `example.pdf` or browser print screenshots.
 
 ## Tasks
@@ -34,7 +34,7 @@ Rebuild the print queue and physical price-tag output with parity to the current
    - Avoid layout shifts caused by dynamic content.
 
 4. Add tests.
-   - Order queue unit tests already pass.
+   - Print Queue unit tests already pass.
    - Component tests for queue rendering.
    - Component tests for tag rendering with discount on/off.
    - Playwright smoke test for print view rendering.

@@ -4,7 +4,7 @@
 
 Modernize the app without disrupting the single production user or rewriting the database unnecessarily.
 
-The target state is a current React app that keeps the existing product behavior: manage bike-shop inventory, apply discounts, build a print queue, and print price tags. Security and local/prod separation are part of the modernization, not a later cleanup.
+The target state is a current React app that keeps the existing product behavior: manage the bike-shop catalog, apply discounts, build a print queue, and print price tags. Security and local/prod separation are part of the modernization, not a later cleanup.
 
 ## Decisions
 
@@ -55,13 +55,13 @@ optional shared dev:
 
 | Milestone | Status | File | Purpose |
 | --- | --- | --- | --- |
-| 0 | Deferred | [Safety Baseline](milestones/00-safety-baseline.md) | Inventory current state and protect prod data before changes. |
+| 0 | Deferred | [Safety Baseline](milestones/00-safety-baseline.md) | Catalog current state and protect prod data before changes. |
 | 1 | Deferred | [Harden Production DB](milestones/01-harden-production-db.md) | Fix insecure rules while preserving current app compatibility. |
 | 2 | Done | [Firebase Emulator Local Development](milestones/02-firebase-emulator-local-development.md) | Make local development emulator-first and prod-safe. |
 | 3 | Done | [Modern App Scaffold](milestones/03-modern-app-scaffold.md) | Replace CRA/React 15 shell with Vite/React/TypeScript/pnpm. |
-| 4 | Planned | [Domain Model And Tests](milestones/04-domain-model-and-tests.md) | Extract and test pricing, order, and storage behavior. |
+| 4 | Done | [Domain Model And Tests](milestones/04-domain-model-and-tests.md) | Extract and test catalog, pricing, print queue, print tag rendering, and storage behavior. |
 | 5 | Planned | [Firebase Modular Service Layer](milestones/05-firebase-modular-service-layer.md) | Isolate Firebase access behind typed services. |
-| 6 | Planned | [Inventory And Auth Parity](milestones/06-inventory-and-auth-parity.md) | Rebuild the existing inventory/auth workflows without redesign. |
+| 6 | Planned | [Catalog And Auth Parity](milestones/06-catalog-and-auth-parity.md) | Rebuild the existing catalog/auth workflows without redesign. |
 | 7 | Planned | [Print Queue And Price Tags](milestones/07-print-queue-and-price-tags.md) | Rebuild printing and verify physical-layout behavior. |
 | 8 | Planned | [Production Cutover](milestones/08-production-cutover.md) | Deploy the modern app safely against the hardened prod DB. |
 | 9 | Planned | [Legacy Cleanup](milestones/09-legacy-cleanup.md) | Remove transitional code and obsolete tooling after cutover. |
@@ -90,6 +90,15 @@ Completed on `develop`.
 - Removed `re-base`, Firebase 4, CRA service worker registration, and old transition dependency usage.
 - Preserved the current UI and workflows instead of redesigning the app.
 
+### Milestone 4
+
+Completed on `develop`.
+
+- Established Catalog, Pricing, Print Queue, Print Tag Rendering, and Storage as explicit domain modules.
+- Renamed active UI components and props to use Catalog, Print Queue, and Print Tag vocabulary.
+- Added unit tests for legacy catalog parsing/filtering, discount calculation, print queue behavior, print queue storage, and print tag render expansion.
+- Kept the production Realtime Database field names unchanged.
+
 ## Execution Principles
 
 - Reduce production risk first.
@@ -108,6 +117,6 @@ The modernization is complete when:
 - Local development runs against Firebase emulators by default.
 - The app runs on a modern Node version using pnpm.
 - The app is built with React 19, TypeScript, Vite, and Firebase modular SDK.
-- Core pricing, order, Firebase rules, and print behavior have tests.
+- Core catalog, pricing, print queue, Firebase rules, and print behavior have tests.
 - The production user can complete the same workflows as before.
 - Old CRA/React 15/Firebase 4 dependencies are gone.

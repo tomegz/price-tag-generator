@@ -37,7 +37,7 @@
     color: white;
 }
 
-.pricetag-list {
+.print-tag-rendering {
     display: none;
 }
 
@@ -56,7 +56,7 @@
 
 @media print {
 
-    html, body, .pricetag-list {
+    html, body, .print-tag-rendering {
         width: 210mm;
         height: 297mm;
         display: initial;

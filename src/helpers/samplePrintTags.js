@@ -1,4 +1,4 @@
-const samplePricetags = {
+const samplePrintTags = {
   item1: {
     name: "Kross",
     model: "Trans Siberian",
@@ -85,4 +85,4 @@ const samplePricetags = {
   }
 };
 
-export default samplePricetags;
+export default samplePrintTags;

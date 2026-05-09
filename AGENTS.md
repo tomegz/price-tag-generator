@@ -2,7 +2,7 @@
 
 ## Project Summary
 
-This is a small React/Firebase app used by one production user to manage bike-shop inventory and print price tags. The current production app is old but live: React 15, Create React App 1, Firebase 4, Realtime Database, and `re-base`.
+This is a small React/Firebase app used by one production user to manage a bike-shop catalog and print price tags. The current production app is old but live: React 15, Create React App 1, Firebase 4, Realtime Database, and `re-base`.
 
 The modernization goal is to keep the product focused while moving it to a current, maintainable stack:
 
@@ -15,7 +15,7 @@ The modernization goal is to keep the product focused while moving it to a curre
 - Vitest, React Testing Library, and Playwright
 - Firebase Realtime Database retained for now
 
-Do not expand this into a larger product unless the user explicitly asks. The core workflow is inventory search/editing, print queue management, discounts, and reliable price-tag printing.
+Do not expand this into a larger product unless the user explicitly asks. The core workflow is catalog search/editing, print queue management, discounts, and reliable price-tag printing.
 
 UI/UX redesign is out of scope for the modernization unless the user explicitly reopens it. Preserve the existing workflows and visual intent first; only make UI changes required by the framework migration, accessibility correctness, or bug fixes.
 
@@ -49,7 +49,7 @@ Keep Realtime Database for this modernization. Do not migrate to Firestore as pa
 Reasoning:
 
 - The data model is simple and small.
-- The app already depends on realtime inventory syncing.
+- The app already depends on realtime catalog syncing.
 - The urgent problem is insecure rules and shared prod/local usage, not database capability.
 - Migrating the database and modernizing the frontend at the same time would add risk without enough benefit.
 
@@ -172,7 +172,7 @@ When implementing emulator support, make it difficult to accidentally write to p
 
 Use pnpm for the modernized app. Pin the package manager through the `packageManager` field and commit `pnpm-lock.yaml`. Do not keep both `package-lock.json` and `pnpm-lock.yaml` after the package-manager migration is complete.
 
-Milestones 02 and 03 are complete on `develop`. The current scaffold intentionally keeps the legacy UI/component structure mostly intact and migrates it to the modern runtime instead of redesigning or reorganizing the whole app.
+Milestones 02, 03, and 04 are complete on `develop`. The current scaffold intentionally preserves the visual UI while using current domain vocabulary in code: Catalog, Print Queue, Print Tag Rendering, Pricing, and Storage.
 
 ## Modernization Implementation Notes
 
@@ -182,8 +182,9 @@ Prefer this architecture:
 src/
   app/
   features/
-    inventory/
-    order/
+    catalog/
+    printQueue/
+    printTagRendering/
     pricing/
     print/
   services/
@@ -194,7 +195,7 @@ src/
 Core model direction:
 
 ```ts
-type InventoryItem = {
+type CatalogItem = {
   id: string;
   brand: string;
   model: string;
@@ -216,8 +217,8 @@ Prices in current data appear to be integer display amounts, not cents in a form
 At minimum, add tests for:
 
 - Discount calculation
-- Order add/remove/clear behavior
-- Inventory form validation
+- Print Queue add/remove/clear behavior
+- Catalog form validation
 - Firebase rules access checks
 - Print queue and print layout rendering
 
@@ -237,7 +238,7 @@ The current code has known risks:
 - Local and production currently share the same database.
 - The only test is a render smoke test.
 - `AddPromotionForm` uses `this` inside a function component.
-- `Inventory` reads `this.state.uid` immediately after `setState`.
+- The previous catalog auth flow used to read `this.state.uid` immediately after `setState`.
 
 ## Git And Data Safety
 

@@ -3,18 +3,18 @@ import PropTypes from "prop-types";
 
 import Tabs from "./Tabs";
 import Pane from "./Pane";
-import AddItemForm from "./AddItemForm";
+import AddCatalogItemForm from "./AddCatalogItemForm";
 import AddPromotionForm from "./AddPromotionForm";
 import YearDropdown from "./YearDropdown";
 import DiscountStatusDropdown from './DiscountStatusDropdown';
 import { observeAuth, signIn, signOutUser } from "../services/firebase";
 
-import "../styles/Inventory.css";
+import "../styles/Catalog.css";
 
-class Inventory extends Component {
+class Catalog extends Component {
   constructor() {
     super();
-    this.renderItem = this.renderItem.bind(this);
+    this.renderCatalogItem = this.renderCatalogItem.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
     this.authenticate = this.authenticate.bind(this);
     this.authHandler = this.authHandler.bind(this);
@@ -42,17 +42,17 @@ class Inventory extends Component {
     }
   }
   handleChange(e, key) {
-    const item = this.props.items[key];
+    const item = this.props.catalogItems[key];
     const name = e.target.name;
     const value = e.target.value;
     const updatedItem = {
       ...item,
       [name]: ["price", "discountPrice"].includes(name) ? Number(value) : value
     }
-    this.props.updateItem(key, updatedItem);
+    this.props.updateCatalogItem(key, updatedItem);
   }
-  renderItem(key) {
-    const item = this.props.items[key];
+  renderCatalogItem(key) {
+    const item = this.props.catalogItems[key];
     return (
       <div className="item-edit" key={key}>
         <input type="text" name="name" value={item.name} placeholder="Marka produktu" onChange={(e) => this.handleChange(e, key)}/>
@@ -103,37 +103,37 @@ class Inventory extends Component {
   }
   render() {
     const logout = <button className="btn-logout" onClick={() => this.logout()}><i className="fa fa-sign-out fa-3x" /></button>;
-    const { itemsToRender, addItem, addPromotion } = this.props;
+    const { catalogItemIds, addCatalogItem, addPromotion } = this.props;
     if(!this.state.uid) {
-      return <div className="inventory">{this.renderLogin()}</div>;
+      return <div className="catalog">{this.renderLogin()}</div>;
     }
     return (
-      <div className="inventory">
+      <div className="catalog">
         {logout}
         <Tabs>
           <Pane label="Dodaj przedmiot">
-            <AddItemForm addItem={addItem} />
+            <AddCatalogItemForm addCatalogItem={addCatalogItem} />
           </Pane>
           <Pane label="Oblicz promocję">
             <AddPromotionForm addPromotion={addPromotion}/>
           </Pane>
         </Tabs>
         <h4>Edytuj ceny</h4>
-        {itemsToRender.map(this.renderItem)}
+        {catalogItemIds.map(this.renderCatalogItem)}
       </div>
     );
   }
 }
 
-Inventory.propTypes = {
-  items: PropTypes.object.isRequired,
-  itemsToRender: PropTypes.array.isRequired,
+Catalog.propTypes = {
+  catalogItems: PropTypes.object.isRequired,
+  catalogItemIds: PropTypes.array.isRequired,
   searchQuery: PropTypes.string.isRequired,
-  addItem: PropTypes.func.isRequired,
-  updateItem: PropTypes.func.isRequired,
+  addCatalogItem: PropTypes.func.isRequired,
+  updateCatalogItem: PropTypes.func.isRequired,
   addPromotion: PropTypes.func.isRequired,
   authorize: PropTypes.func.isRequired,
   removeBinding: PropTypes.func.isRequired
 }
 
-export default Inventory;
+export default Catalog;

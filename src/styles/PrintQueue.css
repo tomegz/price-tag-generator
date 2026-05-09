@@ -1,16 +1,16 @@
-.order {
+.print-queue {
 	background: #ccc;
 	flex: 1;
 	overflow-y: scroll;
 }
-.order-list {
+.print-queue-list {
 	list-style: none;
 	text-align: left;
 }
-.order-list li > span {
+.print-queue-list li > span {
   position: relative;
 }
-.order-list li button {
+.print-queue-list li button {
   font-size: 22px;
   border: 0;
   background: transparent;
@@ -19,7 +19,7 @@
   padding: 0;
   cursor: pointer;
 }
-.order-list li:hover button {
+.print-queue-list li:hover button {
   display: inline;
   background: #000;
   color: #fff;
@@ -43,24 +43,24 @@ button.print-button:hover, button.remove-button:hover {
 
 /* ANIMATION CSS */
 
-.order-enter {
+.print-queue-enter {
   transition: all 0.5s;
   transform: translateX(-120%);
   max-height: 0;
 }
 
-.order-enter.order-enter-active {
+.print-queue-enter.print-queue-enter-active {
   max-height: 50px;
   transform: translateX(0);
 }
 
-.order-leave {
+.print-queue-leave {
   transition: all 0.5s;
   transform: translateX(0);
   max-height: 50px;
 }
 
-.order-leave.order-leave-active {
+.print-queue-leave.print-queue-leave-active {
   transform: translateX(120%);
   max-height: 0;
   padding: 0;

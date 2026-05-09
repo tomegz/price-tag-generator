@@ -52,7 +52,7 @@ Replace the obsolete Create React App shell with a modern Vite, React, TypeScrip
    - Build a minimal `App.tsx`.
    - Keep the layout minimal and parity-focused.
    - Do not redesign screens.
-   - Add feature folders: `inventory`, `order`, `pricing`, `print`.
+   - Add feature folders: `catalog`, `printQueue`, `pricing`, `printTagRendering`.
    - Add `services/firebase`.
 
 5. Remove obsolete dependencies.

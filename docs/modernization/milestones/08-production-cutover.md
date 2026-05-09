@@ -40,7 +40,7 @@ Deploy the modern app against the existing hardened production Realtime Database
 
 5. Production smoke test.
    - Sign in as owner.
-   - Load inventory.
+   - Load catalog.
    - Search.
    - Add item to queue.
    - Preview/print sample.

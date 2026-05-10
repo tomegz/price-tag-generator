@@ -5,9 +5,11 @@ services:
       dockerfile: docker/firebase-emulators.Dockerfile
     working_dir: /workspace
     ports:
-      - "4000:4000"
-      - "9000:9000"
-      - "9099:9099"
+      - "${FIREBASE_EMULATOR_UI_HOST_PORT:-4000}:4000"
+      - "${FIREBASE_DATABASE_EMULATOR_HOST_PORT:-9000}:9000"
+      - "${FIREBASE_AUTH_EMULATOR_HOST_PORT:-9099}:9099"
+    environment:
+      FIREBASE_EMULATOR_EXPORT_DIR: ${FIREBASE_EMULATOR_EXPORT_DIR:-emulator-data}
     volumes:
       - ./:/workspace
       - firebase-emulator-cache:/root/.cache/firebase/emulators

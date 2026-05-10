@@ -13,7 +13,7 @@ const PrintTag = ({ item }: PrintTagProps) => {
   const discountPrice = onDiscount ? <p className="after-discount">{item.discountPrice},-</p> : "";
   const smallHeader = name.length > 7 ? "smaller" : "";
   return (
-      <div>
+      <div data-testid="print-tag">
         <div className="half-tag">
           <div className="text-content">
             <h3 className={smallHeader}>{name}</h3>

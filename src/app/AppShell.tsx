@@ -8,7 +8,7 @@ type AppShellProps = {
 const AppShell = ({ children, printTags }: AppShellProps) => (
   <div className="redesign-app">
     {children}
-    <div className="print-tag-rendering">
+    <div className="print-tag-rendering" data-testid="print-tag-rendering">
       {printTags}
     </div>
   </div>

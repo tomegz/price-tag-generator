@@ -10,7 +10,9 @@ const seedUid = process.env.SEED_AUTH_USER_UID || 'local-owner';
 const exportDir = process.env.FIREBASE_EMULATOR_EXPORT_DIR || 'emulator-data';
 
 async function readSeedData() {
-  const candidates = ['pricetag-generator-export.json', 'scripts/seed-data.sample.json'];
+  const candidates = process.env.FIREBASE_SEED_DATA_FILE
+    ? [process.env.FIREBASE_SEED_DATA_FILE]
+    : ['pricetag-generator-export.json', 'scripts/seed-data.sample.json'];
 
   for (const candidate of candidates) {
     try {

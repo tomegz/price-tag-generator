@@ -1,0 +1,41 @@
+{
+  "profi-bike": {
+    "brands": ["Cannondale", "Giant", "Kross", "Trek"],
+    "items": {
+      "item-e2e-bulk": {
+        "discountPrice": 0,
+        "discountStatus": "off",
+        "model": "Bulk Target",
+        "name": "Kross",
+        "price": 1000,
+        "year": 2026
+      },
+      "item-e2e-queue": {
+        "discountPrice": 0,
+        "discountStatus": "off",
+        "model": "Queue Runner",
+        "name": "Giant",
+        "price": 2500,
+        "year": 2025
+      },
+      "item-e2e-sort-expensive": {
+        "discountPrice": 0,
+        "discountStatus": "off",
+        "model": "Sort Expensive",
+        "name": "Trek",
+        "price": 5000,
+        "year": 2024
+      },
+      "item-e2e-promo": {
+        "discountPrice": 3200,
+        "discountStatus": "on",
+        "model": "Promo Trail",
+        "name": "Cannondale",
+        "price": 4000,
+        "year": 2023
+      }
+    },
+    "owners": [],
+    "ownerUids": {}
+  }
+}

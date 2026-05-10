@@ -5,6 +5,9 @@
 
 # testing
 /coverage
+/playwright/.auth/
+/playwright-report/
+/test-results/
 
 # production
 /build
@@ -21,6 +24,7 @@
 /pricetag-generator-export.json
 /firebase-export/
 /emulator-data/
+/emulator-data-e2e/
 /.firebase/
 firebase-debug.log*
 database-debug.log*

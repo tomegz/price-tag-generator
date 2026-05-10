@@ -16,6 +16,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium",
     "test:watch": "vitest",
     "test:rules": "firebase emulators:exec --only database \"vitest run --config vitest.rules.config.ts\"",
     "typecheck": "tsc -b",

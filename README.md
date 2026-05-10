@@ -55,6 +55,22 @@ pnpm emulators:seed
 pnpm emulators:start
 ```
 
+# End-to-end tests
+
+The Playwright suite owns a separate Docker emulator instance and deterministic seed data.
+
+Install the Chromium browser once:
+
+```bash
+pnpm test:e2e:install
+```
+
+Run the suite:
+
+```bash
+pnpm test:e2e
+```
+
 # License
 * This project is licensed under the MIT License.
 

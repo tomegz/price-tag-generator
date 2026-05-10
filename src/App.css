@@ -609,7 +609,14 @@
 .admin-row {
   display: grid;
   gap: 12px;
-  grid-template-columns: 1.4fr 1fr 80px 1fr 1fr 140px;
+  grid-template-columns:
+    minmax(180px, 1.4fr)
+    minmax(150px, 1fr)
+    72px
+    minmax(96px, 108px)
+    minmax(104px, 116px)
+    190px;
+  min-width: 920px;
 }
 
 .admin-table__header {

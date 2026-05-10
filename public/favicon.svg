@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Profi Bike">
+  <rect width="64" height="64" rx="14" fill="#17171a" />
+  <rect x="0" y="58" width="64" height="6" fill="#ff3b30" />
+  <path
+    fill="#ffffff"
+    d="M11 14h7v36h-7V14Zm7 0h15v7H18v-7Zm0 17h15v7H18v-7Zm11-10h7v10h-7V21Z"
+  />
+  <path
+    fill="#ffffff"
+    d="M36 14h7v36h-7V14Zm7 0h11v7H43v-7Zm0 15h11v7H43v-7Zm0 14h11v7H43v-7Zm11-22h7v8h-7v-8Zm0 15h7v7h-7v-7Z"
+  />
+</svg>

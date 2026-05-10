@@ -2,6 +2,7 @@ import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { AuthUser } from "../../app/authUser";
 import { printQueueStorageKey, type StorageLike } from "../../domains/storage/printQueueStorage";
+import { createTestObservability } from "../../test/observability";
 import { usePrintQueue } from "./usePrintQueue";
 
 type TestStorage = StorageLike & {
@@ -30,8 +31,9 @@ describe("usePrintQueue", () => {
     const storage = createStorage({
       [printQueueStorageKey]: JSON.stringify({ item1: 2 })
     });
+    const observability = createTestObservability();
     const { result, rerender } = renderHook(
-      ({ currentUser }) => usePrintQueue(currentUser, storage),
+      ({ currentUser }) => usePrintQueue(currentUser, storage, observability),
       { initialProps: { currentUser: null as AuthUser | null } }
     );
 
@@ -44,6 +46,11 @@ describe("usePrintQueue", () => {
 
     expect(result.current.printQueue).toEqual({ item1: 2, item2: 1 });
     expect(storage.setItem).not.toHaveBeenCalled();
+    expect(observability.trackEvent).toHaveBeenCalledWith("print_queue_add", {
+      quantity: 1,
+      queue_item_count: 2,
+      total_tag_count: 3
+    });
 
     rerender({ currentUser: user });
 
@@ -55,13 +62,19 @@ describe("usePrintQueue", () => {
       printQueueStorageKey,
       JSON.stringify({ item1: 3, item2: 1 })
     );
+    expect(observability.trackEvent).toHaveBeenCalledWith("print_queue_quantity_change", {
+      quantity: 3,
+      queue_item_count: 2,
+      total_tag_count: 4
+    });
   });
 
   it("removes and clears queued items through the same storage adapter", () => {
     const storage = createStorage({
       [printQueueStorageKey]: JSON.stringify({ item1: 2, item2: 4 })
     });
-    const { result } = renderHook(() => usePrintQueue(user, storage));
+    const observability = createTestObservability();
+    const { result } = renderHook(() => usePrintQueue(user, storage, observability));
 
     act(() => {
       result.current.removeFromPrintQueue("item1");
@@ -72,6 +85,10 @@ describe("usePrintQueue", () => {
       printQueueStorageKey,
       JSON.stringify({ item2: 4 })
     );
+    expect(observability.trackEvent).toHaveBeenCalledWith("print_queue_remove", {
+      queue_item_count: 1,
+      total_tag_count: 4
+    });
 
     act(() => {
       result.current.clearPrintQueue();
@@ -79,5 +96,9 @@ describe("usePrintQueue", () => {
 
     expect(result.current.printQueue).toEqual({});
     expect(storage.setItem).toHaveBeenLastCalledWith(printQueueStorageKey, "{}");
+    expect(observability.trackEvent).toHaveBeenCalledWith("print_queue_clear", {
+      queue_item_count: 1,
+      total_tag_count: 4
+    });
   });
 });

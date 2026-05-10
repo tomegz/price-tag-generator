@@ -2,9 +2,9 @@
 
 ## Project Summary
 
-This is a small React/Firebase app used by one production user to manage a bike-shop catalog and print price tags. The live production app may still be the old GitHub Pages deployment, but the `develop` branch is the active modernization branch.
+This is a small React/Firebase app used by one production user to manage a bike-shop catalog and print price tags. The live production app may still be the old GitHub Pages deployment, but the current `develop` work is the active modernized app.
 
-The modernization goal is to keep the product focused while moving it to a current, maintainable stack:
+Keep the product focused. The current stack is:
 
 - React 19
 - TypeScript in strict mode
@@ -14,6 +14,7 @@ The modernization goal is to keep the product focused while moving it to a curre
 - Firebase Emulator Suite for local development
 - Vitest, React Testing Library, and Playwright
 - Firebase Realtime Database retained for now
+- Firebase Analytics and Sentry observability
 
 Current `develop` source standards:
 
@@ -21,6 +22,7 @@ Current `develop` source standards:
 - React components are function components using hooks; do not add class components.
 - Runtime `prop-types` has been removed; use TypeScript props, state, event, and ref types.
 - Keep component prop types colocated unless a type is shared across domains or services.
+- Do not import Firebase, Firebase Analytics, or Sentry SDK modules directly from feature components. Use the service layers.
 
 Do not expand this into a larger product unless the user explicitly asks. The core workflow is catalog search/editing, print queue management, discounts, and reliable price-tag printing.
 
@@ -36,13 +38,14 @@ Current Realtime Database URL:
 https://pricetag-generator.firebaseio.com
 ```
 
-Current database shape:
+Current Realtime Database shape:
 
 ```text
 profi-bike/
   brands/
   items/
   owners/
+  ownerUids/
 ```
 
 The exported production data is in `pricetag-generator-export.json` when present locally. It contains one store, 9 brands, 649 items, and 4 owner UIDs. Treat this as production data. Do not commit it unless the user explicitly asks.
@@ -57,7 +60,7 @@ Reasoning:
 
 - The data model is simple and small.
 - The app already depends on realtime catalog syncing.
-- The urgent problem is insecure rules and shared prod/local usage, not database capability.
+- The main database risk is production rules/cutover verification and shared prod/local usage, not database capability.
 - Migrating the database and modernizing the frontend at the same time would add risk without enough benefit.
 
 Use this target environment model:
@@ -78,23 +81,9 @@ optional shared dev/testing:
 
 ## Security Direction
 
-Current production rules are insecure because every authenticated user can read and write the whole database. Fix that before or during modernization.
+Rules must deny by default, then allow only known owners to access `profi-bike`. The repository rules currently use `ownerUids` as the UID-keyed authorization map and keep the legacy `owners` node read-only for authorized owners.
 
-Rules should deny by default, then allow only known owners to access `profi-bike`.
-
-Prefer changing `owners` from an array to a UID-keyed map:
-
-```json
-{
-  "profi-bike": {
-    "owners": {
-      "BROTHER_UID": true
-    }
-  }
-}
-```
-
-Target Realtime Database rules should roughly follow this shape:
+Realtime Database rules should follow this shape:
 
 ```json
 {
@@ -103,12 +92,12 @@ Target Realtime Database rules should roughly follow this shape:
     ".write": false,
     "profi-bike": {
       "brands": {
-        ".read": "auth != null && root.child('profi-bike/owners/' + auth.uid).val() === true",
-        ".write": "auth != null && root.child('profi-bike/owners/' + auth.uid).val() === true"
+        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
+        ".write": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true"
       },
       "items": {
-        ".read": "auth != null && root.child('profi-bike/owners/' + auth.uid).val() === true",
-        ".write": "auth != null && root.child('profi-bike/owners/' + auth.uid).val() === true",
+        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
+        ".write": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
         "$itemId": {
           ".validate": "newData.hasChildren(['name', 'model', 'price', 'discountPrice', 'discountStatus', 'year'])",
           "name": { ".validate": "newData.isString() && newData.val().length > 0" },
@@ -121,7 +110,11 @@ Target Realtime Database rules should roughly follow this shape:
         }
       },
       "owners": {
-        ".read": "auth != null && root.child('profi-bike/owners/' + auth.uid).val() === true",
+        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
+        ".write": false
+      },
+      "ownerUids": {
+        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
         ".write": false
       }
     }
@@ -171,15 +164,26 @@ Expected Vite env naming:
 VITE_FIREBASE_API_KEY
 VITE_FIREBASE_AUTH_DOMAIN
 VITE_FIREBASE_DATABASE_URL
+VITE_FIREBASE_MEASUREMENT_ID
 VITE_FIREBASE_PROJECT_ID
 VITE_USE_FIREBASE_EMULATORS
+VITE_FIREBASE_AUTH_EMULATOR_URL
+VITE_FIREBASE_DATABASE_EMULATOR_HOST
+VITE_FIREBASE_DATABASE_EMULATOR_PORT
+VITE_ENABLE_ANALYTICS
+VITE_SENTRY_DSN
+VITE_SENTRY_ENVIRONMENT
+VITE_SENTRY_RELEASE
+VITE_SENTRY_TRACES_SAMPLE_RATE
+VITE_SENTRY_REPLAY_SESSION_SAMPLE_RATE
+VITE_SENTRY_REPLAY_ERROR_SAMPLE_RATE
 ```
 
 When implementing emulator support, make it difficult to accidentally write to prod from local development.
 
 Use pnpm for the modernized app. Pin the package manager through the `packageManager` field and commit `pnpm-lock.yaml`. Do not keep both `package-lock.json` and `pnpm-lock.yaml` after the package-manager migration is complete.
 
-Milestones 02, 03, 04, and 05 are complete on `develop`. The redesign milestones `R0` through `R8` are also complete on `develop`. Legacy parity-only Milestones 06 and 07 are superseded by the redesign track.
+Milestones 02, 03, 04, and 05 are complete on `develop`. The redesign milestones `R0` through `R8` are complete. Legacy parity-only Milestones 06 and 07 are superseded by the redesign track. Playwright e2e coverage and the observability service layer are now part of the modern app.
 
 ## Modernization Implementation Notes
 
@@ -210,16 +214,22 @@ src/
       authService.ts
       catalogRepository.ts
       config.ts
+    observability/
+      config.ts
+      browserObservability.ts
+      singleton.ts
 ```
 
-React components must not import Firebase SDK modules directly. Use `authService` for authentication and `catalogRepository` for Realtime Database access.
+React components must not import Firebase SDK modules directly. Use `authService` for authentication and `catalogRepository` for Realtime Database access. Use `src/services/observability` for Firebase Analytics and Sentry; feature code should receive or import the typed facade rather than importing SDKs.
 
-Feature components should consume domain/service data through typed view models. For the redesign:
+Feature components should consume domain/service data through typed view models. For the current redesign:
 
 - User initials are derived from the Firebase user identity.
 - Brand filters are data-backed from the DB `brands` node plus item-derived fallback brands.
 - Design-system primitives live in `src/design-system/`; screen/domain components live in `src/features/`.
 - Keep print tag rendering separate from app chrome. The physical output still uses `PrintTag` and `PrintTag.css`.
+- Print queue state is persisted through the storage domain, not directly through ad hoc localStorage calls outside the print queue hook.
+- Catalog writes go through the repository layer and rely on realtime subscriptions to refresh catalog state.
 
 React implementation rules:
 
@@ -229,7 +239,20 @@ React implementation rules:
 - Type refs explicitly, for example `useRef<HTMLInputElement>(null)` or `useRef<HTMLDivElement>(null)`.
 - Use domain types such as `LegacyCatalogItem`, `CatalogItemsById`, `PrintQueue`, and `DiscountOptions` rather than ad hoc object shapes.
 
-Core model direction:
+Current persisted catalog data still uses the legacy database shape:
+
+```ts
+type LegacyCatalogItem = {
+  name: string;
+  model: string;
+  price: number;
+  discountPrice: number;
+  discountStatus: "on" | "off";
+  year: number | string;
+};
+```
+
+Future normalized model direction:
 
 ```ts
 type CatalogItem = {
@@ -249,6 +272,20 @@ The current production data uses fields named `name`, `model`, `price`, `discoun
 
 Prices in current data appear to be integer display amounts, not cents in a formally named field. Be careful when renaming to `priceCents`; confirm the intended display semantics first.
 
+## Observability
+
+Production observability uses Firebase Analytics for workflow events and Sentry for error tracking, tracing, source maps, and limited replay.
+
+Rules:
+
+- Keep telemetry free-tier friendly. Do not add paid Sentry features, BigQuery export, logs, profiling, attachments, or high replay sampling unless explicitly requested.
+- Use Firebase UID only for identity across Firebase Analytics and Sentry. Do not send email.
+- Do not send product names, model names, prices, search text, passwords, full catalog items, or catalog payloads to telemetry.
+- Keep `sendDefaultPii: false`; replay should mask text, inputs, and media and should not capture request or response bodies.
+- Telemetry must be disabled for tests and local emulator development by default.
+- Sentry source-map upload is controlled by build-time `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, and `SENTRY_PROJECT`; never commit those values.
+- `pnpm-workspace.yaml` allows the `@sentry/cli` postinstall so source-map upload can work in environments that install dependencies from scratch.
+
 ## Testing Expectations
 
 At minimum, add tests for:
@@ -258,6 +295,7 @@ At minimum, add tests for:
 - Catalog form validation
 - Firebase rules access checks
 - Print queue and print layout rendering
+- Observability event names, privacy scrubbing, UID-only identity, and disabled local/test defaults when touching telemetry
 
 Rules and repository integration tests live under `tests/` and use `vitest.rules.config.ts`. With the Docker Firebase emulator running, use:
 
@@ -265,7 +303,21 @@ Rules and repository integration tests live under `tests/` and use `vitest.rules
 pnpm exec vitest run --config vitest.rules.config.ts
 ```
 
-Use Playwright for the print workflow once the modern app runs locally.
+Use Playwright for browser workflow coverage when changing user-facing flows.
+
+The Playwright suite lives under `tests/e2e`, owns a separate Docker emulator lifecycle, runs Vite on port `5174`, and uses `.env.e2e`.
+
+Install Chromium once with:
+
+```sh
+pnpm test:e2e:install
+```
+
+Run e2e tests with:
+
+```sh
+pnpm test:e2e
+```
 
 Before handing off code changes, run:
 
@@ -276,7 +328,7 @@ pnpm lint
 pnpm build
 ```
 
-Run `pnpm audit --prod` after dependency changes. Run the rules/repository test with the Docker emulator when touching Firebase rules or repository behavior.
+Run `pnpm audit --prod` after dependency changes. Run `pnpm test:e2e` when changing user workflows, print queue behavior, auth flow, catalog admin behavior, or Playwright-owned selectors. Run the rules/repository test with the Docker emulator when touching Firebase rules or repository behavior.
 
 ## Known Legacy Issues
 
@@ -291,10 +343,10 @@ The legacy code had known risks that have mostly been addressed on `develop`:
 
 Current known risks on `develop`:
 
-- Production database hardening/cutover is still deferred.
-- Catalog edit writes are still optimistic and should be handled as a separate behavior fix.
-- UI workflow test coverage is still thin compared to domain and Firebase repository coverage.
-- The print workflow will be redesigned, so do not implement legacy print parity work from Milestone 07 as written.
+- Production cutover may still need verification against the live GitHub Pages/Firebase deployment.
+- Production Realtime Database rules may need a deliberate deploy and owner UID data check even though the repository rules are hardened.
+- Production observability requires real Firebase measurement ID, Sentry DSN, Sentry project setup, and deploy-time source-map credentials.
+- UI workflow coverage exists in Playwright, but broaden it when changing core print, catalog admin, auth, or bulk promotion flows.
 
 ## Git And Data Safety
 

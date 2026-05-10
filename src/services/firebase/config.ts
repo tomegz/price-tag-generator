@@ -7,6 +7,7 @@ type FirebaseEnv = {
   VITE_FIREBASE_API_KEY?: string;
   VITE_FIREBASE_AUTH_DOMAIN?: string;
   VITE_FIREBASE_DATABASE_URL?: string;
+  VITE_FIREBASE_MEASUREMENT_ID?: string;
   VITE_FIREBASE_PROJECT_ID?: string;
   VITE_USE_FIREBASE_EMULATORS?: string;
   VITE_FIREBASE_AUTH_EMULATOR_URL?: string;
@@ -15,7 +16,8 @@ type FirebaseEnv = {
 };
 
 export type FirebaseRuntimeConfig = {
-  firebaseOptions: Required<Pick<FirebaseOptions, 'apiKey' | 'authDomain' | 'databaseURL' | 'projectId'>>;
+  firebaseOptions: Required<Pick<FirebaseOptions, 'apiKey' | 'authDomain' | 'databaseURL' | 'projectId'>> &
+    Pick<FirebaseOptions, 'measurementId'>;
   useEmulators: boolean;
   authEmulatorUrl: string;
   databaseEmulatorHost: string;
@@ -43,10 +45,16 @@ export function readFirebaseRuntimeConfig(
     databaseURL:
       env.VITE_FIREBASE_DATABASE_URL ||
       (allowDemoFallbacks ? `https://${defaultProjectId}-default-rtdb.firebaseio.com` : ''),
+    measurementId: env.VITE_FIREBASE_MEASUREMENT_ID || undefined,
     projectId: env.VITE_FIREBASE_PROJECT_ID || (allowDemoFallbacks ? defaultProjectId : '')
   };
 
-  const missing = Object.entries(firebaseOptions)
+  const missing = Object.entries({
+    apiKey: firebaseOptions.apiKey,
+    authDomain: firebaseOptions.authDomain,
+    databaseURL: firebaseOptions.databaseURL,
+    projectId: firebaseOptions.projectId
+  })
     .filter(([, value]) => !value)
     .map(([key]) => envNames[key as keyof typeof envNames]);
 

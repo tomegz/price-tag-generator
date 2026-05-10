@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import type { AuthUser } from "../../app/authUser";
 import type { AuthService } from "../../services/firebase";
+import {
+  observability as defaultObservability,
+  type ObservabilityService
+} from "../../services/observability";
 
 export type AuthSession = {
   authError: string;
@@ -10,7 +14,10 @@ export type AuthSession = {
   logout(): Promise<void>;
 };
 
-export function useAuthSession(service: AuthService): AuthSession {
+export function useAuthSession(
+  service: AuthService,
+  observability: ObservabilityService = defaultObservability
+): AuthSession {
   const [authError, setAuthError] = useState("");
   const [authLoading, setAuthLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
@@ -20,24 +27,34 @@ export function useAuthSession(service: AuthService): AuthSession {
       setCurrentUser(user);
       setAuthLoading(false);
       setAuthError("");
+      if (user) {
+        observability.identifyUser({ uid: user.uid });
+      } else {
+        observability.clearUser();
+      }
     });
 
     return unsubscribe;
-  }, [service]);
+  }, [observability, service]);
 
   const login = useCallback(async (email: string, password: string) => {
     setAuthError("");
     try {
       await service.signIn(email, password);
+      observability.trackEvent("login_success");
     } catch (error) {
       setAuthError("Nieprawidłowy email lub hasło.");
+      observability.trackEvent("login_failure");
+      observability.captureError(error, { operation: "auth.login" });
       throw error;
     }
-  }, [service]);
+  }, [observability, service]);
 
   const logout = useCallback(async () => {
     await service.signOut();
-  }, [service]);
+    observability.trackEvent("logout");
+    observability.clearUser();
+  }, [observability, service]);
 
   return {
     authError,

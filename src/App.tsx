@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 
 import AppHeader from "./app/AppHeader";
@@ -16,9 +16,34 @@ import { useCatalog } from "./features/catalog/useCatalog";
 import { useCatalogMutations } from "./features/catalog/useCatalogMutations";
 import PrintQueuePanel from "./features/printQueue/PrintQueuePanel";
 import { usePrintQueue } from "./features/printQueue/usePrintQueue";
-import { authService, catalogRepository } from "./services/firebase";
+import {
+  authService,
+  catalogRepository,
+  type AuthService,
+  type CatalogRepository
+} from "./services/firebase";
+import type { StorageLike } from "./domains/storage/printQueueStorage";
+import {
+  countTelemetryItems,
+  observability as defaultObservability,
+  type ObservabilityService
+} from "./services/observability";
 
-function App() {
+type AppProps = {
+  auth?: AuthService;
+  catalog?: CatalogRepository;
+  observability?: ObservabilityService;
+  print?: () => void;
+  storage?: StorageLike;
+};
+
+function App({
+  auth = authService,
+  catalog = catalogRepository,
+  observability = defaultObservability,
+  print = () => window.print(),
+  storage = localStorage
+}: AppProps = {}) {
   const [bulkPromotionOpen, setBulkPromotionOpen] = useState(false);
   const [mode, setMode] = useState<AppMode>("print");
   const {
@@ -27,7 +52,7 @@ function App() {
     currentUser,
     login,
     logout
-  } = useAuthSession(authService);
+  } = useAuthSession(auth, observability);
   const {
     brands,
     catalogError,
@@ -35,14 +60,14 @@ function App() {
     catalogLoading,
     handleCatalogError,
     products
-  } = useCatalog(currentUser, catalogRepository);
+  } = useCatalog(currentUser, catalog, observability);
   const {
     addToPrintQueue,
     clearPrintQueue,
     printQueue,
     removeFromPrintQueue,
     setPrintQueueQuantity
-  } = usePrintQueue(currentUser, localStorage);
+  } = usePrintQueue(currentUser, storage, observability);
   const {
     addCatalogItem,
     removeCatalogItem,
@@ -50,12 +75,14 @@ function App() {
   } = useCatalogMutations({
     handleCatalogError,
     onCatalogItemRemoved: removeFromPrintQueue,
-    repository: catalogRepository
+    observability,
+    repository: catalog
   });
   const { applyPromotionToItems } = useBulkPromotionActions({
     catalogItems,
     handleCatalogError,
-    repository: catalogRepository
+    observability,
+    repository: catalog
   });
 
   const handleLogout = useCallback(async () => {
@@ -63,6 +90,22 @@ function App() {
     setMode("print");
     setBulkPromotionOpen(false);
   }, [logout]);
+
+  const handlePrint = useCallback(() => {
+    const counts = countTelemetryItems(printQueue);
+    observability.trackEvent("print_started", {
+      queue_item_count: counts.itemCount,
+      total_tag_count: counts.totalCount
+    });
+    print();
+  }, [observability, print, printQueue]);
+
+  useEffect(() => {
+    if (!currentUser) return;
+    observability.trackEvent("screen_view", {
+      screen: bulkPromotionOpen ? "bulk_promotion" : mode
+    });
+  }, [bulkPromotionOpen, currentUser, mode, observability]);
 
   if (authLoading) {
     return (
@@ -100,7 +143,7 @@ function App() {
             />
             <PrintQueuePanel
               onClear={clearPrintQueue}
-              onPrint={() => window.print()}
+              onPrint={handlePrint}
               onRemove={removeFromPrintQueue}
               onSetQuantity={setPrintQueueQuantity}
               printQueue={printQueue}

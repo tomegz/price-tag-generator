@@ -6,6 +6,7 @@ import type {
   CatalogReadRepository,
   FirebaseRepositoryError
 } from "../../services/firebase";
+import { createTestObservability } from "../../test/observability";
 import { useCatalog } from "./useCatalog";
 
 type SubscriptionHandlers<T> = {
@@ -60,8 +61,9 @@ describe("useCatalog", () => {
   it("subscribes after login and derives products and brands", () => {
     const { emitBrands, emitItems, repository, unsubscribeBrands, unsubscribeItems } =
       createCatalogRepository();
+    const observability = createTestObservability();
     const { result, rerender, unmount } = renderHook(
-      ({ currentUser }) => useCatalog(currentUser, repository),
+      ({ currentUser }) => useCatalog(currentUser, repository, observability),
       { initialProps: { currentUser: null as AuthUser | null } }
     );
 
@@ -78,6 +80,9 @@ describe("useCatalog", () => {
     emitItems({ item1: item });
     emitBrands(["KTM", "Trek"]);
 
+    expect(observability.trackEvent).toHaveBeenCalledWith("catalog_load_success", {
+      item_count: 1
+    });
     expect(result.current.catalogLoading).toBe(false);
     expect(result.current.catalogItems).toEqual({ item1: item });
     expect(result.current.products).toEqual([
@@ -109,17 +114,28 @@ describe("useCatalog", () => {
 
   it("maps permission errors to the catalog access message", () => {
     const { failItems, repository } = createCatalogRepository();
-    const { result } = renderHook(() => useCatalog(user, repository));
-
-    failItems({
+    const observability = createTestObservability();
+    const { result } = renderHook(() => useCatalog(user, repository, observability));
+    const error: FirebaseRepositoryError = {
       cause: null,
       code: "PERMISSION_DENIED",
       message: "Permission denied"
-    });
+    };
+
+    failItems(error);
 
     expect(result.current.catalogLoading).toBe(false);
     expect(result.current.catalogError).toBe(
       "Brak dostępu do katalogu. Zalogowany użytkownik nie ma uprawnień do tej bazy."
     );
+    expect(observability.trackEvent).toHaveBeenCalledWith("catalog_load_failure", {
+      error_code: "PERMISSION_DENIED"
+    });
+    expect(observability.captureError).toHaveBeenCalledWith(error, {
+      operation: "catalog.subscribe_items",
+      params: {
+        error_code: "PERMISSION_DENIED"
+      }
+    });
   });
 });

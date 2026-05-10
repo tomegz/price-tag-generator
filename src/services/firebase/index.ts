@@ -3,6 +3,7 @@ import { createAuthService } from './authService';
 import { createCatalogRepository } from './catalogRepository';
 
 export { firebaseServices, createFirebaseServiceInstances } from './app';
+export type { FirebaseServiceInstances } from './app';
 export { createAuthService } from './authService';
 export type { AuthService } from './authService';
 export {

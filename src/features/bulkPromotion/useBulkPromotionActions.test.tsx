@@ -2,6 +2,7 @@ import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { CatalogItemsById } from "../../domains/catalog/catalog";
 import type { CatalogRepository } from "../../services/firebase";
+import { createTestObservability } from "../../test/observability";
 import { useBulkPromotionActions } from "./useBulkPromotionActions";
 
 function createCatalogRepository(): CatalogRepository {
@@ -36,10 +37,12 @@ const catalogItems: CatalogItemsById = {
 describe("useBulkPromotionActions", () => {
   it("applies bulk promotion updates through the injected repository", async () => {
     const repository = createCatalogRepository();
+    const observability = createTestObservability();
     const { result } = renderHook(() =>
       useBulkPromotionActions({
         catalogItems,
         handleCatalogError: vi.fn(),
+        observability,
         repository
       })
     );
@@ -57,6 +60,10 @@ describe("useBulkPromotionActions", () => {
     };
     expect(repository.saveCatalogItems).toHaveBeenCalledWith({ item1: promotedItem });
     expect(repository.saveCatalogItem).not.toHaveBeenCalled();
+    expect(observability.trackEvent).toHaveBeenCalledWith("bulk_promotion_apply", {
+      discount_mode: "percent",
+      selected_item_count: 1
+    });
   });
 
   it("surfaces repository failures through the catalog error handler", async () => {
@@ -64,10 +71,12 @@ describe("useBulkPromotionActions", () => {
     const error = new Error("write failed");
     vi.mocked(repository.saveCatalogItems).mockRejectedValueOnce(error);
     const handleCatalogError = vi.fn();
+    const observability = createTestObservability();
     const { result } = renderHook(() =>
       useBulkPromotionActions({
         catalogItems,
         handleCatalogError,
+        observability,
         repository
       })
     );
@@ -84,6 +93,13 @@ describe("useBulkPromotionActions", () => {
       cause: error,
       code: "unknown",
       message: "write failed"
+    });
+    expect(observability.captureError).toHaveBeenCalledWith(error, {
+      operation: "bulk_promotion.apply",
+      params: {
+        error_code: "unknown",
+        selected_item_count: 1
+      }
     });
   });
 });

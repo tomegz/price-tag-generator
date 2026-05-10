@@ -6,6 +6,10 @@ import {
 } from "../../services/firebase";
 import type { CatalogErrorHandler } from "../../app/catalogErrors";
 import {
+  observability as defaultObservability,
+  type ObservabilityService
+} from "../../services/observability";
+import {
   applyBulkPromotion,
   type BulkPromotionOptions
 } from "./bulkPromotion";
@@ -13,6 +17,7 @@ import {
 type UseBulkPromotionActionsOptions = {
   catalogItems: CatalogItemsById;
   handleCatalogError: CatalogErrorHandler;
+  observability?: ObservabilityService;
   repository: CatalogWriteRepository;
 };
 
@@ -23,6 +28,7 @@ export type BulkPromotionActions = {
 export function useBulkPromotionActions({
   catalogItems,
   handleCatalogError,
+  observability = defaultObservability,
   repository
 }: UseBulkPromotionActionsOptions): BulkPromotionActions {
   const applyPromotionToItems = useCallback(async (
@@ -39,11 +45,23 @@ export function useBulkPromotionActions({
       await repository.saveCatalogItems(Object.fromEntries(
         updates.map(({ productId, item }) => [productId, item])
       ));
+      observability.trackEvent("bulk_promotion_apply", {
+        discount_mode: options.mode,
+        selected_item_count: updates.length
+      });
     } catch (error) {
-      handleCatalogError(toFirebaseRepositoryError(error));
+      const repositoryError = toFirebaseRepositoryError(error);
+      handleCatalogError(repositoryError);
+      observability.captureError(error, {
+        operation: "bulk_promotion.apply",
+        params: {
+          error_code: repositoryError.code,
+          selected_item_count: updates.length
+        }
+      });
       throw error;
     }
-  }, [catalogItems, handleCatalogError, repository]);
+  }, [catalogItems, handleCatalogError, observability, repository]);
 
   return { applyPromotionToItems };
 }

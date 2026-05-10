@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { AuthUser } from "../../app/authUser";
 import {
   getCatalogErrorMessage,
@@ -7,6 +7,10 @@ import {
 } from "../../app/catalogErrors";
 import type { CatalogBrands, CatalogItemsById } from "../../domains/catalog/catalog";
 import type { CatalogReadRepository } from "../../services/firebase";
+import {
+  observability as defaultObservability,
+  type ObservabilityService
+} from "../../services/observability";
 import {
   catalogItemsToProducts,
   getCatalogBrands,
@@ -35,9 +39,11 @@ export type CatalogState = {
 
 export function useCatalog(
   currentUser: AuthUser | null,
-  repository: CatalogReadRepository
+  repository: CatalogReadRepository,
+  observability: ObservabilityService = defaultObservability
 ): CatalogState {
   const activeUid = currentUser?.uid ?? null;
+  const trackedCatalogLoadsRef = useRef(new Set<string>());
   const [catalogData, setCatalogData] = useState<CatalogDataState>({
     brands: [],
     brandsLoadedForUid: null,
@@ -64,8 +70,25 @@ export function useCatalog(
           items,
           itemsLoadedForUid: activeUid
         }));
+        if (!trackedCatalogLoadsRef.current.has(activeUid)) {
+          observability.trackEvent("catalog_load_success", {
+            item_count: Object.keys(items).length
+          });
+          trackedCatalogLoadsRef.current.add(activeUid);
+        }
       },
-      error: handleCatalogError
+      error: error => {
+        handleCatalogError(error);
+        observability.trackEvent("catalog_load_failure", {
+          error_code: error.code
+        });
+        observability.captureError(error.cause || error, {
+          operation: "catalog.subscribe_items",
+          params: {
+            error_code: error.code
+          }
+        });
+      }
     });
 
     const unsubscribeBrands = repository.subscribeCatalogBrands({
@@ -76,14 +99,25 @@ export function useCatalog(
           brandsLoadedForUid: activeUid
         }));
       },
-      error: handleCatalogError
+      error: error => {
+        handleCatalogError(error);
+        observability.trackEvent("catalog_load_failure", {
+          error_code: error.code
+        });
+        observability.captureError(error.cause || error, {
+          operation: "catalog.subscribe_brands",
+          params: {
+            error_code: error.code
+          }
+        });
+      }
     });
 
     return () => {
       unsubscribeItems();
       unsubscribeBrands();
     };
-  }, [activeUid, handleCatalogError, repository]);
+  }, [activeUid, handleCatalogError, observability, repository]);
 
   const catalogItems =
     activeUid && catalogData.itemsLoadedForUid === activeUid ? catalogData.items : emptyCatalogItems;

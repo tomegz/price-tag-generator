@@ -3,19 +3,10 @@ import formatParagraphs from "../helpers/formatParagraphs";
 import type { LegacyCatalogItem } from "../domains/catalog/catalog";
 
 type PrintTagProps = {
-  item?: LegacyCatalogItem;
+  item: LegacyCatalogItem;
 };
 
-const defaultPrintTagItem: LegacyCatalogItem = {
-  name: "default",
-  model: "default",
-  price: 999,
-  discountPrice: 999,
-  discountStatus: "off",
-  year: "-"
-};
-
-const PrintTag = ({ item = defaultPrintTagItem }: PrintTagProps) => {
+const PrintTag = ({ item }: PrintTagProps) => {
   const name = item.name.toUpperCase();
   const model = formatParagraphs(item.model.toUpperCase());
   const onDiscount = item.discountStatus === "on";

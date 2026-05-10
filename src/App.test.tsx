@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-it('renders without crashing', () => {
+it('renders login screen without crashing', async () => {
   render(<App />);
-  expect(screen.getByText(/Profi Bike - Drukowanie cen/i)).toBeInTheDocument();
+  expect(await screen.findByRole('heading', { name: /Zaloguj się/i })).toBeInTheDocument();
 });

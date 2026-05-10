@@ -14,7 +14,7 @@ The target state is a current React app that keeps the existing product behavior
 - Use pnpm instead of npm.
 - Rebuild on Vite, React 19, and TypeScript strict mode.
 - Replace Firebase 4 and `re-base` with the Firebase modular SDK.
-- Keep UI/UX changes out of scope except for parity, accessibility correctness, and bug fixes.
+- UI parity-only work has been superseded by the dedicated redesign execution plan.
 - Avoid any silent rewrite of production data.
 
 ## Target Stack
@@ -61,10 +61,16 @@ optional shared dev:
 | 3 | Done | [Modern App Scaffold](milestones/03-modern-app-scaffold.md) | Replace CRA/React 15 shell with Vite/React/TypeScript/pnpm. |
 | 4 | Done | [Domain Model And Tests](milestones/04-domain-model-and-tests.md) | Extract and test catalog, pricing, print queue, print tag rendering, and storage behavior. |
 | 5 | Done | [Firebase Modular Service Layer](milestones/05-firebase-modular-service-layer.md) | Isolate Firebase access behind typed services. |
-| 6 | Planned | [Catalog And Auth Parity](milestones/06-catalog-and-auth-parity.md) | Rebuild the existing catalog/auth workflows without redesign. |
-| 7 | Planned | [Print Queue And Price Tags](milestones/07-print-queue-and-price-tags.md) | Rebuild printing and verify physical-layout behavior. |
+| 6 | Superseded | [Catalog And Auth Parity](milestones/06-catalog-and-auth-parity.md) | Replaced by the redesign execution plan. |
+| 7 | Deferred | [Print Queue And Price Tags](milestones/07-print-queue-and-price-tags.md) | Park legacy print parity work until the new print design is defined. |
 | 8 | Planned | [Production Cutover](milestones/08-production-cutover.md) | Deploy the modern app safely against the hardened prod DB. |
 | 9 | Planned | [Legacy Cleanup](milestones/09-legacy-cleanup.md) | Remove transitional code and obsolete tooling after cutover. |
+
+## Redesign Track
+
+The original parity-only UI scope is now replaced by the [Profi Bike Redesign Execution Plan](redesign-exec-plan.md), which is complete on `develop`.
+
+Do not implement Milestone 6 or the old Milestone 7 as written if the next user-facing release is the new Profi Bike redesign. The redesign milestones `R0` through `R8` now cover the user-facing app surface, while keeping the Firebase schema, emulator workflow, service layer, and production cutover principles from this modernization plan.
 
 ## Completed Work
 

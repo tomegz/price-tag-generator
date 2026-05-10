@@ -2,7 +2,7 @@
 
 ## Project Summary
 
-This is a small React/Firebase app used by one production user to manage a bike-shop catalog and print price tags. The current production app is old but live: React 15, Create React App 1, Firebase 4, Realtime Database, and `re-base`.
+This is a small React/Firebase app used by one production user to manage a bike-shop catalog and print price tags. The live production app may still be the old GitHub Pages deployment, but the `develop` branch is the active modernization branch.
 
 The modernization goal is to keep the product focused while moving it to a current, maintainable stack:
 
@@ -15,9 +15,16 @@ The modernization goal is to keep the product focused while moving it to a curre
 - Vitest, React Testing Library, and Playwright
 - Firebase Realtime Database retained for now
 
+Current `develop` source standards:
+
+- All app source under `src/` is TypeScript or TSX; do not add new JS/JSX files there.
+- React components are function components using hooks; do not add class components.
+- Runtime `prop-types` has been removed; use TypeScript props, state, event, and ref types.
+- Keep component prop types colocated unless a type is shared across domains or services.
+
 Do not expand this into a larger product unless the user explicitly asks. The core workflow is catalog search/editing, print queue management, discounts, and reliable price-tag printing.
 
-UI/UX redesign is out of scope for the modernization unless the user explicitly reopens it. Preserve the existing workflows and visual intent first; only make UI changes required by the framework migration, accessibility correctness, or bug fixes.
+The Profi Bike redesign has been implemented on `develop`. Preserve the Carbon design-system direction unless the user explicitly replaces it.
 
 ## Current Firebase Context
 
@@ -172,7 +179,7 @@ When implementing emulator support, make it difficult to accidentally write to p
 
 Use pnpm for the modernized app. Pin the package manager through the `packageManager` field and commit `pnpm-lock.yaml`. Do not keep both `package-lock.json` and `pnpm-lock.yaml` after the package-manager migration is complete.
 
-Milestones 02, 03, 04, and 05 are complete on `develop`. The current scaffold intentionally preserves the visual UI while using current domain vocabulary in code: Catalog, Print Queue, Print Tag Rendering, Pricing, Storage, and Firebase service repositories.
+Milestones 02, 03, 04, and 05 are complete on `develop`. The redesign milestones `R0` through `R8` are also complete on `develop`. Legacy parity-only Milestones 06 and 07 are superseded by the redesign track.
 
 ## Modernization Implementation Notes
 
@@ -180,6 +187,17 @@ Prefer this architecture:
 
 ```text
 src/
+  design-system/
+    tokens.css
+    base.css
+    Icon.tsx
+    Button.tsx
+    ...
+  features/
+    auth/
+    catalog/
+    printQueue/
+    bulkPromotion/
   domains/
     catalog/
     pricing/
@@ -195,6 +213,21 @@ src/
 ```
 
 React components must not import Firebase SDK modules directly. Use `authService` for authentication and `catalogRepository` for Realtime Database access.
+
+Feature components should consume domain/service data through typed view models. For the redesign:
+
+- User initials are derived from the Firebase user identity.
+- Brand filters are data-backed from the DB `brands` node plus item-derived fallback brands.
+- Design-system primitives live in `src/design-system/`; screen/domain components live in `src/features/`.
+- Keep print tag rendering separate from app chrome. The physical output still uses `PrintTag` and `PrintTag.css`.
+
+React implementation rules:
+
+- Use function components, `useState`, `useEffect`, `useMemo`, `useCallback`, and `useRef` as appropriate.
+- Preserve existing behavior when converting legacy code; do not bundle behavior fixes into mechanical typing or component-shape migrations.
+- Type DOM events explicitly when handlers are extracted, for example `ChangeEvent<HTMLInputElement | HTMLSelectElement>` and `FormEvent<HTMLFormElement>`.
+- Type refs explicitly, for example `useRef<HTMLInputElement>(null)` or `useRef<HTMLDivElement>(null)`.
+- Use domain types such as `LegacyCatalogItem`, `CatalogItemsById`, `PrintQueue`, and `DiscountOptions` rather than ad hoc object shapes.
 
 Core model direction:
 
@@ -234,21 +267,34 @@ pnpm exec vitest run --config vitest.rules.config.ts
 
 Use Playwright for the print workflow once the modern app runs locally.
 
+Before handing off code changes, run:
+
+```sh
+pnpm typecheck
+pnpm test
+pnpm lint
+pnpm build
+```
+
+Run `pnpm audit --prod` after dependency changes. Run the rules/repository test with the Docker emulator when touching Firebase rules or repository behavior.
+
 ## Known Legacy Issues
 
-The current app cannot run on modern Node versions such as Node 24 because the old dependency tree uses packages that reference removed Node internals like `http_parser`.
+The legacy production app could not run on modern Node versions such as Node 24 because the old dependency tree used packages that referenced removed Node internals like `http_parser`.
 
-Do not try to solve this with `npm audit fix --force`. The correct fix is modernization. If the old app must be run temporarily, use an old compatible Node runtime and do not treat that as the target state.
+Do not try to solve legacy dependency issues with `npm audit fix --force`. The correct fix is modernization. If the old app must be run temporarily, use an old compatible Node runtime and do not treat that as the target state.
 
-The current code has known risks:
+The legacy code had known risks that have mostly been addressed on `develop`:
 
 - React 15 and CRA 1 are obsolete.
 - Firebase 4 and `re-base` should be replaced with the modular Firebase SDK.
-- The current auth/authorization flow is client-heavy.
-- Local and production currently share the same database.
-- The only test is a render smoke test.
-- `AddPromotionForm` uses `this` inside a function component.
-- The previous catalog auth flow used to read `this.state.uid` immediately after `setState`.
+
+Current known risks on `develop`:
+
+- Production database hardening/cutover is still deferred.
+- Catalog edit writes are still optimistic and should be handled as a separate behavior fix.
+- UI workflow test coverage is still thin compared to domain and Firebase repository coverage.
+- The print workflow will be redesigned, so do not implement legacy print parity work from Milestone 07 as written.
 
 ## Git And Data Safety
 

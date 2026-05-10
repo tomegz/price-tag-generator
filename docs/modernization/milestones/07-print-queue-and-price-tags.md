@@ -1,5 +1,11 @@
 # Milestone 7: Print Queue And Price Tags
 
+## Status
+
+Superseded.
+
+Do not implement this legacy print parity milestone as written. The user-facing print queue has been rebuilt through the redesign execution plan, while the physical price-tag rendering remains isolated in `PrintTag` and `PrintTag.css` to preserve existing printed output.
+
 ## Objective
 
 Rebuild the print queue and physical price-tag output with parity to the current app.

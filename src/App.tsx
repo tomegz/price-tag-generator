@@ -1,19 +1,26 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { User } from "firebase/auth";
+import "./App.css";
 
-import CatalogMenu from "./components/CatalogMenu";
-import PrintQueue from "./components/PrintQueue";
-import Catalog from "./components/Catalog";
-import PrintTag from "./components/PrintTag";
-
-import formatPrice from "./helpers/formatPrice";
+import Button from "./design-system/Button";
+import Icon from "./design-system/Icon";
+import BulkPromotionModal from "./features/bulkPromotion/BulkPromotionModal";
+import { applyBulkPromotion } from "./features/bulkPromotion/bulkPromotion";
+import CatalogAdminScreen from "./features/catalog/CatalogAdminScreen";
+import ProductList from "./features/catalog/ProductList";
 import {
-  filterCatalogItemIds,
-  type CatalogItemsById,
-  type LegacyCatalogItem
+  catalogItemsToProducts,
+  getCatalogBrands,
+  getUserInitials
+} from "./features/catalog/catalogViewModel";
+import LoginScreen from "./features/auth/LoginScreen";
+import PrintQueuePanel from "./features/printQueue/PrintQueuePanel";
+import PrintTag from "./components/PrintTag";
+import type {
+  CatalogBrands,
+  CatalogItemsById,
+  LegacyCatalogItem
 } from "./domains/catalog/catalog";
-import type { DiscountOptions } from "./domains/pricing/discount";
 import {
   addToPrintQueue as addToPrintQueueState,
   clearPrintQueue as clearPrintQueueState,
@@ -26,17 +33,27 @@ import {
 } from "./domains/storage/printQueueStorage";
 import { buildPrintTagRenderQueue } from "./domains/printTagRendering/printTagRendering";
 import {
+  authService,
   catalogRepository,
   isPermissionDenied,
+  toFirebaseRepositoryError,
   type FirebaseRepositoryError
 } from "./services/firebase";
+import type { BulkPromotionOptions } from "./features/bulkPromotion/bulkPromotion";
+
+type AppMode = "print" | "admin";
 
 function App() {
-  const [catalogItems, setCatalogItems] = useState<CatalogItemsById>({});
-  const [printQueue, setPrintQueue] = useState<PrintQueueState>({});
-  const [searchQuery, setSearchQueryState] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [authLoading, setAuthLoading] = useState(true);
+  const [bulkPromotionOpen, setBulkPromotionOpen] = useState(false);
+  const [catalogBrands, setCatalogBrands] = useState<CatalogBrands>([]);
   const [catalogError, setCatalogError] = useState("");
-  const catalogUnsubscribeRef = useRef<(() => void) | null>(null);
+  const [catalogItems, setCatalogItems] = useState<CatalogItemsById>({});
+  const [catalogLoading, setCatalogLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [mode, setMode] = useState<AppMode>("print");
+  const [printQueue, setPrintQueue] = useState<PrintQueueState>({});
   const shouldPersistPrintQueueRef = useRef(false);
 
   const handleCatalogError = useCallback((error: FirebaseRepositoryError) => {
@@ -44,101 +61,168 @@ function App() {
       ? "Brak dostępu do katalogu. Zalogowany użytkownik nie ma uprawnień do tej bazy."
       : "Nie udało się zapisać lub pobrać danych katalogu.";
     setCatalogError(message);
+    setCatalogLoading(false);
   }, []);
 
-  const removeBinding = useCallback(() => {
-    if(catalogUnsubscribeRef.current) {
-      catalogUnsubscribeRef.current();
-      catalogUnsubscribeRef.current = null;
-    }
-  }, []);
-
-  const getCatalogItems = useCallback(() => {
-    if(catalogUnsubscribeRef.current) return;
-    /* Since there's only one store, it is hardcoded for now */
-    catalogUnsubscribeRef.current = catalogRepository.subscribeCatalogItems({
-      next: (items) => {
-        setCatalogItems(items);
+  useEffect(() => {
+    const unsubscribe = authService.observeAuth(user => {
+      setCurrentUser(user);
+      setAuthLoading(false);
+      setAuthError("");
+      if (user) {
+        setCatalogLoading(true);
+        shouldPersistPrintQueueRef.current = true;
+        setPrintQueue(loadPrintQueueFromStorage(localStorage));
+      } else {
+        setCatalogItems({});
+        setCatalogBrands([]);
         setCatalogError("");
-      },
-      error: (error) => {
-        catalogUnsubscribeRef.current = null;
-        handleCatalogError(error);
+        setCatalogLoading(false);
+        shouldPersistPrintQueueRef.current = false;
       }
     });
 
-    shouldPersistPrintQueueRef.current = true;
-    setPrintQueue(loadPrintQueueFromStorage(localStorage));
-  }, [handleCatalogError]);
-
-  const connectCatalogForUser = useCallback((user: string | null) => {
-    if(user) {
-      getCatalogItems();
-    }
-  }, [getCatalogItems]);
-
-  useEffect(() => removeBinding, [removeBinding]);
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
-    if(!shouldPersistPrintQueueRef.current) return;
+    if (!currentUser) return;
+
+    const unsubscribeItems = catalogRepository.subscribeCatalogItems({
+      next: items => {
+        setCatalogItems(items);
+        setCatalogError("");
+        setCatalogLoading(false);
+      },
+      error: handleCatalogError
+    });
+
+    const unsubscribeBrands = catalogRepository.subscribeCatalogBrands({
+      next: brands => setCatalogBrands(brands),
+      error: handleCatalogError
+    });
+
+    return () => {
+      unsubscribeItems();
+      unsubscribeBrands();
+    };
+  }, [currentUser, handleCatalogError]);
+
+  useEffect(() => {
+    if (!shouldPersistPrintQueueRef.current) return;
     savePrintQueueToStorage(localStorage, printQueue);
   }, [printQueue]);
 
-  const addCatalogItem = useCallback((item: LegacyCatalogItem) => {
-    const timestamp = Date.now();
-    const key = `item${timestamp}`;
+  const products = useMemo(() => catalogItemsToProducts(catalogItems), [catalogItems]);
+  const brands = useMemo(() => getCatalogBrands(products, catalogBrands), [catalogBrands, products]);
+  const userInitials = useMemo(() => getUserInitials(currentUser), [currentUser]);
 
-    setCatalogItems(currentCatalogItems => ({
-      ...currentCatalogItems,
-      [key]: item
-    }));
-    catalogRepository.saveCatalogItem(key, item).catch(handleCatalogError);
-  }, [handleCatalogError]);
-
-  const updateCatalogItem = useCallback((key: string, updatedItem: LegacyCatalogItem) => {
-    setCatalogItems(currentCatalogItems => ({
-      ...currentCatalogItems,
-      [key]: updatedItem
-    }));
-    catalogRepository.saveCatalogItem(key, updatedItem).catch(handleCatalogError);
-  }, [handleCatalogError]);
-
-  const removeCatalogItem = useCallback((id: string) => {
-    catalogRepository.deleteCatalogItem(id).catch(handleCatalogError);
-  }, [handleCatalogError]);
-
-  const visibleCatalogItemIds = useMemo(
-    () => filterCatalogItemIds(catalogItems, searchQuery),
-    [catalogItems, searchQuery]
-  );
-
-  const setSearchQuery = useCallback((text: string) => {
-    setSearchQueryState(text.toLowerCase());
+  const login = useCallback(async (email: string, password: string) => {
+    setAuthError("");
+    try {
+      await authService.signIn(email, password);
+    } catch (error) {
+      setAuthError("Nieprawidłowy email lub hasło.");
+      throw error;
+    }
   }, []);
 
-  const enqueuePrintTags = useCallback((key: string, count: number) => {
-    setPrintQueue(currentPrintQueue => addToPrintQueueState(currentPrintQueue, key, count));
+  const logout = useCallback(async () => {
+    await authService.signOut();
+    setMode("print");
+    setBulkPromotionOpen(false);
   }, []);
 
-  const addPromotion = useCallback((options: DiscountOptions) => {
-    /* Update every visible catalog item without deleting unrelated records. */
-    visibleCatalogItemIds.forEach(key => {
-      const item = catalogItems[key];
-      const updatedItem = {
-        ...item,
-        discountPrice: formatPrice(item.price, options)
+  const addCatalogItem = useCallback(async (item: LegacyCatalogItem) => {
+    const key = `item${Date.now()}`;
+    try {
+      await catalogRepository.saveCatalogItem(key, item);
+      setCatalogItems(currentItems => ({
+        ...currentItems,
+        [key]: item
+      }));
+    } catch (error) {
+      handleCatalogError(toFirebaseRepositoryError(error));
+      throw error;
+    }
+  }, [handleCatalogError]);
+
+  const updateCatalogItem = useCallback(async (key: string, updatedItem: LegacyCatalogItem) => {
+    try {
+      await catalogRepository.saveCatalogItem(key, updatedItem);
+      setCatalogItems(currentItems => ({
+        ...currentItems,
+        [key]: updatedItem
+      }));
+    } catch (error) {
+      handleCatalogError(toFirebaseRepositoryError(error));
+      throw error;
+    }
+  }, [handleCatalogError]);
+
+  const removeCatalogItem = useCallback(async (id: string) => {
+    try {
+      await catalogRepository.deleteCatalogItem(id);
+      setCatalogItems(currentItems => {
+        const next = { ...currentItems };
+        delete next[id];
+        return next;
+      });
+      setPrintQueue(currentQueue => removeFromPrintQueueState(currentQueue, id));
+    } catch (error) {
+      handleCatalogError(toFirebaseRepositoryError(error));
+      throw error;
+    }
+  }, [handleCatalogError]);
+
+  const addToPrintQueue = useCallback((key: string, count: number) => {
+    setPrintQueue(currentQueue => addToPrintQueueState(currentQueue, key, count));
+  }, []);
+
+  const setPrintQueueQuantity = useCallback((key: string, quantity: number) => {
+    setPrintQueue(currentQueue => {
+      if (quantity <= 0) return removeFromPrintQueueState(currentQueue, key);
+      return {
+        ...currentQueue,
+        [key]: Math.floor(quantity)
       };
-      updateCatalogItem(key, updatedItem);
     });
-  }, [catalogItems, updateCatalogItem, visibleCatalogItemIds]);
+  }, []);
 
   const removeFromPrintQueue = useCallback((key: string) => {
-    setPrintQueue(currentPrintQueue => removeFromPrintQueueState(currentPrintQueue, key));
+    setPrintQueue(currentQueue => removeFromPrintQueueState(currentQueue, key));
   }, []);
 
   const clearPrintQueue = useCallback(() => {
     setPrintQueue(clearPrintQueueState());
   }, []);
+
+  const applyPromotionToItems = useCallback(async (
+    productIds: string[],
+    options: BulkPromotionOptions
+  ) => {
+    const updates = productIds.flatMap(productId => {
+      const item = catalogItems[productId];
+      return item ? [{ productId, item: applyBulkPromotion(item, options) }] : [];
+    });
+
+    try {
+      await Promise.all(
+        updates.map(({ productId, item }) => catalogRepository.saveCatalogItem(productId, item))
+      );
+
+      setCatalogItems(currentItems => {
+        const next = { ...currentItems };
+        updates.forEach(({ productId, item }) => {
+          next[productId] = item;
+        });
+        return next;
+      });
+    } catch (error) {
+      handleCatalogError(toFirebaseRepositoryError(error));
+      throw error;
+    }
+  }, [catalogItems, handleCatalogError]);
 
   const printTags = useMemo(
     () => buildPrintTagRenderQueue(catalogItems, printQueue)
@@ -146,34 +230,81 @@ function App() {
     [catalogItems, printQueue]
   );
 
+  if (authLoading) {
+    return (
+      <div className="app-loading">
+        <span className="pb-mono">PROFI BIKE</span>
+        <strong>Ładowanie aplikacji...</strong>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return <LoginScreen error={authError} loading={authLoading} onLogin={login} />;
+  }
+
   return (
-    <div className="App">
-      <div className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h2>Profi Bike - Drukowanie cen</h2>
-      </div>
-      <div className="wrapper">
-        <CatalogMenu catalogItems={catalogItems}
-                     catalogItemIds={visibleCatalogItemIds}
-                     searchQuery={searchQuery}
-                     enqueuePrintTags={enqueuePrintTags}
-                     setSearchQuery={setSearchQuery}
-                     removeCatalogItem={removeCatalogItem} />
-        <PrintQueue catalogItems={catalogItems}
-                    printQueue={printQueue}
-                    removeFromPrintQueue={removeFromPrintQueue}
-                    clearPrintQueue={clearPrintQueue} />
-        <Catalog catalogItems={catalogItems}
-                 catalogItemIds={visibleCatalogItemIds}
-                 searchQuery={searchQuery}
-                 addCatalogItem={addCatalogItem}
-                 updateCatalogItem={updateCatalogItem}
-                 addPromotion={addPromotion}
-                 catalogError={catalogError}
-                 connectCatalogForUser={connectCatalogForUser}
-                 removeBinding={removeBinding} />
-      </div>
-      <footer className="App-footer"></footer>
+    <div className="redesign-app">
+      {mode === "print" ? (
+        <>
+          <header className="app-shell-header">
+            <div className="app-shell-header__brand">
+              <Icon name="bike" size={23} />
+              <strong>Profi Bike</strong>
+              <span className="pb-mono">CENNIK</span>
+            </div>
+            <div className="app-shell-header__spacer" />
+            <Button icon="pencil" onClick={() => setMode("admin")} variant="ghost">
+              Edycja cennika
+            </Button>
+            <Button aria-label="Wyloguj" icon="logout" onClick={() => void logout()} variant="icon" />
+            <div aria-label={`Zalogowany użytkownik ${currentUser.email || ""}`} className="user-avatar pb-mono">
+              {userInitials}
+            </div>
+          </header>
+
+          {catalogError ? <p className="app-error" role="alert">{catalogError}</p> : null}
+          {catalogLoading ? <p className="app-loading-line pb-mono">Ładowanie katalogu...</p> : null}
+
+          <main className="print-workflow">
+            <ProductList
+              brands={brands}
+              onAdd={addToPrintQueue}
+              printQueue={printQueue}
+              products={products}
+            />
+            <PrintQueuePanel
+              onClear={clearPrintQueue}
+              onPrint={() => window.print()}
+              onRemove={removeFromPrintQueue}
+              onSetQuantity={setPrintQueueQuantity}
+              printQueue={printQueue}
+              products={products}
+            />
+          </main>
+        </>
+      ) : (
+        <CatalogAdminScreen
+          brands={brands}
+          catalogError={catalogError}
+          onAddProduct={addCatalogItem}
+          onBackToPrint={() => setMode("print")}
+          onDeleteProduct={removeCatalogItem}
+          onOpenBulkPromotion={() => setBulkPromotionOpen(true)}
+          onUpdateProduct={updateCatalogItem}
+          products={products}
+        />
+      )}
+
+      {bulkPromotionOpen ? (
+        <BulkPromotionModal
+          brands={brands}
+          onApply={applyPromotionToItems}
+          onClose={() => setBulkPromotionOpen(false)}
+          products={products}
+        />
+      ) : null}
+
       <div className="print-tag-rendering">
         {printTags}
       </div>

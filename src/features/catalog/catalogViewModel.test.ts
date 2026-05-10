@@ -8,7 +8,8 @@ import {
   getCatalogBrands,
   getUserInitials,
   hasActivePromotion,
-  isDraftValid
+  isDraftValid,
+  sortCatalogProducts
 } from "./catalogViewModel";
 import type { CatalogItemsById } from "../../domains/catalog/catalog";
 
@@ -51,6 +52,24 @@ describe("catalogViewModel", () => {
     expect(filterCatalogProducts(products, { brand: "Kross", query: "hex" })).toHaveLength(1);
     expect(filterCatalogProducts(products, { brand: "Kross", query: "marlin" })).toHaveLength(0);
     expect(filterCatalogProducts(products, { brand: ALL_BRANDS, query: "TREK" })[0].id).toBe("item2");
+  });
+
+  it("sorts catalog products for the main list controls", () => {
+    const products = catalogItemsToProducts(catalogItems);
+
+    expect(sortCatalogProducts(products, "brand").map(product => product.id)).toEqual(["item1", "item2"]);
+    expect(
+      sortCatalogProducts(products, { mode: "brand", direction: "desc" }).map(product => product.id)
+    ).toEqual(["item2", "item1"]);
+    expect(sortCatalogProducts(products, "price").map(product => product.id)).toEqual(["item2", "item1"]);
+    expect(
+      sortCatalogProducts(products, { mode: "price", direction: "asc" }).map(product => product.id)
+    ).toEqual(["item1", "item2"]);
+    expect(sortCatalogProducts(products, "year").map(product => product.id)).toEqual(["item1", "item2"]);
+    expect(sortCatalogProducts(products, "promo").map(product => product.id)).toEqual(["item1", "item2"]);
+    expect(
+      sortCatalogProducts(products, { mode: "promo", direction: "asc" }).map(product => product.id)
+    ).toEqual(["item2", "item1"]);
   });
 
   it("formats prices using Polish grouping and zł suffix", () => {

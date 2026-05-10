@@ -27,6 +27,21 @@ export function getPrintQueueTotal(queue: PrintQueue): number {
   return Object.values(queue).reduce((total, quantity) => total + quantity, 0);
 }
 
+export function getPriceCountWord(count: number): "cena" | "ceny" | "cen" {
+  if (!Number.isFinite(count)) return "cen";
+
+  const normalizedCount = Math.abs(Math.trunc(count));
+  if (normalizedCount === 1) return "cena";
+
+  const lastDigit = normalizedCount % 10;
+  const lastTwoDigits = normalizedCount % 100;
+  if (lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)) {
+    return "ceny";
+  }
+
+  return "cen";
+}
+
 export function parsePrintQueue(value: unknown): PrintQueue {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
     return {};

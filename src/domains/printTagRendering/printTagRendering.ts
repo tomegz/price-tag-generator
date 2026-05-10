@@ -6,6 +6,14 @@ export type PrintTagRenderEntry = {
   item: LegacyCatalogItem;
 };
 
+export const PRINT_TAGS_PER_A4_SHEET = 5;
+
+export function getPrintSheetCount(tagCount: number): number {
+  if (!Number.isFinite(tagCount) || tagCount <= 0) return 0;
+
+  return Math.ceil(tagCount / PRINT_TAGS_PER_A4_SHEET);
+}
+
 export function buildPrintTagRenderQueue(
   items: CatalogItemsById,
   queue: PrintQueue

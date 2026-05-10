@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   addToPrintQueue,
   clearPrintQueue,
+  getPriceCountWord,
   getPrintQueueTotal,
   parsePrintQueue,
   removeFromPrintQueue
@@ -43,6 +44,25 @@ describe('clearPrintQueue', () => {
 describe('getPrintQueueTotal', () => {
   it('counts the total number of tags to print', () => {
     expect(getPrintQueueTotal({ item1: 2, item2: 3 })).toBe(5);
+  });
+});
+
+describe('getPriceCountWord', () => {
+  it('uses Polish count forms for price labels', () => {
+    expect(getPriceCountWord(0)).toBe('cen');
+    expect(getPriceCountWord(1)).toBe('cena');
+    expect(getPriceCountWord(2)).toBe('ceny');
+    expect(getPriceCountWord(4)).toBe('ceny');
+    expect(getPriceCountWord(5)).toBe('cen');
+    expect(getPriceCountWord(11)).toBe('cen');
+    expect(getPriceCountWord(21)).toBe('cen');
+    expect(getPriceCountWord(22)).toBe('ceny');
+    expect(getPriceCountWord(24)).toBe('ceny');
+    expect(getPriceCountWord(25)).toBe('cen');
+    expect(getPriceCountWord(31)).toBe('cen');
+    expect(getPriceCountWord(32)).toBe('ceny');
+    expect(getPriceCountWord(112)).toBe('cen');
+    expect(getPriceCountWord(122)).toBe('ceny');
   });
 });
 

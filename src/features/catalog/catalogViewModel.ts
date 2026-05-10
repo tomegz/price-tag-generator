@@ -18,6 +18,14 @@ export type CatalogFilterOptions = {
   query: string;
 };
 
+export type CatalogSortMode = "brand" | "price" | "year" | "promo";
+export type CatalogSortDirection = "asc" | "desc";
+
+export type CatalogSort = {
+  mode: CatalogSortMode;
+  direction: CatalogSortDirection;
+};
+
 export type CatalogDraft = {
   name: string;
   model: string;
@@ -63,6 +71,56 @@ export function filterCatalogProducts(
 
     return matchesQuery && matchesBrand;
   });
+}
+
+export function getDefaultCatalogSortDirection(mode: CatalogSortMode): CatalogSortDirection {
+  return mode === "brand" ? "asc" : "desc";
+}
+
+export function toggleCatalogSortDirection(direction: CatalogSortDirection): CatalogSortDirection {
+  return direction === "asc" ? "desc" : "asc";
+}
+
+export function sortCatalogProducts(
+  products: CatalogProduct[],
+  sort: CatalogSort | CatalogSortMode
+): CatalogProduct[] {
+  const activeSort = typeof sort === "string"
+    ? { mode: sort, direction: getDefaultCatalogSortDirection(sort) }
+    : sort;
+  const directionFactor = activeSort.direction === "asc" ? 1 : -1;
+
+  return [...products].sort((a, b) => {
+    if (activeSort.mode === "price") {
+      const priceSort = compareNumericValues(a.price, b.price) * directionFactor;
+      if (priceSort !== 0) return priceSort;
+    }
+
+    if (activeSort.mode === "year") {
+      const yearSort = compareNumericValues(a.year, b.year) * directionFactor;
+      if (yearSort !== 0) return yearSort;
+    }
+
+    if (activeSort.mode === "promo") {
+      const promotionSort =
+        (Number(hasActivePromotion(a)) - Number(hasActivePromotion(b))) * directionFactor;
+      if (promotionSort !== 0) return promotionSort;
+    }
+
+    const brandSort = `${a.brand} ${a.model}`.localeCompare(`${b.brand} ${b.model}`, "pl");
+    return activeSort.mode === "brand" ? brandSort * directionFactor : brandSort;
+  });
+}
+
+function compareNumericValues(first: number | string, second: number | string): number {
+  const firstNumber = Number(first);
+  const secondNumber = Number(second);
+
+  if (!Number.isFinite(firstNumber) && !Number.isFinite(secondNumber)) return 0;
+  if (!Number.isFinite(firstNumber)) return -1;
+  if (!Number.isFinite(secondNumber)) return 1;
+
+  return firstNumber - secondNumber;
 }
 
 export function formatPLN(value: number | string | null | undefined): string {

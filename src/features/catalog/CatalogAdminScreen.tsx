@@ -241,9 +241,11 @@ const CatalogAdminScreen = ({
         })}
       </section>
 
-      <footer className="admin-status pb-mono">
-        {editedCount > 0 ? `${editedCount} wierszy w trakcie edycji · niezapisane` : "Wszystkie zmiany zapisane"}
-      </footer>
+      {editedCount > 0 ? (
+        <footer className="admin-status pb-mono">
+          <span>{editedCount}</span> wierszy w trakcie edycji · niezapisane
+        </footer>
+      ) : null}
     </main>
   );
 };

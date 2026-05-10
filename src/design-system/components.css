@@ -187,6 +187,7 @@
   align-items: center;
   color: var(--pb-ink);
   display: flex;
+  font-family: var(--pb-font-mono);
   font-size: 13px;
   font-weight: 600;
   justify-content: center;
@@ -277,7 +278,7 @@
 }
 
 .ds-modal-overlay {
-  align-items: center;
+  align-items: stretch;
   background: rgba(0, 0, 0, 0.45);
   display: flex;
   inset: 0;
@@ -294,7 +295,7 @@
   color: var(--pb-ink);
   display: flex;
   flex-direction: column;
-  height: min(100%, 900px);
+  height: 100%;
   max-width: 1080px;
   overflow: hidden;
   position: relative;

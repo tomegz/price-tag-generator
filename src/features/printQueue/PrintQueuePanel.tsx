@@ -2,9 +2,11 @@ import Button from "../../design-system/Button";
 import Icon from "../../design-system/Icon";
 import QuantityStepper from "../../design-system/QuantityStepper";
 import {
+  getPriceCountWord,
   getPrintQueueTotal,
   type PrintQueue
 } from "../../domains/printQueue/printQueue";
+import { getPrintSheetCount } from "../../domains/printTagRendering/printTagRendering";
 import {
   formatPLN,
   getEffectivePrice,
@@ -31,7 +33,7 @@ const PrintQueuePanel = ({
   const productsById = new Map(products.map(product => [product.id, product]));
   const queueIds = Object.keys(printQueue);
   const totalTags = getPrintQueueTotal(printQueue);
-  const totalPages = Math.ceil(totalTags / 10);
+  const totalPages = getPrintSheetCount(totalTags);
   const empty = queueIds.length === 0;
 
   return (
@@ -47,7 +49,7 @@ const PrintQueuePanel = ({
           <strong className="pb-mono" id="print-queue-title">
             {String(totalTags).padStart(2, "0")}
           </strong>
-          <span>cen do druku</span>
+          <span>{getPriceCountWord(totalTags)} do druku</span>
         </div>
       </header>
 
@@ -91,7 +93,7 @@ const PrintQueuePanel = ({
           Wyczyść
         </Button>
         <Button className="print-queue-panel__print" disabled={empty} icon="print" onClick={onPrint} variant="accent">
-          Drukuj {totalTags} etykiet
+          <span>Drukuj <span className="pb-mono">{totalTags}</span> etykiet</span>
         </Button>
       </footer>
     </aside>

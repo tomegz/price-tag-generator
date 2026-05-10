@@ -54,6 +54,8 @@ function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [mode, setMode] = useState<AppMode>("print");
   const [printQueue, setPrintQueue] = useState<PrintQueueState>({});
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
   const shouldPersistPrintQueueRef = useRef(false);
 
   const handleCatalogError = useCallback((error: FirebaseRepositoryError) => {
@@ -112,6 +114,32 @@ function App() {
     if (!shouldPersistPrintQueueRef.current) return;
     savePrintQueueToStorage(localStorage, printQueue);
   }, [printQueue]);
+
+  useEffect(() => {
+    if (!profileMenuOpen) return undefined;
+
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (
+        event.target instanceof Node &&
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target)
+      ) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setProfileMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [profileMenuOpen]);
 
   const products = useMemo(() => catalogItemsToProducts(catalogItems), [catalogItems]);
   const brands = useMemo(() => getCatalogBrands(products, catalogBrands), [catalogBrands, products]);
@@ -257,9 +285,33 @@ function App() {
             <Button icon="pencil" onClick={() => setMode("admin")} variant="ghost">
               Edycja cennika
             </Button>
-            <Button aria-label="Wyloguj" icon="logout" onClick={() => void logout()} variant="icon" />
-            <div aria-label={`Zalogowany użytkownik ${currentUser.email || ""}`} className="user-avatar pb-mono">
-              {userInitials}
+            <div className="profile-menu" ref={profileMenuRef}>
+              <button
+                aria-expanded={profileMenuOpen}
+                aria-label={`Zalogowany użytkownik ${currentUser.email || ""}`}
+                className="user-avatar pb-mono"
+                onClick={() => setProfileMenuOpen(open => !open)}
+                type="button"
+              >
+                {userInitials}
+              </button>
+              {profileMenuOpen ? (
+                <div aria-label="Menu użytkownika" className="profile-menu__popover" role="menu">
+                  <span className="profile-menu__email pb-mono">{currentUser.email || "Użytkownik"}</span>
+                  <button
+                    className="profile-menu__item"
+                    onClick={() => {
+                      setProfileMenuOpen(false);
+                      void logout();
+                    }}
+                    role="menuitem"
+                    type="button"
+                  >
+                    <Icon name="logout" size={14} />
+                    Wyloguj
+                  </button>
+                </div>
+              ) : null}
             </div>
           </header>
 

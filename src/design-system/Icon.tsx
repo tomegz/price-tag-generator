@@ -14,6 +14,8 @@ export type IconName =
   | "percent"
   | "arrow-r"
   | "arrow-l"
+  | "arrow-up"
+  | "arrow-down"
   | "info"
   | "queue"
   | "bike";
@@ -40,6 +42,8 @@ const paths: Record<IconName, ReactElement> = {
   percent: <><path d="M19 5 5 19" /><circle cx="7" cy="7" r="2.5" /><circle cx="17" cy="17" r="2.5" /></>,
   "arrow-r": <path d="M5 12h14M13 5l7 7-7 7" />,
   "arrow-l": <path d="M19 12H5M11 5l-7 7 7 7" />,
+  "arrow-up": <path d="M12 19V5M5 12l7-7 7 7" />,
+  "arrow-down": <path d="M12 5v14M19 12l-7 7-7-7" />,
   info: <><circle cx="12" cy="12" r="10" /><path d="M12 16v-5M12 8h.01" /></>,
   queue: <><path d="M4 6h12M4 12h12M4 18h8" /><circle cx="20" cy="6" r="1.5" /><circle cx="20" cy="12" r="1.5" /></>,
   bike: <><circle cx="6" cy="17" r="4" /><circle cx="18" cy="17" r="4" /><path d="M6 17 10 7h5l3 10M10 7H7M15 7h2" /></>

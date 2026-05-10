@@ -33,7 +33,7 @@ const BulkPromotionModal = ({ brands, onApply, onClose, products }: BulkPromotio
   const [brand, setBrand] = useState(ALL_BRANDS);
   const [error, setError] = useState("");
   const [mode, setMode] = useState<BulkPromotionMode>("percent");
-  const [percent, setPercent] = useState(15);
+  const [percent, setPercent] = useState(30);
   const [query, setQuery] = useState("");
   const [saving, setSaving] = useState(false);
   const [selected, setSelected] = useState<Record<string, boolean>>({});
@@ -102,7 +102,9 @@ const BulkPromotionModal = ({ brands, onApply, onClose, products }: BulkPromotio
             <p>Wybierz produkty, ustaw rabat, zatwierdź</p>
           </div>
         </div>
-        <FlowStepper currentStep={step} totalSteps={2} />
+        <div className="bulk-modal__stepper">
+          <FlowStepper currentStep={step} totalSteps={2} />
+        </div>
       </header>
 
       {step === 1 ? (
@@ -155,10 +157,13 @@ const BulkPromotionModal = ({ brands, onApply, onClose, products }: BulkPromotio
         <div className="bulk-modal__body bulk-modal__body--configure">
           <section className="bulk-config">
             <p className="bulk-config__kicker pb-mono">KROK 2 Z 2 · KONFIGURACJA I PODGLĄD</p>
-            <h3>Ustaw rabat dla {selectedCount} {selectedCount === 1 ? "produktu" : "produktów"}</h3>
+            <h3>
+              Ustaw rabat dla <span className="pb-mono">{selectedCount}</span> {selectedCount === 1 ? "produktu" : "produktów"}
+            </h3>
 
             <SegmentedControl<BulkPromotionMode>
               ariaLabel="Tryb rabatu"
+              className="bulk-config__mode-picker"
               onChange={setMode}
               options={[
                 { label: "Procentowo (%)", value: "percent" },
@@ -258,11 +263,15 @@ const BulkPromotionModal = ({ brands, onApply, onClose, products }: BulkPromotio
         {step === 2 ? <Button icon="arrow-l" onClick={() => setStep(1)} variant="ghost">Wstecz</Button> : null}
         {step === 1 ? (
           <Button disabled={selectedCount === 0} icon="arrow-r" onClick={() => setStep(2)}>
-            Dalej ({selectedCount})
+            <span>Dalej (<span className="pb-mono">{selectedCount}</span>)</span>
           </Button>
         ) : (
           <Button disabled={saving || selectedCount === 0} onClick={() => void apply()} variant="accent">
-            {saving ? "Zapisywanie..." : `Zastosuj promocję do ${selectedCount} produktów`}
+            {saving ? "Zapisywanie..." : (
+              <span>
+                Zastosuj promocję do <span className="pb-mono">{selectedCount}</span> produktów
+              </span>
+            )}
           </Button>
         )}
       </footer>

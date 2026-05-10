@@ -16,6 +16,7 @@ import { useCatalog } from "./features/catalog/useCatalog";
 import { useCatalogMutations } from "./features/catalog/useCatalogMutations";
 import PrintQueuePanel from "./features/printQueue/PrintQueuePanel";
 import { usePrintQueue } from "./features/printQueue/usePrintQueue";
+import { authService, catalogRepository } from "./services/firebase";
 
 function App() {
   const [bulkPromotionOpen, setBulkPromotionOpen] = useState(false);
@@ -26,7 +27,7 @@ function App() {
     currentUser,
     login,
     logout
-  } = useAuthSession();
+  } = useAuthSession(authService);
   const {
     brands,
     catalogError,
@@ -35,14 +36,14 @@ function App() {
     handleCatalogError,
     products,
     setCatalogItems
-  } = useCatalog(currentUser);
+  } = useCatalog(currentUser, catalogRepository);
   const {
     addToPrintQueue,
     clearPrintQueue,
     printQueue,
     removeFromPrintQueue,
     setPrintQueueQuantity
-  } = usePrintQueue(currentUser);
+  } = usePrintQueue(currentUser, localStorage);
   const {
     addCatalogItem,
     removeCatalogItem,
@@ -50,11 +51,13 @@ function App() {
   } = useCatalogMutations({
     handleCatalogError,
     onCatalogItemRemoved: removeFromPrintQueue,
+    repository: catalogRepository,
     setCatalogItems
   });
   const { applyPromotionToItems } = useBulkPromotionActions({
     catalogItems,
     handleCatalogError,
+    repository: catalogRepository,
     setCatalogItems
   });
 

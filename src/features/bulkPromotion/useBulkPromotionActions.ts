@@ -1,7 +1,7 @@
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import type { CatalogItemsById } from "../../domains/catalog/catalog";
 import {
-  catalogRepository,
+  type CatalogRepository,
   toFirebaseRepositoryError
 } from "../../services/firebase";
 import type { CatalogErrorHandler } from "../catalog/useCatalog";
@@ -13,6 +13,7 @@ import {
 type UseBulkPromotionActionsOptions = {
   catalogItems: CatalogItemsById;
   handleCatalogError: CatalogErrorHandler;
+  repository: CatalogRepository;
   setCatalogItems: Dispatch<SetStateAction<CatalogItemsById>>;
 };
 
@@ -23,6 +24,7 @@ export type BulkPromotionActions = {
 export function useBulkPromotionActions({
   catalogItems,
   handleCatalogError,
+  repository,
   setCatalogItems
 }: UseBulkPromotionActionsOptions): BulkPromotionActions {
   const applyPromotionToItems = useCallback(async (
@@ -36,7 +38,7 @@ export function useBulkPromotionActions({
 
     try {
       await Promise.all(
-        updates.map(({ productId, item }) => catalogRepository.saveCatalogItem(productId, item))
+        updates.map(({ productId, item }) => repository.saveCatalogItem(productId, item))
       );
 
       setCatalogItems(currentItems => {
@@ -50,7 +52,7 @@ export function useBulkPromotionActions({
       handleCatalogError(toFirebaseRepositoryError(error));
       throw error;
     }
-  }, [catalogItems, handleCatalogError, setCatalogItems]);
+  }, [catalogItems, handleCatalogError, repository, setCatalogItems]);
 
   return { applyPromotionToItems };
 }

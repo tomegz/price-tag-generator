@@ -8,7 +8,8 @@ import {
 } from "../../domains/printQueue/printQueue";
 import {
   loadPrintQueueFromStorage,
-  savePrintQueueToStorage
+  savePrintQueueToStorage,
+  type StorageLike
 } from "../../domains/storage/printQueueStorage";
 
 export type PrintQueueActions = {
@@ -19,8 +20,11 @@ export type PrintQueueActions = {
   setPrintQueueQuantity(itemId: string, quantity: number): void;
 };
 
-export function usePrintQueue(currentUser: User | null): PrintQueueActions {
-  const [printQueue, setPrintQueue] = useState<PrintQueueState>(() => loadPrintQueueFromStorage(localStorage));
+export function usePrintQueue(
+  currentUser: User | null,
+  storage: StorageLike
+): PrintQueueActions {
+  const [printQueue, setPrintQueue] = useState<PrintQueueState>(() => loadPrintQueueFromStorage(storage));
   const shouldPersistPrintQueueRef = useRef(false);
 
   useEffect(() => {
@@ -29,8 +33,8 @@ export function usePrintQueue(currentUser: User | null): PrintQueueActions {
 
   useEffect(() => {
     if (!shouldPersistPrintQueueRef.current) return;
-    savePrintQueueToStorage(localStorage, printQueue);
-  }, [printQueue]);
+    savePrintQueueToStorage(storage, printQueue);
+  }, [printQueue, storage]);
 
   const addToPrintQueue = useCallback((itemId: string, quantity: number) => {
     setPrintQueue(currentQueue => addToPrintQueueState(currentQueue, itemId, quantity));

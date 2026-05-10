@@ -1,0 +1,127 @@
+import { act, renderHook } from "@testing-library/react";
+import type { User } from "firebase/auth";
+import { describe, expect, it, vi } from "vitest";
+import type { CatalogBrands, CatalogItemsById } from "../../domains/catalog/catalog";
+import type {
+  CatalogRepository,
+  FirebaseRepositoryError
+} from "../../services/firebase";
+import { useCatalog } from "./useCatalog";
+
+type SubscriptionHandlers<T> = {
+  next(value: T): void;
+  error?(error: FirebaseRepositoryError): void;
+};
+
+function createCatalogRepository() {
+  let itemHandlers: SubscriptionHandlers<CatalogItemsById> | null = null;
+  let brandHandlers: SubscriptionHandlers<CatalogBrands> | null = null;
+  const unsubscribeItems = vi.fn();
+  const unsubscribeBrands = vi.fn();
+  const repository: CatalogRepository = {
+    deleteCatalogItem: vi.fn(async () => undefined),
+    saveCatalogItem: vi.fn(async () => undefined),
+    subscribeCatalogBrands: vi.fn(handlers => {
+      brandHandlers = handlers;
+      return unsubscribeBrands;
+    }),
+    subscribeCatalogItems: vi.fn(handlers => {
+      itemHandlers = handlers;
+      return unsubscribeItems;
+    })
+  };
+
+  return {
+    emitBrands(brands: CatalogBrands) {
+      act(() => brandHandlers?.next(brands));
+    },
+    emitItems(items: CatalogItemsById) {
+      act(() => itemHandlers?.next(items));
+    },
+    failItems(error: FirebaseRepositoryError) {
+      act(() => itemHandlers?.error?.(error));
+    },
+    repository,
+    unsubscribeBrands,
+    unsubscribeItems
+  };
+}
+
+const user = { email: "owner@example.test", uid: "owner" } as User;
+
+const item = {
+  discountPrice: 0,
+  discountStatus: "off" as const,
+  model: "Scarp",
+  name: "KTM",
+  price: 12999,
+  year: 2026
+};
+
+describe("useCatalog", () => {
+  it("subscribes after login and derives products and brands", () => {
+    const { emitBrands, emitItems, repository, unsubscribeBrands, unsubscribeItems } =
+      createCatalogRepository();
+    const { result, rerender, unmount } = renderHook(
+      ({ currentUser }) => useCatalog(currentUser, repository),
+      { initialProps: { currentUser: null as User | null } }
+    );
+
+    expect(result.current.catalogLoading).toBe(false);
+    expect(result.current.products).toEqual([]);
+    expect(repository.subscribeCatalogItems).not.toHaveBeenCalled();
+
+    rerender({ currentUser: user });
+
+    expect(result.current.catalogLoading).toBe(true);
+    expect(repository.subscribeCatalogItems).toHaveBeenCalledTimes(1);
+    expect(repository.subscribeCatalogBrands).toHaveBeenCalledTimes(1);
+
+    emitItems({ item1: item });
+    emitBrands(["KTM", "Trek"]);
+
+    expect(result.current.catalogLoading).toBe(false);
+    expect(result.current.catalogItems).toEqual({ item1: item });
+    expect(result.current.products).toEqual([
+      {
+        brand: "KTM",
+        discountPrice: 0,
+        discountStatus: "off",
+        id: "item1",
+        model: "Scarp",
+        name: "KTM",
+        price: 12999,
+        year: 2026,
+        yearLabel: "2026"
+      }
+    ]);
+    expect(result.current.brands).toEqual(["KTM", "Trek"]);
+
+    rerender({ currentUser: null });
+
+    expect(result.current.catalogError).toBe("");
+    expect(result.current.catalogItems).toEqual({});
+    expect(result.current.products).toEqual([]);
+    expect(result.current.brands).toEqual([]);
+    expect(unsubscribeItems).toHaveBeenCalledTimes(1);
+    expect(unsubscribeBrands).toHaveBeenCalledTimes(1);
+
+    unmount();
+  });
+
+  it("maps permission errors to the catalog access message", () => {
+    const { failItems, repository } = createCatalogRepository();
+    const { result } = renderHook(() => useCatalog(user, repository));
+
+    failItems({
+      cause: null,
+      code: "PERMISSION_DENIED",
+      message: "Permission denied"
+    });
+
+    expect(result.current.catalogLoading).toBe(false);
+    expect(result.current.catalogError).toBe(
+      "Brak dostępu do katalogu. Zalogowany użytkownik nie ma uprawnień do tej bazy."
+    );
+  });
+});

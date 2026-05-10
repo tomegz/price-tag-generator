@@ -1,7 +1,7 @@
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import type { CatalogItemsById, LegacyCatalogItem } from "../../domains/catalog/catalog";
 import {
-  catalogRepository,
+  type CatalogRepository,
   toFirebaseRepositoryError
 } from "../../services/firebase";
 import type { CatalogErrorHandler } from "./useCatalog";
@@ -9,6 +9,7 @@ import type { CatalogErrorHandler } from "./useCatalog";
 type UseCatalogMutationsOptions = {
   handleCatalogError: CatalogErrorHandler;
   onCatalogItemRemoved(itemId: string): void;
+  repository: CatalogRepository;
   setCatalogItems: Dispatch<SetStateAction<CatalogItemsById>>;
 };
 
@@ -21,12 +22,13 @@ export type CatalogMutations = {
 export function useCatalogMutations({
   handleCatalogError,
   onCatalogItemRemoved,
+  repository,
   setCatalogItems
 }: UseCatalogMutationsOptions): CatalogMutations {
   const addCatalogItem = useCallback(async (item: LegacyCatalogItem) => {
     const key = `item${Date.now()}`;
     try {
-      await catalogRepository.saveCatalogItem(key, item);
+      await repository.saveCatalogItem(key, item);
       setCatalogItems(currentItems => ({
         ...currentItems,
         [key]: item
@@ -35,11 +37,11 @@ export function useCatalogMutations({
       handleCatalogError(toFirebaseRepositoryError(error));
       throw error;
     }
-  }, [handleCatalogError, setCatalogItems]);
+  }, [handleCatalogError, repository, setCatalogItems]);
 
   const updateCatalogItem = useCallback(async (key: string, updatedItem: LegacyCatalogItem) => {
     try {
-      await catalogRepository.saveCatalogItem(key, updatedItem);
+      await repository.saveCatalogItem(key, updatedItem);
       setCatalogItems(currentItems => ({
         ...currentItems,
         [key]: updatedItem
@@ -48,11 +50,11 @@ export function useCatalogMutations({
       handleCatalogError(toFirebaseRepositoryError(error));
       throw error;
     }
-  }, [handleCatalogError, setCatalogItems]);
+  }, [handleCatalogError, repository, setCatalogItems]);
 
   const removeCatalogItem = useCallback(async (id: string) => {
     try {
-      await catalogRepository.deleteCatalogItem(id);
+      await repository.deleteCatalogItem(id);
       setCatalogItems(currentItems => {
         const next = { ...currentItems };
         delete next[id];
@@ -63,7 +65,7 @@ export function useCatalogMutations({
       handleCatalogError(toFirebaseRepositoryError(error));
       throw error;
     }
-  }, [handleCatalogError, onCatalogItemRemoved, setCatalogItems]);
+  }, [handleCatalogError, onCatalogItemRemoved, repository, setCatalogItems]);
 
   return {
     addCatalogItem,

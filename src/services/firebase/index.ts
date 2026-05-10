@@ -4,7 +4,7 @@ import { createCatalogRepository } from './catalogRepository';
 
 export { firebaseServices, createFirebaseServiceInstances } from './app';
 export { createAuthService } from './authService';
-export type { AuthSignInResult } from './authService';
+export type { AuthService, AuthSignInResult } from './authService';
 export {
   catalogPaths,
   createCatalogRepository,
@@ -13,7 +13,7 @@ export {
   readCatalogBrands,
   toFirebaseRepositoryError
 } from './catalogRepository';
-export type { FirebaseRepositoryError } from './catalogRepository';
+export type { CatalogRepository, FirebaseRepositoryError } from './catalogRepository';
 export { readFirebaseRuntimeConfig } from './config';
 
 export const authService = createAuthService(firebaseServices.auth);

@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState, type Dispatch, type SetState
 import type { User } from "firebase/auth";
 import type { CatalogBrands, CatalogItemsById } from "../../domains/catalog/catalog";
 import {
-  catalogRepository,
   isPermissionDenied,
+  type CatalogRepository,
   type FirebaseRepositoryError
 } from "../../services/firebase";
 import {
@@ -35,7 +35,10 @@ export type CatalogState = {
   setCatalogItems: Dispatch<SetStateAction<CatalogItemsById>>;
 };
 
-export function useCatalog(currentUser: User | null): CatalogState {
+export function useCatalog(
+  currentUser: User | null,
+  repository: CatalogRepository
+): CatalogState {
   const activeUid = currentUser?.uid ?? null;
   const [catalogData, setCatalogData] = useState<CatalogDataState>({
     brands: [],
@@ -58,7 +61,7 @@ export function useCatalog(currentUser: User | null): CatalogState {
   useEffect(() => {
     if (!activeUid) return undefined;
 
-    const unsubscribeItems = catalogRepository.subscribeCatalogItems({
+    const unsubscribeItems = repository.subscribeCatalogItems({
       next: items => {
         setCatalogData(currentData => ({
           ...currentData,
@@ -70,7 +73,7 @@ export function useCatalog(currentUser: User | null): CatalogState {
       error: handleCatalogError
     });
 
-    const unsubscribeBrands = catalogRepository.subscribeCatalogBrands({
+    const unsubscribeBrands = repository.subscribeCatalogBrands({
       next: brands => {
         setCatalogData(currentData => ({
           ...currentData,
@@ -85,7 +88,7 @@ export function useCatalog(currentUser: User | null): CatalogState {
       unsubscribeItems();
       unsubscribeBrands();
     };
-  }, [activeUid, handleCatalogError]);
+  }, [activeUid, handleCatalogError, repository]);
 
   const catalogItems =
     activeUid && catalogData.itemsLoadedForUid === activeUid ? catalogData.items : emptyCatalogItems;

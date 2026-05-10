@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
-import type { User } from "firebase/auth";
 import { describe, expect, it, vi } from "vitest";
+import type { AuthUser } from "../../app/authUser";
 import { printQueueStorageKey, type StorageLike } from "../../domains/storage/printQueueStorage";
 import { usePrintQueue } from "./usePrintQueue";
 
@@ -23,7 +23,7 @@ function createStorage(initialValues: Record<string, string> = {}): TestStorage 
   };
 }
 
-const user = { email: "owner@example.test", uid: "owner" } as User;
+const user: AuthUser = { displayName: null, email: "owner@example.test", uid: "owner" };
 
 describe("usePrintQueue", () => {
   it("loads from injected storage and persists only after a user is present", () => {
@@ -32,7 +32,7 @@ describe("usePrintQueue", () => {
     });
     const { result, rerender } = renderHook(
       ({ currentUser }) => usePrintQueue(currentUser, storage),
-      { initialProps: { currentUser: null as User | null } }
+      { initialProps: { currentUser: null as AuthUser | null } }
     );
 
     expect(storage.getItem).toHaveBeenCalledWith(printQueueStorageKey);

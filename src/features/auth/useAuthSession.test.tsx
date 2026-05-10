@@ -1,25 +1,25 @@
 import { act, renderHook } from "@testing-library/react";
-import type { User } from "firebase/auth";
 import { describe, expect, it, vi } from "vitest";
-import type { AuthService, AuthSignInResult } from "../../services/firebase";
+import type { AuthUser } from "../../app/authUser";
+import type { AuthService } from "../../services/firebase";
 import { useAuthSession } from "./useAuthSession";
 
 function createAuthService() {
-  let authCallback: (user: User | null) => void = () => undefined;
+  let authCallback: (user: AuthUser | null) => void = () => undefined;
   const unsubscribe = vi.fn();
   const service: AuthService = {
     observeAuth: vi.fn(callback => {
       authCallback = callback;
       return unsubscribe;
     }),
-    signIn: vi.fn(async () => ({}) as AuthSignInResult),
+    signIn: vi.fn(async () => undefined),
     signOut: vi.fn(async () => undefined)
   };
 
-  return { authCallback: (user: User | null) => authCallback(user), service, unsubscribe };
+  return { authCallback: (user: AuthUser | null) => authCallback(user), service, unsubscribe };
 }
 
-const user = { email: "owner@example.test", uid: "owner" } as User;
+const user: AuthUser = { displayName: null, email: "owner@example.test", uid: "owner" };
 
 describe("useAuthSession", () => {
   it("subscribes to auth state and exposes the current user", () => {
@@ -32,7 +32,11 @@ describe("useAuthSession", () => {
     act(() => authCallback(user));
 
     expect(result.current.authLoading).toBe(false);
-    expect(result.current.currentUser).toBe(user);
+    expect(result.current.currentUser).toEqual({
+      displayName: null,
+      email: "owner@example.test",
+      uid: "owner"
+    });
 
     unmount();
     expect(unsubscribe).toHaveBeenCalledTimes(1);

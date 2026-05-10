@@ -1,16 +1,17 @@
-import { useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
-import type { User } from "firebase/auth";
-import type { CatalogBrands, CatalogItemsById } from "../../domains/catalog/catalog";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { AuthUser } from "../../app/authUser";
 import {
-  isPermissionDenied,
-  type CatalogRepository,
-  type FirebaseRepositoryError
-} from "../../services/firebase";
+  getCatalogErrorMessage,
+  type CatalogErrorHandler,
+  type RepositoryError
+} from "../../app/catalogErrors";
+import type { CatalogBrands, CatalogItemsById } from "../../domains/catalog/catalog";
+import type { CatalogReadRepository } from "../../services/firebase";
 import {
   catalogItemsToProducts,
   getCatalogBrands,
   type CatalogProduct
-} from "./catalogViewModel";
+} from "../../domains/catalog/catalogProduct";
 
 type CatalogDataState = {
   brands: CatalogBrands;
@@ -23,8 +24,6 @@ type CatalogDataState = {
 const emptyCatalogItems: CatalogItemsById = {};
 const emptyCatalogBrands: CatalogBrands = [];
 
-export type CatalogErrorHandler = (error: FirebaseRepositoryError) => void;
-
 export type CatalogState = {
   brands: string[];
   catalogError: string;
@@ -32,12 +31,11 @@ export type CatalogState = {
   catalogLoading: boolean;
   handleCatalogError: CatalogErrorHandler;
   products: CatalogProduct[];
-  setCatalogItems: Dispatch<SetStateAction<CatalogItemsById>>;
 };
 
 export function useCatalog(
-  currentUser: User | null,
-  repository: CatalogRepository
+  currentUser: AuthUser | null,
+  repository: CatalogReadRepository
 ): CatalogState {
   const activeUid = currentUser?.uid ?? null;
   const [catalogData, setCatalogData] = useState<CatalogDataState>({
@@ -48,13 +46,10 @@ export function useCatalog(
     itemsLoadedForUid: null
   });
 
-  const handleCatalogError = useCallback((error: FirebaseRepositoryError) => {
-    const message = isPermissionDenied(error)
-      ? "Brak dostępu do katalogu. Zalogowany użytkownik nie ma uprawnień do tej bazy."
-      : "Nie udało się zapisać lub pobrać danych katalogu.";
+  const handleCatalogError = useCallback((error: RepositoryError) => {
     setCatalogData(currentData => ({
       ...currentData,
-      error: message
+      error: getCatalogErrorMessage(error)
     }));
   }, []);
 
@@ -97,19 +92,6 @@ export function useCatalog(
   const catalogError = activeUid ? catalogData.error : "";
   const catalogLoading = Boolean(activeUid && catalogData.itemsLoadedForUid !== activeUid && !catalogError);
 
-  const setCatalogItems: Dispatch<SetStateAction<CatalogItemsById>> = useCallback((nextItems) => {
-    setCatalogData(currentData => {
-      const items = typeof nextItems === "function" ? nextItems(currentData.items) : nextItems;
-
-      return {
-        ...currentData,
-        error: "",
-        items,
-        itemsLoadedForUid: activeUid
-      };
-    });
-  }, [activeUid]);
-
   const products = useMemo(() => catalogItemsToProducts(catalogItems), [catalogItems]);
   const brands = useMemo(() => getCatalogBrands(products, catalogBrands), [catalogBrands, products]);
 
@@ -119,7 +101,6 @@ export function useCatalog(
     catalogItems,
     catalogLoading,
     handleCatalogError,
-    products,
-    setCatalogItems
+    products
   };
 }

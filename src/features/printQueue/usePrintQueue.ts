@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { User } from "firebase/auth";
+import type { AuthUser } from "../../app/authUser";
 import {
   addToPrintQueue as addToPrintQueueState,
   clearPrintQueue as clearPrintQueueState,
@@ -21,7 +21,7 @@ export type PrintQueueActions = {
 };
 
 export function usePrintQueue(
-  currentUser: User | null,
+  currentUser: AuthUser | null,
   storage: StorageLike
 ): PrintQueueActions {
   const [printQueue, setPrintQueue] = useState<PrintQueueState>(() => loadPrintQueueFromStorage(storage));

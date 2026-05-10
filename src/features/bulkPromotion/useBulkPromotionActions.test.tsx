@@ -8,20 +8,9 @@ function createCatalogRepository(): CatalogRepository {
   return {
     deleteCatalogItem: vi.fn(async () => undefined),
     saveCatalogItem: vi.fn(async () => undefined),
+    saveCatalogItems: vi.fn(async () => undefined),
     subscribeCatalogBrands: vi.fn(() => vi.fn()),
     subscribeCatalogItems: vi.fn(() => vi.fn())
-  };
-}
-
-function createCatalogState(initialItems: CatalogItemsById) {
-  let catalogItems = initialItems;
-
-  return {
-    getCatalogItems: () => catalogItems,
-    setCatalogItems: vi.fn(nextItems => {
-      catalogItems =
-        typeof nextItems === "function" ? nextItems(catalogItems) : nextItems;
-    })
   };
 }
 
@@ -47,13 +36,11 @@ const catalogItems: CatalogItemsById = {
 describe("useBulkPromotionActions", () => {
   it("applies bulk promotion updates through the injected repository", async () => {
     const repository = createCatalogRepository();
-    const catalogState = createCatalogState(catalogItems);
     const { result } = renderHook(() =>
       useBulkPromotionActions({
         catalogItems,
         handleCatalogError: vi.fn(),
-        repository,
-        setCatalogItems: catalogState.setCatalogItems
+        repository
       })
     );
 
@@ -68,26 +55,20 @@ describe("useBulkPromotionActions", () => {
       discountPrice: 700,
       discountStatus: "on" as const
     };
-    expect(repository.saveCatalogItem).toHaveBeenCalledTimes(1);
-    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item1", promotedItem);
-    expect(catalogState.getCatalogItems()).toEqual({
-      ...catalogItems,
-      item1: promotedItem
-    });
+    expect(repository.saveCatalogItems).toHaveBeenCalledWith({ item1: promotedItem });
+    expect(repository.saveCatalogItem).not.toHaveBeenCalled();
   });
 
   it("surfaces repository failures through the catalog error handler", async () => {
     const repository = createCatalogRepository();
     const error = new Error("write failed");
-    vi.mocked(repository.saveCatalogItem).mockRejectedValueOnce(error);
+    vi.mocked(repository.saveCatalogItems).mockRejectedValueOnce(error);
     const handleCatalogError = vi.fn();
-    const catalogState = createCatalogState(catalogItems);
     const { result } = renderHook(() =>
       useBulkPromotionActions({
         catalogItems,
         handleCatalogError,
-        repository,
-        setCatalogItems: catalogState.setCatalogItems
+        repository
       })
     );
 

@@ -1,4 +1,3 @@
-import { useMemo, useState } from "react";
 import Button from "../../design-system/Button";
 import FilterPills from "../../design-system/FilterPills";
 import FlowStepper from "../../design-system/FlowStepper";
@@ -6,17 +5,14 @@ import Icon from "../../design-system/Icon";
 import Modal from "../../design-system/Modal";
 import SearchInput from "../../design-system/SearchInput";
 import SegmentedControl from "../../design-system/SegmentedControl";
-import {
-  ALL_BRANDS,
-  filterCatalogProducts,
-  formatPLN,
-  type CatalogProduct
-} from "../catalog/catalogViewModel";
+import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import { formatPLN } from "../../domains/pricing/priceFormatting";
 import {
   calculateBulkDiscountPrice,
   type BulkPromotionMode,
   type BulkPromotionOptions
 } from "./bulkPromotion";
+import { useBulkPromotionWizard } from "./useBulkPromotionWizard";
 
 type BulkPromotionModalProps = {
   brands: string[];
@@ -29,68 +25,37 @@ const percentQuickPicks = [10, 15, 20, 25, 30, 40, 50];
 const amountQuickPicks = [50, 100, 200, 500, 1000];
 
 const BulkPromotionModal = ({ brands, onApply, onClose, products }: BulkPromotionModalProps) => {
-  const [amount, setAmount] = useState(200);
-  const [brand, setBrand] = useState(ALL_BRANDS);
-  const [error, setError] = useState("");
-  const [mode, setMode] = useState<BulkPromotionMode>("percent");
-  const [percent, setPercent] = useState(30);
-  const [query, setQuery] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [selected, setSelected] = useState<Record<string, boolean>>({});
-  const [step, setStep] = useState(1);
-
-  const brandOptions = useMemo(
-    () => [
-      { label: "Wszystkie", value: ALL_BRANDS },
-      ...brands.map(item => ({ label: item, value: item }))
-    ],
-    [brands]
-  );
-
-  const filteredProducts = useMemo(
-    () => filterCatalogProducts(products, { brand, query }),
-    [brand, products, query]
-  );
-
-  const selectedItems = useMemo(
-    () => products.filter(product => selected[product.id]),
-    [products, selected]
-  );
-
-  const selectedCount = selectedItems.length;
-  const allFilteredSelected =
-    filteredProducts.length > 0 && filteredProducts.every(product => selected[product.id]);
-  const options = { amount, mode, percent };
-
-  const toggleAllFiltered = () => {
-    setSelected(current => {
-      const next = { ...current };
-      if (allFilteredSelected) {
-        filteredProducts.forEach(product => {
-          delete next[product.id];
-        });
-      } else {
-        filteredProducts.forEach(product => {
-          next[product.id] = true;
-        });
-      }
-      return next;
-    });
-  };
-
-  const apply = async () => {
-    setError("");
-    setSaving(true);
-
-    try {
-      await onApply(selectedItems.map(product => product.id), options);
-      onClose();
-    } catch {
-      setError("Nie udało się zapisać promocji. Spróbuj ponownie.");
-    } finally {
-      setSaving(false);
-    }
-  };
+  const {
+    allFilteredSelected,
+    amount,
+    apply,
+    brand,
+    brandOptions,
+    error,
+    filteredProducts,
+    mode,
+    options,
+    percent,
+    query,
+    saving,
+    selected,
+    selectedCount,
+    selectedItems,
+    setAmount,
+    setBrand,
+    setMode,
+    setPercent,
+    setQuery,
+    setStep,
+    step,
+    toggleAllFiltered,
+    toggleProduct
+  } = useBulkPromotionWizard({
+    brands,
+    onApply,
+    onClose,
+    products
+  });
 
   return (
     <Modal labelledBy="bulk-promotion-title" onClose={onClose}>
@@ -135,10 +100,16 @@ const BulkPromotionModal = ({ brands, onApply, onClose, products }: BulkPromotio
               const checked = Boolean(selected[product.id]);
 
               return (
-                <label className="bulk-table__row" data-selected={checked ? "true" : "false"} key={product.id}>
+                <label
+                  className="bulk-table__row"
+                  data-product-id={product.id}
+                  data-selected={checked ? "true" : "false"}
+                  data-testid="bulk-product-row"
+                  key={product.id}
+                >
                   <input
                     checked={checked}
-                    onChange={() => setSelected(current => ({ ...current, [product.id]: !current[product.id] }))}
+                    onChange={() => toggleProduct(product.id)}
                     type="checkbox"
                   />
                   <strong>{product.brand}</strong>

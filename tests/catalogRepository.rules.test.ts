@@ -111,9 +111,16 @@ describe('CatalogRepository security rules integration', () => {
     const repository = authenticatedRepository('owner-uid');
 
     await assertSucceeds(repository.saveCatalogItem('item-1', validItem));
-    await expect(readItemsOnce(repository)).resolves.toEqual({ 'item-1': validItem });
+    await assertSucceeds(repository.saveCatalogItems({
+      'item-2': { ...validItem, model: 'Batch demo' }
+    }));
+    await expect(readItemsOnce(repository)).resolves.toEqual({
+      'item-1': validItem,
+      'item-2': { ...validItem, model: 'Batch demo' }
+    });
 
     await assertSucceeds(repository.deleteCatalogItem('item-1'));
+    await assertSucceeds(repository.deleteCatalogItem('item-2'));
     await expect(readItemsOnce(repository)).resolves.toEqual({});
   });
 

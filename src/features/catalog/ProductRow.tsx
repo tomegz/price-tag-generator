@@ -4,9 +4,9 @@ import PromoPrice from "../../design-system/PromoPrice";
 import QuantityStepper from "../../design-system/QuantityStepper";
 import {
   formatPLN,
-  hasActivePromotion,
-  type CatalogProduct
-} from "./catalogViewModel";
+  hasActivePromotion
+} from "../../domains/pricing/priceFormatting";
+import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
 
 type ProductRowProps = {
   product: CatalogProduct;
@@ -22,6 +22,8 @@ const ProductRow = ({ inQueue, onAdd, product }: ProductRowProps) => {
     <div
       className="product-row"
       data-in-queue={inQueue > 0 ? "true" : "false"}
+      data-product-id={product.id}
+      data-testid="product-row"
       onKeyDown={event => {
         if (event.key === "Enter") onAdd(product.id, quantity);
       }}

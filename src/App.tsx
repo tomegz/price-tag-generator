@@ -10,7 +10,7 @@ import { useAuthSession } from "./features/auth/useAuthSession";
 import BulkPromotionModal from "./features/bulkPromotion/BulkPromotionModal";
 import { useBulkPromotionActions } from "./features/bulkPromotion/useBulkPromotionActions";
 import CatalogAdminScreen from "./features/catalog/CatalogAdminScreen";
-import { getUserInitials } from "./features/catalog/catalogViewModel";
+import { getUserInitials } from "./app/authUser";
 import ProductList from "./features/catalog/ProductList";
 import { useCatalog } from "./features/catalog/useCatalog";
 import { useCatalogMutations } from "./features/catalog/useCatalogMutations";
@@ -34,8 +34,7 @@ function App() {
     catalogItems,
     catalogLoading,
     handleCatalogError,
-    products,
-    setCatalogItems
+    products
   } = useCatalog(currentUser, catalogRepository);
   const {
     addToPrintQueue,
@@ -51,14 +50,12 @@ function App() {
   } = useCatalogMutations({
     handleCatalogError,
     onCatalogItemRemoved: removeFromPrintQueue,
-    repository: catalogRepository,
-    setCatalogItems
+    repository: catalogRepository
   });
   const { applyPromotionToItems } = useBulkPromotionActions({
     catalogItems,
     handleCatalogError,
-    repository: catalogRepository,
-    setCatalogItems
+    repository: catalogRepository
   });
 
   const handleLogout = useCallback(async () => {

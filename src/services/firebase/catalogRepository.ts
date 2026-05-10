@@ -1,5 +1,6 @@
-import { get, onValue, ref, remove, set, type Database } from 'firebase/database';
+import { get, onValue, ref, remove, set, update, type Database } from 'firebase/database';
 
+import type { RepositoryError } from '../../app/catalogErrors';
 import {
   parseLegacyCatalogBrands,
   parseLegacyCatalogItem,
@@ -23,23 +24,25 @@ export const catalogPaths = {
   }
 };
 
-export type FirebaseRepositoryError = {
-  code: string;
-  message: string;
-  cause: unknown;
-};
+export type FirebaseRepositoryError = RepositoryError;
 
-type SubscriptionHandlers<T> = {
+export type SubscriptionHandlers<T> = {
   next(value: T): void;
   error?(error: FirebaseRepositoryError): void;
 };
 
-export type CatalogRepository = {
+export type CatalogReadRepository = {
   subscribeCatalogItems(handlers: SubscriptionHandlers<CatalogItemsById>): () => void;
   subscribeCatalogBrands(handlers: SubscriptionHandlers<CatalogBrands>): () => void;
+};
+
+export type CatalogWriteRepository = {
   saveCatalogItem(itemId: string, item: LegacyCatalogItem): Promise<void>;
+  saveCatalogItems(items: CatalogItemsById): Promise<void>;
   deleteCatalogItem(itemId: string): Promise<void>;
 };
+
+export type CatalogRepository = CatalogReadRepository & CatalogWriteRepository;
 
 type FirebaseErrorLike = {
   code?: string;
@@ -88,6 +91,15 @@ export function createCatalogRepository(
     },
     saveCatalogItem(itemId, item) {
       return set(ref(database, catalogPaths.item(itemId, storeId)), ensureWritableCatalogItem(item));
+    },
+    saveCatalogItems(items) {
+      const writableItems = Object.entries(items).reduce<CatalogItemsById>((nextItems, [itemId, item]) => {
+        nextItems[itemId] = ensureWritableCatalogItem(item);
+        return nextItems;
+      }, {});
+
+      if (Object.keys(writableItems).length === 0) return Promise.resolve();
+      return update(ref(database, catalogPaths.items(storeId)), writableItems);
     },
     deleteCatalogItem(itemId) {
       return remove(ref(database, catalogPaths.item(itemId, storeId)));

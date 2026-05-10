@@ -1,9 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
-import type { User } from "firebase/auth";
 import { describe, expect, it, vi } from "vitest";
+import type { AuthUser } from "../../app/authUser";
 import type { CatalogBrands, CatalogItemsById } from "../../domains/catalog/catalog";
 import type {
-  CatalogRepository,
+  CatalogReadRepository,
   FirebaseRepositoryError
 } from "../../services/firebase";
 import { useCatalog } from "./useCatalog";
@@ -18,9 +18,7 @@ function createCatalogRepository() {
   let brandHandlers: SubscriptionHandlers<CatalogBrands> | null = null;
   const unsubscribeItems = vi.fn();
   const unsubscribeBrands = vi.fn();
-  const repository: CatalogRepository = {
-    deleteCatalogItem: vi.fn(async () => undefined),
-    saveCatalogItem: vi.fn(async () => undefined),
+  const repository: CatalogReadRepository = {
     subscribeCatalogBrands: vi.fn(handlers => {
       brandHandlers = handlers;
       return unsubscribeBrands;
@@ -47,7 +45,7 @@ function createCatalogRepository() {
   };
 }
 
-const user = { email: "owner@example.test", uid: "owner" } as User;
+const user: AuthUser = { displayName: null, email: "owner@example.test", uid: "owner" };
 
 const item = {
   discountPrice: 0,
@@ -64,7 +62,7 @@ describe("useCatalog", () => {
       createCatalogRepository();
     const { result, rerender, unmount } = renderHook(
       ({ currentUser }) => useCatalog(currentUser, repository),
-      { initialProps: { currentUser: null as User | null } }
+      { initialProps: { currentUser: null as AuthUser | null } }
     );
 
     expect(result.current.catalogLoading).toBe(false);

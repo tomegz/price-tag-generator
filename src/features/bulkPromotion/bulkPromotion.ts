@@ -10,14 +10,17 @@ export type BulkPromotionOptions = {
 
 export function calculateBulkDiscountPrice(
   price: number,
-  { amount, mode, percent }: BulkPromotionOptions
+  options: BulkPromotionOptions
 ): number {
-  if (mode === "percent") {
-    return Math.round(price * (1 - percent / 100));
-  }
-
-  return Math.max(0, price - amount);
+  return bulkPromotionCalculators[options.mode](price, options);
 }
+
+type BulkPromotionCalculator = (price: number, options: BulkPromotionOptions) => number;
+
+const bulkPromotionCalculators: Record<BulkPromotionMode, BulkPromotionCalculator> = {
+  percent: (price, { percent }) => Math.round(price * (1 - percent / 100)),
+  amount: (price, { amount }) => Math.max(0, price - amount)
+};
 
 export function applyBulkPromotion(
   item: LegacyCatalogItem,

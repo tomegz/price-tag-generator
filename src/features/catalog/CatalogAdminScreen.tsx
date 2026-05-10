@@ -1,4 +1,3 @@
-import { useMemo, useState } from "react";
 import Button from "../../design-system/Button";
 import FilterPills from "../../design-system/FilterPills";
 import Icon from "../../design-system/Icon";
@@ -6,18 +5,16 @@ import SearchInput from "../../design-system/SearchInput";
 import TextField from "../../design-system/TextField";
 import type { LegacyCatalogItem } from "../../domains/catalog/catalog";
 import {
-  ALL_BRANDS,
-  catalogDraftToItem,
-  draftFromItem,
-  emptyCatalogDraft,
-  filterCatalogProducts,
-  formatPLN,
-  hasActivePromotion,
   isDraftDirty,
   isDraftValid,
-  type CatalogDraft,
-  type CatalogProduct
-} from "./catalogViewModel";
+  type CatalogDraft
+} from "../../domains/catalog/catalogDraft";
+import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import {
+  formatPLN,
+  hasActivePromotion
+} from "../../domains/pricing/priceFormatting";
+import { useCatalogEditor } from "./useCatalogEditor";
 
 type CatalogAdminScreenProps = {
   brands: string[];
@@ -59,71 +56,32 @@ const CatalogAdminScreen = ({
   onUpdateProduct,
   products
 }: CatalogAdminScreenProps) => {
-  const [adding, setAdding] = useState(false);
-  const [brand, setBrand] = useState(ALL_BRANDS);
-  const [drafts, setDrafts] = useState<Record<string, CatalogDraft>>({});
-  const [newDraft, setNewDraft] = useState<CatalogDraft>(() => emptyCatalogDraft());
-  const [query, setQuery] = useState("");
-
-  const brandOptions = useMemo(
-    () => [
-      { label: "Wszystkie", value: ALL_BRANDS },
-      ...brands.map(item => ({ label: item, value: item }))
-    ],
-    [brands]
-  );
-
-  const filteredProducts = useMemo(
-    () => filterCatalogProducts(products, { brand, query }),
-    [brand, products, query]
-  );
-
-  const updateDraft = (productId: string, field: keyof CatalogDraft, value: string) => {
-    setDrafts(current => ({
-      ...current,
-      [productId]: {
-        ...current[productId],
-        [field]: value
-      }
-    }));
-  };
-
-  const startEdit = (product: CatalogProduct) => {
-    setDrafts(current => ({
-      ...current,
-      [product.id]: draftFromItem(product)
-    }));
-  };
-
-  const cancelEdit = (productId: string) => {
-    setDrafts(current => {
-      const next = { ...current };
-      delete next[productId];
-      return next;
-    });
-  };
-
-  const saveEdit = async (product: CatalogProduct) => {
-    const draft = drafts[product.id];
-    if (!draft || !isDraftValid(draft) || !isDraftDirty(product, draft)) return;
-    await onUpdateProduct(product.id, catalogDraftToItem(draft));
-    cancelEdit(product.id);
-  };
-
-  const addProduct = async () => {
-    if (!isDraftValid(newDraft)) return;
-    await onAddProduct(catalogDraftToItem(newDraft));
-    setNewDraft(emptyCatalogDraft());
-    setAdding(false);
-  };
-
-  const deleteProduct = async (product: CatalogProduct) => {
-    const confirmed = window.confirm(`Czy na pewno chcesz usunąć ${product.brand} ${product.model} z bazy cen?`);
-    if (!confirmed) return;
-    await onDeleteProduct(product.id);
-  };
-
-  const editedCount = Object.keys(drafts).length;
+  const {
+    adding,
+    addProduct,
+    brand,
+    brandOptions,
+    cancelEdit,
+    deleteProduct,
+    drafts,
+    editedCount,
+    filteredProducts,
+    newDraft,
+    query,
+    saveEdit,
+    setAdding,
+    setBrand,
+    setQuery,
+    startEdit,
+    updateDraft,
+    updateNewDraft
+  } = useCatalogEditor({
+    brands,
+    onAddProduct,
+    onDeleteProduct,
+    onUpdateProduct,
+    products
+  });
 
   return (
     <main className="admin-screen">
@@ -175,13 +133,13 @@ const CatalogAdminScreen = ({
         </div>
 
         {adding ? (
-          <div className="admin-row admin-row--editing">
+          <div className="admin-row admin-row--editing" data-testid="admin-add-row">
             {draftFields.map(field => (
               <TextField
                 aria-label={fieldPlaceholder(field)}
                 key={field}
                 numeric={field === "price" || field === "discountPrice" || field === "year"}
-                onChange={event => setNewDraft(current => ({ ...current, [field]: event.target.value }))}
+                onChange={event => updateNewDraft(field, event.target.value)}
                 placeholder={fieldPlaceholder(field)}
                 value={newDraft[field]}
               />
@@ -201,7 +159,12 @@ const CatalogAdminScreen = ({
 
           if (editing && draft) {
             return (
-              <div className="admin-row admin-row--editing" key={product.id}>
+              <div
+                className="admin-row admin-row--editing"
+                data-product-id={product.id}
+                data-testid="admin-product-row"
+                key={product.id}
+              >
                 {draftFields.map(field => (
                   <TextField
                     aria-label={fieldPlaceholder(field)}
@@ -224,7 +187,7 @@ const CatalogAdminScreen = ({
           }
 
           return (
-            <div className="admin-row" key={product.id}>
+            <div className="admin-row" data-product-id={product.id} data-testid="admin-product-row" key={product.id}>
               <strong>{product.brand}</strong>
               <span>{product.model}</span>
               <span className="pb-mono muted">{product.yearLabel}</span>

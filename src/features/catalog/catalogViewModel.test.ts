@@ -1,16 +1,24 @@
 import { describe, expect, it } from "vitest";
+import { getUserInitials } from "../../app/authUser";
+import {
+  catalogDraftToItem,
+  isDraftValid
+} from "../../domains/catalog/catalogDraft";
 import {
   ALL_BRANDS,
-  catalogDraftToItem,
+  filterCatalogProducts
+} from "../../domains/catalog/catalogFilter";
+import {
   catalogItemsToProducts,
-  filterCatalogProducts,
-  formatPLN,
-  getCatalogBrands,
-  getUserInitials,
-  hasActivePromotion,
-  isDraftValid,
+  getCatalogBrands
+} from "../../domains/catalog/catalogProduct";
+import {
   sortCatalogProducts
-} from "./catalogViewModel";
+} from "../../domains/catalog/catalogSort";
+import {
+  formatPLN,
+  hasActivePromotion
+} from "../../domains/pricing/priceFormatting";
 import type { CatalogItemsById } from "../../domains/catalog/catalog";
 
 const catalogItems: CatalogItemsById = {
@@ -32,7 +40,7 @@ const catalogItems: CatalogItemsById = {
   }
 };
 
-describe("catalogViewModel", () => {
+describe("catalog domain view models", () => {
   it("converts legacy catalog records to stable products", () => {
     expect(catalogItemsToProducts(catalogItems)).toEqual([
       expect.objectContaining({ brand: "Kross", id: "item1", yearLabel: "2026" }),

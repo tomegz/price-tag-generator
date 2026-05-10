@@ -6,14 +6,16 @@ import SegmentedControl, { type SegmentedOption } from "../../design-system/Segm
 import type { PrintQueue } from "../../domains/printQueue/printQueue";
 import {
   ALL_BRANDS,
-  filterCatalogProducts,
+  filterCatalogProducts
+} from "../../domains/catalog/catalogFilter";
+import {
   getDefaultCatalogSortDirection,
   sortCatalogProducts,
   toggleCatalogSortDirection,
   type CatalogSort,
   type CatalogSortMode,
-  type CatalogProduct
-} from "./catalogViewModel";
+} from "../../domains/catalog/catalogSort";
+import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
 import ProductRow from "./ProductRow";
 
 type ProductListProps = {

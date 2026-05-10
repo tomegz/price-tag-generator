@@ -1,16 +1,16 @@
-import { useCallback, type Dispatch, type SetStateAction } from "react";
-import type { CatalogItemsById, LegacyCatalogItem } from "../../domains/catalog/catalog";
+import { useCallback } from "react";
+import type { LegacyCatalogItem } from "../../domains/catalog/catalog";
 import {
-  type CatalogRepository,
+  type CatalogWriteRepository,
   toFirebaseRepositoryError
 } from "../../services/firebase";
-import type { CatalogErrorHandler } from "./useCatalog";
+import type { CatalogErrorHandler } from "../../app/catalogErrors";
 
 type UseCatalogMutationsOptions = {
+  createCatalogItemId?: () => string;
   handleCatalogError: CatalogErrorHandler;
   onCatalogItemRemoved(itemId: string): void;
-  repository: CatalogRepository;
-  setCatalogItems: Dispatch<SetStateAction<CatalogItemsById>>;
+  repository: CatalogWriteRepository;
 };
 
 export type CatalogMutations = {
@@ -20,56 +20,47 @@ export type CatalogMutations = {
 };
 
 export function useCatalogMutations({
+  createCatalogItemId = createTimestampCatalogItemId,
   handleCatalogError,
   onCatalogItemRemoved,
-  repository,
-  setCatalogItems
+  repository
 }: UseCatalogMutationsOptions): CatalogMutations {
   const addCatalogItem = useCallback(async (item: LegacyCatalogItem) => {
-    const key = `item${Date.now()}`;
+    const key = createCatalogItemId();
     try {
       await repository.saveCatalogItem(key, item);
-      setCatalogItems(currentItems => ({
-        ...currentItems,
-        [key]: item
-      }));
     } catch (error) {
       handleCatalogError(toFirebaseRepositoryError(error));
       throw error;
     }
-  }, [handleCatalogError, repository, setCatalogItems]);
+  }, [createCatalogItemId, handleCatalogError, repository]);
 
   const updateCatalogItem = useCallback(async (key: string, updatedItem: LegacyCatalogItem) => {
     try {
       await repository.saveCatalogItem(key, updatedItem);
-      setCatalogItems(currentItems => ({
-        ...currentItems,
-        [key]: updatedItem
-      }));
     } catch (error) {
       handleCatalogError(toFirebaseRepositoryError(error));
       throw error;
     }
-  }, [handleCatalogError, repository, setCatalogItems]);
+  }, [handleCatalogError, repository]);
 
   const removeCatalogItem = useCallback(async (id: string) => {
     try {
       await repository.deleteCatalogItem(id);
-      setCatalogItems(currentItems => {
-        const next = { ...currentItems };
-        delete next[id];
-        return next;
-      });
       onCatalogItemRemoved(id);
     } catch (error) {
       handleCatalogError(toFirebaseRepositoryError(error));
       throw error;
     }
-  }, [handleCatalogError, onCatalogItemRemoved, repository, setCatalogItems]);
+  }, [handleCatalogError, onCatalogItemRemoved, repository]);
 
   return {
     addCatalogItem,
     removeCatalogItem,
     updateCatalogItem
   };
+}
+
+function createTimestampCatalogItemId(): string {
+  return `item${Date.now()}`;
 }

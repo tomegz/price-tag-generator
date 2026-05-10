@@ -9,9 +9,9 @@ import {
 import { getPrintSheetCount } from "../../domains/printTagRendering/printTagRendering";
 import {
   formatPLN,
-  getEffectivePrice,
-  type CatalogProduct
-} from "../catalog/catalogViewModel";
+  getEffectivePrice
+} from "../../domains/pricing/priceFormatting";
+import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
 
 type PrintQueuePanelProps = {
   printQueue: PrintQueue;
@@ -37,7 +37,7 @@ const PrintQueuePanel = ({
   const empty = queueIds.length === 0;
 
   return (
-    <aside aria-labelledby="print-queue-title" className="print-queue-panel">
+    <aside aria-labelledby="print-queue-title" className="print-queue-panel" data-testid="print-queue">
       <header className="print-queue-panel__header">
         <div className="print-queue-panel__meta">
           <span className="pb-mono">Kolejka druku</span>
@@ -46,7 +46,7 @@ const PrintQueuePanel = ({
           </span>
         </div>
         <div className="print-queue-panel__total">
-          <strong className="pb-mono" id="print-queue-title">
+          <strong className="pb-mono" data-testid="print-queue-total" id="print-queue-title">
             {String(totalTags).padStart(2, "0")}
           </strong>
           <span>{getPriceCountWord(totalTags)} do druku</span>
@@ -68,7 +68,12 @@ const PrintQueuePanel = ({
             const quantity = printQueue[productId];
 
             return (
-              <div className="print-queue-item" key={productId}>
+              <div
+                className="print-queue-item"
+                data-product-id={productId}
+                data-testid="print-queue-item"
+                key={productId}
+              >
                 <div className="print-queue-item__copy">
                   <strong>{product ? `${product.brand} ${product.model}` : "Cena tego produktu nie jest już dostępna"}</strong>
                   <span className="pb-mono">

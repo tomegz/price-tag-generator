@@ -83,15 +83,15 @@
 
 ## Milestone 4: Production Export Validation
 
-- [ ] Add `pnpm validate:prod-export`.
-- [ ] Treat a missing export as a skipped local check with a successful exit.
-- [ ] Validate the expected `profi-bike` root when an export exists.
-- [ ] Validate that `brands`, `items`, `owners`, and `ownerUids` have expected shapes.
-- [ ] Validate all item records parse as legacy catalog records.
-- [ ] Validate every item round-trips legacy to internal to legacy without losing data.
-- [ ] Validate `ownerUids` exists and contains the expected trusted owner count.
-- [ ] Print failing item IDs and reasons.
-- [ ] Keep the export local-only and uncommitted.
+- [x] Add `pnpm validate:prod-export`.
+- [x] Treat a missing export as a skipped local check with a successful exit.
+- [x] Validate the expected `profi-bike` root when an export exists.
+- [x] Validate that `brands`, `items`, `owners`, and `ownerUids` have expected shapes.
+- [x] Validate all item records parse as legacy catalog records.
+- [x] Validate every item round-trips legacy to internal to legacy without losing data.
+- [x] Validate `ownerUids` exists and contains the expected trusted owner count.
+- [x] Print failing item IDs and reasons.
+- [x] Keep the export local-only and uncommitted.
 
 ## Milestone 5: Rules Coverage
 

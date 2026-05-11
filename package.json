@@ -27,6 +27,7 @@
     "test:rules:native": "firebase emulators:exec --only database \"vitest run --config vitest.rules.config.ts\"",
     "typecheck": "tsc -b",
     "lint": "eslint .",
+    "validate:prod-export": "node scripts/validate-prod-export.mjs",
     "emulators:start": "firebase emulators:start --import=./emulator-data --export-on-exit=./emulator-data",
     "emulators:docker": "docker compose up firebase-emulators",
     "emulators:docker:build": "docker compose build firebase-emulators",

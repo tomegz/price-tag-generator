@@ -93,6 +93,7 @@ Development defaults live in `.env.development`; copy `.env.example` for new env
 
 ```text
 VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_APP_ID=
 VITE_FIREBASE_AUTH_DOMAIN=
 VITE_FIREBASE_DATABASE_URL=
 VITE_FIREBASE_MEASUREMENT_ID=

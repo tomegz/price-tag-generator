@@ -5,6 +5,7 @@ const defaultProjectId = 'demo-price-tag-generator';
 type FirebaseEnv = {
   DEV?: boolean;
   VITE_FIREBASE_API_KEY?: string;
+  VITE_FIREBASE_APP_ID?: string;
   VITE_FIREBASE_AUTH_DOMAIN?: string;
   VITE_FIREBASE_DATABASE_URL?: string;
   VITE_FIREBASE_MEASUREMENT_ID?: string;
@@ -17,7 +18,7 @@ type FirebaseEnv = {
 
 export type FirebaseRuntimeConfig = {
   firebaseOptions: Required<Pick<FirebaseOptions, 'apiKey' | 'authDomain' | 'databaseURL' | 'projectId'>> &
-    Pick<FirebaseOptions, 'measurementId'>;
+    Pick<FirebaseOptions, 'appId' | 'measurementId'>;
   useEmulators: boolean;
   authEmulatorUrl: string;
   databaseEmulatorHost: string;
@@ -39,6 +40,7 @@ export function readFirebaseRuntimeConfig(
 
   const firebaseOptions = {
     apiKey: env.VITE_FIREBASE_API_KEY || (allowDemoFallbacks ? 'demo-api-key' : ''),
+    appId: env.VITE_FIREBASE_APP_ID || undefined,
     authDomain:
       env.VITE_FIREBASE_AUTH_DOMAIN ||
       (allowDemoFallbacks ? `${defaultProjectId}.firebaseapp.com` : ''),

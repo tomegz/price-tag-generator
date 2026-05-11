@@ -26,7 +26,7 @@ export type CatalogMutations = {
 };
 
 export function useCatalogMutations({
-  createCatalogItemId = createTimestampCatalogItemId,
+  createCatalogItemId = createRandomCatalogItemId,
   handleCatalogError,
   observability = defaultObservability,
   onCatalogItemRemoved,
@@ -106,6 +106,11 @@ export function useCatalogMutations({
   };
 }
 
-function createTimestampCatalogItemId(): string {
-  return `item${Date.now()}`;
+function createRandomCatalogItemId(): string {
+  if (globalThis.crypto?.randomUUID) {
+    return `item-${globalThis.crypto.randomUUID()}`;
+  }
+
+  const randomSuffix = Math.random().toString(36).slice(2, 12);
+  return `item-${Date.now()}-${randomSuffix}`;
 }

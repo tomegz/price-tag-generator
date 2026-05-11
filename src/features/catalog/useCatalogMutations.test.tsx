@@ -49,6 +49,23 @@ describe("useCatalogMutations", () => {
     expect(observability.trackEvent).toHaveBeenCalledWith("catalog_item_create");
   });
 
+  it("uses a UUID-based catalog item id by default", async () => {
+    const repository = createCatalogRepository();
+    const randomUUID = vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue("00000000-0000-4000-8000-000000000000");
+    const { result } = renderHook(() =>
+      useCatalogMutations({
+        handleCatalogError: vi.fn(),
+        onCatalogItemRemoved: vi.fn(),
+        repository
+      })
+    );
+
+    await result.current.addCatalogItem(item);
+
+    expect(randomUUID).toHaveBeenCalled();
+    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item-00000000-0000-4000-8000-000000000000", item);
+  });
+
   it("updates existing catalog items through the injected repository", async () => {
     const repository = createCatalogRepository();
     const observability = createTestObservability();

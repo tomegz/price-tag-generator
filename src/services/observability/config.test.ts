@@ -9,6 +9,7 @@ describe("readObservabilityConfig", () => {
         {
           MODE: "development",
           VITE_ENABLE_ANALYTICS: "true",
+          VITE_FIREBASE_APP_ID: "app-id",
           VITE_FIREBASE_MEASUREMENT_ID: "G-TEST",
           VITE_SENTRY_DSN: "https://example@sentry.io/1"
         },
@@ -26,6 +27,7 @@ describe("readObservabilityConfig", () => {
       readObservabilityConfig({
         MODE: "test",
         VITE_ENABLE_ANALYTICS: "true",
+        VITE_FIREBASE_APP_ID: "app-id",
         VITE_FIREBASE_MEASUREMENT_ID: "G-TEST",
         VITE_SENTRY_DSN: "https://example@sentry.io/1"
       })
@@ -40,6 +42,7 @@ describe("readObservabilityConfig", () => {
       readObservabilityConfig({
         MODE: "production",
         VITE_ENABLE_ANALYTICS: "true",
+        VITE_FIREBASE_APP_ID: "app-id",
         VITE_FIREBASE_MEASUREMENT_ID: "G-TEST",
         VITE_SENTRY_DSN: "https://example@sentry.io/1",
         VITE_SENTRY_ENVIRONMENT: "production",
@@ -65,9 +68,20 @@ describe("readObservabilityConfig", () => {
     expect(() =>
       readObservabilityConfig({
         MODE: "production",
-        VITE_ENABLE_ANALYTICS: "true"
+        VITE_ENABLE_ANALYTICS: "true",
+        VITE_FIREBASE_APP_ID: "app-id"
       })
     ).toThrow("VITE_FIREBASE_MEASUREMENT_ID is required");
+  });
+
+  it("requires a Firebase app ID when analytics are enabled", () => {
+    expect(() =>
+      readObservabilityConfig({
+        MODE: "production",
+        VITE_ENABLE_ANALYTICS: "true",
+        VITE_FIREBASE_MEASUREMENT_ID: "G-TEST"
+      })
+    ).toThrow("VITE_FIREBASE_APP_ID is required");
   });
 
   it("validates sample rates", () => {

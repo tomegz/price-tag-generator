@@ -1,6 +1,7 @@
 type ObservabilityEnv = {
   MODE?: string;
   VITE_ENABLE_ANALYTICS?: string;
+  VITE_FIREBASE_APP_ID?: string;
   VITE_FIREBASE_MEASUREMENT_ID?: string;
   VITE_SENTRY_DSN?: string;
   VITE_SENTRY_ENVIRONMENT?: string;
@@ -31,8 +32,13 @@ export function readObservabilityConfig(
   options: ObservabilityRuntimeOptions = {}
 ): ObservabilityConfig {
   const telemetryDisabled = Boolean(options.useFirebaseEmulators) || env.MODE === "test";
+  const firebaseAppId = env.VITE_FIREBASE_APP_ID || "";
   const firebaseMeasurementId = env.VITE_FIREBASE_MEASUREMENT_ID || "";
   const analyticsEnabled = !telemetryDisabled && env.VITE_ENABLE_ANALYTICS === "true";
+
+  if (analyticsEnabled && !firebaseAppId) {
+    throw new Error("VITE_FIREBASE_APP_ID is required when VITE_ENABLE_ANALYTICS=true.");
+  }
 
   if (analyticsEnabled && !firebaseMeasurementId) {
     throw new Error("VITE_FIREBASE_MEASUREMENT_ID is required when VITE_ENABLE_ANALYTICS=true.");

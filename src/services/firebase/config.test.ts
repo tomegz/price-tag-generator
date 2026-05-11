@@ -26,6 +26,23 @@ describe('readFirebaseRuntimeConfig', () => {
     );
   });
 
+  it('includes the Firebase web app id when provided', () => {
+    expect(
+      readFirebaseRuntimeConfig({
+        DEV: false,
+        VITE_FIREBASE_API_KEY: 'api-key',
+        VITE_FIREBASE_APP_ID: '1:878475552771:web:ba470e45ce75cbddd88636',
+        VITE_FIREBASE_AUTH_DOMAIN: 'pricetag-generator.firebaseapp.com',
+        VITE_FIREBASE_DATABASE_URL: 'https://pricetag-generator.firebaseio.com',
+        VITE_FIREBASE_MEASUREMENT_ID: 'G-8E2CQT4NGZ',
+        VITE_FIREBASE_PROJECT_ID: 'pricetag-generator'
+      }).firebaseOptions
+    ).toMatchObject({
+      appId: '1:878475552771:web:ba470e45ce75cbddd88636',
+      measurementId: 'G-8E2CQT4NGZ'
+    });
+  });
+
   it('refuses local development against the production project without emulators', () => {
     expect(() =>
       readFirebaseRuntimeConfig({

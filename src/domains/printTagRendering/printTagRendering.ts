@@ -1,9 +1,9 @@
-import type { CatalogItemsById, LegacyCatalogItem } from '../catalog/catalog';
+import type { CatalogItem, CatalogItemsById } from '../catalog/catalogItem';
 import type { PrintQueue } from '../printQueue/printQueue';
 
 export type PrintTagRenderEntry = {
   key: string;
-  item: LegacyCatalogItem;
+  item: CatalogItem;
 };
 
 export const PRINT_TAGS_PER_A4_SHEET = 5;

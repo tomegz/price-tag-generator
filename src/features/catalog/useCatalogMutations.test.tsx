@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { LegacyCatalogItem } from "../../domains/catalog/catalog";
+import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
 import type { CatalogRepository } from "../../services/firebase";
 import { createTestObservability } from "../../test/observability";
 import { useCatalogMutations } from "./useCatalogMutations";
@@ -16,9 +16,18 @@ function createCatalogRepository(): CatalogRepository {
   };
 }
 
-const item: LegacyCatalogItem = {
+const item: CatalogItemInput = {
+  brand: "KTM",
   discountPrice: 0,
-  discountStatus: "off",
+  discountEnabled: false,
+  model: "Scarp",
+  price: 12999,
+  year: 2026
+};
+
+const legacyItem = {
+  discountPrice: 0,
+  discountStatus: "off" as const,
   model: "Scarp",
   name: "KTM",
   price: 12999,
@@ -45,7 +54,7 @@ describe("useCatalogMutations", () => {
 
     await result.current.addCatalogItem(item);
 
-    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item123", item);
+    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item123", legacyItem);
     expect(observability.trackEvent).toHaveBeenCalledWith("catalog_item_create");
   });
 
@@ -63,7 +72,7 @@ describe("useCatalogMutations", () => {
     await result.current.addCatalogItem(item);
 
     expect(randomUUID).toHaveBeenCalled();
-    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item-00000000-0000-4000-8000-000000000000", item);
+    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item-00000000-0000-4000-8000-000000000000", legacyItem);
   });
 
   it("updates existing catalog items through the injected repository", async () => {
@@ -81,7 +90,10 @@ describe("useCatalogMutations", () => {
 
     await result.current.updateCatalogItem("item1", updatedItem);
 
-    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item1", updatedItem);
+    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item1", {
+      ...legacyItem,
+      price: 9999
+    });
     expect(observability.trackEvent).toHaveBeenCalledWith("catalog_item_update");
   });
 

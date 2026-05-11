@@ -16,7 +16,7 @@ import {
   type CatalogRepository,
   type FirebaseRepositoryError
 } from '../src/services/firebase/catalogRepository';
-import type { CatalogItemsById, LegacyCatalogItem } from '../src/domains/catalog/catalog';
+import type { LegacyCatalogItem, LegacyCatalogItemsById } from '../src/domains/catalog/catalog';
 
 let testEnv: RulesTestEnvironment;
 const databaseEmulator = readRulesDatabaseEmulatorConfig();
@@ -54,7 +54,7 @@ async function seedOwner(uid = 'owner-uid'): Promise<void> {
   });
 }
 
-function readItemsOnce(repository: CatalogRepository): Promise<CatalogItemsById> {
+function readItemsOnce(repository: CatalogRepository): Promise<LegacyCatalogItemsById> {
   return new Promise((resolve, reject) => {
     let unsubscribe: () => void = () => {};
     const timeout = setTimeout(() => {

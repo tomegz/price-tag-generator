@@ -7,11 +7,12 @@ import {
 } from './printTagRendering';
 
 const item = {
-  name: 'KTM',
+  id: 'item1',
+  brand: 'KTM',
   model: 'Macina Cross',
   price: 16999,
   discountPrice: 10999,
-  discountStatus: 'on' as const,
+  discountEnabled: true,
   year: 2026
 };
 

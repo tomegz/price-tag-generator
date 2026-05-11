@@ -1,4 +1,4 @@
-import type { LegacyCatalogItem } from "../../domains/catalog/catalog";
+import type { CatalogItem } from "../../domains/catalog/catalogItem";
 
 export type BulkPromotionMode = "percent" | "amount";
 
@@ -23,12 +23,12 @@ const bulkPromotionCalculators: Record<BulkPromotionMode, BulkPromotionCalculato
 };
 
 export function applyBulkPromotion(
-  item: LegacyCatalogItem,
+  item: CatalogItem,
   options: BulkPromotionOptions
-): LegacyCatalogItem {
+): CatalogItem {
   return {
     ...item,
     discountPrice: calculateBulkDiscountPrice(item.price, options),
-    discountStatus: "on"
+    discountEnabled: true
   };
 }

@@ -1,17 +1,14 @@
-import type { CatalogBrands, CatalogItemsById, LegacyCatalogItem } from "./catalog";
+import type { CatalogBrands } from "./catalog";
+import type { CatalogItem, CatalogItemsById } from "./catalogItem";
 
-export type CatalogProduct = LegacyCatalogItem & {
-  id: string;
-  brand: string;
+export type CatalogProduct = CatalogItem & {
   yearLabel: string;
 };
 
 export function catalogItemsToProducts(items: CatalogItemsById): CatalogProduct[] {
-  return Object.entries(items)
-    .map(([id, item]) => ({
+  return Object.values(items)
+    .map(item => ({
       ...item,
-      id,
-      brand: item.name,
       yearLabel: String(item.year || "-")
     }))
     .sort((a, b) => `${a.brand} ${a.model}`.localeCompare(`${b.brand} ${b.model}`, "pl"));

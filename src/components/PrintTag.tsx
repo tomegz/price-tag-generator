@@ -1,15 +1,16 @@
 import "../styles/PrintTag.css";
 import formatParagraphs from "../helpers/formatParagraphs";
-import type { LegacyCatalogItem } from "../domains/catalog/catalog";
+import type { CatalogItem } from "../domains/catalog/catalogItem";
+import { hasActivePromotion } from "../domains/pricing/priceFormatting";
 
 type PrintTagProps = {
-  item: LegacyCatalogItem;
+  item: CatalogItem;
 };
 
 const PrintTag = ({ item }: PrintTagProps) => {
-  const name = item.name.toUpperCase();
+  const name = item.brand.toUpperCase();
   const model = formatParagraphs(item.model.toUpperCase());
-  const onDiscount = item.discountStatus === "on";
+  const onDiscount = hasActivePromotion(item);
   const discountPrice = onDiscount ? <p className="after-discount">{item.discountPrice},-</p> : "";
   const smallHeader = name.length > 7 ? "smaller" : "";
   return (

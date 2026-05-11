@@ -5,7 +5,7 @@ import Icon from "../../design-system/Icon";
 import SearchInput from "../../design-system/SearchInput";
 import SegmentedControl from "../../design-system/SegmentedControl";
 import TextField from "../../design-system/TextField";
-import type { LegacyCatalogItem } from "../../domains/catalog/catalog";
+import type { CatalogItem, CatalogItemInput } from "../../domains/catalog/catalogItem";
 import {
   isDraftDirty,
   isDraftValid,
@@ -37,19 +37,19 @@ type CatalogAdminScreenProps = {
   brands: string[];
   catalogError: string;
   products: CatalogProduct[];
-  onAddProduct(item: LegacyCatalogItem): Promise<void>;
+  onAddProduct(item: CatalogItemInput): Promise<void>;
   onApplyBulkPromotion(productIds: string[], options: BulkPromotionOptions): Promise<void>;
   onBackToPrint(): void;
   onDeleteProduct(productId: string): Promise<void>;
   onDeleteProducts(productIds: string[]): Promise<void>;
-  onUpdateProduct(productId: string, item: LegacyCatalogItem): Promise<void>;
+  onUpdateProduct(productId: string, item: CatalogItemInput): Promise<void>;
 };
 
-const draftFields: Array<keyof CatalogDraft> = ["name", "model", "year", "price", "discountPrice"];
+const draftFields: Array<keyof CatalogDraft> = ["brand", "model", "year", "price", "discountPrice"];
 
 function fieldPlaceholder(field: keyof CatalogDraft): string {
   return {
-    name: "Marka",
+    brand: "Marka",
     model: "Model",
     year: "Rocznik",
     price: "Cena katalogowa",
@@ -57,7 +57,7 @@ function fieldPlaceholder(field: keyof CatalogDraft): string {
   }[field];
 }
 
-function isFieldDirty(product: LegacyCatalogItem, draft: CatalogDraft, field: keyof CatalogDraft): boolean {
+function isFieldDirty(product: CatalogItem, draft: CatalogDraft, field: keyof CatalogDraft): boolean {
   if (field === "discountPrice") return Number(draft.discountPrice || 0) !== Number(product.discountPrice);
   if (field === "price") return Number(draft.price) !== Number(product.price);
   if (field === "year") return String(draft.year) !== String(product.year);

@@ -21,29 +21,31 @@ import {
   formatPLN,
   hasActivePromotion
 } from "../../domains/pricing/priceFormatting";
-import type { CatalogItemsById } from "../../domains/catalog/catalog";
+import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
 
 const catalogItems: CatalogItemsById = {
   item1: {
-    name: "Kross",
+    id: "item1",
+    brand: "Kross",
     model: "Hexagon 3.0",
     year: "2026",
     price: 1299,
     discountPrice: 1099,
-    discountStatus: "on"
+    discountEnabled: true
   },
   item2: {
-    name: "Trek",
+    id: "item2",
+    brand: "Trek",
     model: "Marlin 7",
     year: "2025",
     price: 3899,
     discountPrice: 0,
-    discountStatus: "off"
+    discountEnabled: false
   }
 };
 
 describe("catalog domain view models", () => {
-  it("converts legacy catalog records to stable products", () => {
+  it("converts catalog records to stable products", () => {
     expect(catalogItemsToProducts(catalogItems)).toEqual([
       expect.objectContaining({ brand: "Kross", id: "item1", yearLabel: "2026" }),
       expect.objectContaining({ brand: "Trek", id: "item2", yearLabel: "2025" })
@@ -106,7 +108,7 @@ describe("catalog domain view models", () => {
 
   it("validates and converts catalog drafts to legacy item shape", () => {
     const draft = {
-      name: " Giant ",
+      brand: " Giant ",
       model: "Talon",
       year: "2026",
       price: "2999",
@@ -115,12 +117,12 @@ describe("catalog domain view models", () => {
 
     expect(isDraftValid(draft)).toBe(true);
     expect(catalogDraftToItem(draft)).toEqual({
-      name: "Giant",
+      brand: "Giant",
       model: "Talon",
       year: "2026",
       price: 2999,
       discountPrice: 2499,
-      discountStatus: "on"
+      discountEnabled: true
     });
   });
 

@@ -71,15 +71,15 @@
 
 ## Milestone 3: Internal Catalog Adapter
 
-- [ ] Keep the production Realtime Database item shape unchanged.
-- [ ] Keep `LegacyCatalogItem` as the persisted DTO at repository and database boundaries.
-- [ ] Introduce an internal normalized `CatalogItem` type.
-- [ ] Add a mapper from `LegacyCatalogItem` to `CatalogItem`.
-- [ ] Add a mapper from `CatalogItem` to `LegacyCatalogItem`.
-- [ ] Preserve current price semantics exactly.
-- [ ] Do not silently convert display amounts to cents.
-- [ ] Move feature/domain code toward the internal `CatalogItem` shape.
-- [ ] Confine legacy field names to repository and adapter code.
+- [x] Keep the production Realtime Database item shape unchanged.
+- [x] Keep `LegacyCatalogItem` as the persisted DTO at repository and database boundaries.
+- [x] Introduce an internal normalized `CatalogItem` type.
+- [x] Add a mapper from `LegacyCatalogItem` to `CatalogItem`.
+- [x] Add a mapper from `CatalogItem` to `LegacyCatalogItem`.
+- [x] Preserve current price semantics exactly.
+- [x] Do not silently convert display amounts to cents.
+- [x] Move feature/domain code toward the internal `CatalogItem` shape.
+- [x] Confine legacy field names to repository and adapter code.
 
 ## Milestone 4: Production Export Validation
 

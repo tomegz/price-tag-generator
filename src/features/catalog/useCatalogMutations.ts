@@ -1,5 +1,8 @@
 import { useCallback } from "react";
-import type { LegacyCatalogItem } from "../../domains/catalog/catalog";
+import {
+  catalogItemToLegacyCatalogItem,
+  type CatalogItemInput
+} from "../../domains/catalog/catalogItem";
 import {
   type CatalogWriteRepository,
   toFirebaseRepositoryError
@@ -19,10 +22,10 @@ type UseCatalogMutationsOptions = {
 };
 
 export type CatalogMutations = {
-  addCatalogItem(item: LegacyCatalogItem): Promise<void>;
+  addCatalogItem(item: CatalogItemInput): Promise<void>;
   removeCatalogItem(itemId: string): Promise<void>;
   removeCatalogItems(itemIds: string[]): Promise<void>;
-  updateCatalogItem(itemId: string, updatedItem: LegacyCatalogItem): Promise<void>;
+  updateCatalogItem(itemId: string, updatedItem: CatalogItemInput): Promise<void>;
 };
 
 export function useCatalogMutations({
@@ -32,10 +35,10 @@ export function useCatalogMutations({
   onCatalogItemRemoved,
   repository
 }: UseCatalogMutationsOptions): CatalogMutations {
-  const addCatalogItem = useCallback(async (item: LegacyCatalogItem) => {
+  const addCatalogItem = useCallback(async (item: CatalogItemInput) => {
     const key = createCatalogItemId();
     try {
-      await repository.saveCatalogItem(key, item);
+      await repository.saveCatalogItem(key, catalogItemToLegacyCatalogItem(item));
       observability.trackEvent("catalog_item_create");
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);
@@ -50,9 +53,9 @@ export function useCatalogMutations({
     }
   }, [createCatalogItemId, handleCatalogError, observability, repository]);
 
-  const updateCatalogItem = useCallback(async (key: string, updatedItem: LegacyCatalogItem) => {
+  const updateCatalogItem = useCallback(async (key: string, updatedItem: CatalogItemInput) => {
     try {
-      await repository.saveCatalogItem(key, updatedItem);
+      await repository.saveCatalogItem(key, catalogItemToLegacyCatalogItem(updatedItem));
       observability.trackEvent("catalog_item_update");
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);

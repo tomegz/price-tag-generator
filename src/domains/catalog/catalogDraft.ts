@@ -1,16 +1,16 @@
-import type { DiscountStatus, LegacyCatalogItem } from "./catalog";
+import type { CatalogItem, CatalogItemInput } from "./catalogItem";
 
 export type CatalogDraft = {
-  name: string;
+  brand: string;
   model: string;
   year: string;
   price: string;
   discountPrice: string;
 };
 
-export function draftFromItem(item: LegacyCatalogItem): CatalogDraft {
+export function draftFromItem(item: CatalogItem): CatalogDraft {
   return {
-    name: item.name,
+    brand: item.brand,
     model: item.model,
     year: String(item.year || ""),
     price: String(item.price || ""),
@@ -20,7 +20,7 @@ export function draftFromItem(item: LegacyCatalogItem): CatalogDraft {
 
 export function emptyCatalogDraft(defaultYear = new Date().getFullYear()): CatalogDraft {
   return {
-    name: "",
+    brand: "",
     model: "",
     year: String(defaultYear),
     price: "",
@@ -33,7 +33,7 @@ export function isDraftValid(draft: CatalogDraft): boolean {
   const discountPrice = draft.discountPrice === "" ? 0 : Number(draft.discountPrice);
 
   return (
-    draft.name.trim().length > 0 &&
+    draft.brand.trim().length > 0 &&
     draft.model.trim().length > 0 &&
     draft.year.trim().length > 0 &&
     Number.isFinite(price) &&
@@ -43,29 +43,28 @@ export function isDraftValid(draft: CatalogDraft): boolean {
   );
 }
 
-export function catalogDraftToItem(draft: CatalogDraft): LegacyCatalogItem {
+export function catalogDraftToItem(draft: CatalogDraft): CatalogItemInput {
   const discountPrice = draft.discountPrice === "" ? 0 : Number(draft.discountPrice);
-  const discountStatus: DiscountStatus = discountPrice > 0 ? "on" : "off";
 
   return {
-    name: draft.name.trim(),
+    brand: draft.brand.trim(),
     model: draft.model.trim(),
     year: draft.year.trim(),
     price: Number(draft.price),
     discountPrice,
-    discountStatus
+    discountEnabled: discountPrice > 0
   };
 }
 
-export function isDraftDirty(original: LegacyCatalogItem, draft: CatalogDraft): boolean {
+export function isDraftDirty(original: CatalogItem, draft: CatalogDraft): boolean {
   const next = catalogDraftToItem(draft);
 
   return (
-    next.name !== original.name ||
+    next.brand !== original.brand ||
     next.model !== original.model ||
     String(next.year) !== String(original.year) ||
     Number(next.price) !== Number(original.price) ||
     Number(next.discountPrice) !== Number(original.discountPrice) ||
-    next.discountStatus !== original.discountStatus
+    next.discountEnabled !== original.discountEnabled
   );
 }

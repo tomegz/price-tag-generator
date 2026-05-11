@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { CatalogItemsById } from "../../domains/catalog/catalog";
+import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
 import type { CatalogRepository } from "../../services/firebase";
 import { createTestObservability } from "../../test/observability";
 import { useBulkPromotionActions } from "./useBulkPromotionActions";
@@ -18,18 +18,20 @@ function createCatalogRepository(): CatalogRepository {
 
 const catalogItems: CatalogItemsById = {
   item1: {
+    id: "item1",
+    brand: "KTM",
     discountPrice: 0,
-    discountStatus: "off",
+    discountEnabled: false,
     model: "Scarp",
-    name: "KTM",
     price: 1000,
     year: 2026
   },
   item2: {
+    id: "item2",
+    brand: "Trek",
     discountPrice: 0,
-    discountStatus: "off",
+    discountEnabled: false,
     model: "Madone",
-    name: "Trek",
     price: 5000,
     year: 2026
   }
@@ -55,9 +57,12 @@ describe("useBulkPromotionActions", () => {
     });
 
     const promotedItem = {
-      ...catalogItems.item1,
+      name: "KTM",
+      model: "Scarp",
+      price: 1000,
       discountPrice: 700,
-      discountStatus: "on" as const
+      discountStatus: "on" as const,
+      year: 2026
     };
     expect(repository.saveCatalogItems).toHaveBeenCalledWith({ item1: promotedItem });
     expect(repository.saveCatalogItem).not.toHaveBeenCalled();

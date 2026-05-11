@@ -3,15 +3,16 @@ import {
   applyBulkPromotion,
   calculateBulkDiscountPrice
 } from "./bulkPromotion";
-import type { LegacyCatalogItem } from "../../domains/catalog/catalog";
+import type { CatalogItem } from "../../domains/catalog/catalogItem";
 
-const item: LegacyCatalogItem = {
-  name: "Kross",
+const item: CatalogItem = {
+  id: "item1",
+  brand: "Kross",
   model: "Hexagon",
   year: "2026",
   price: 1299,
   discountPrice: 0,
-  discountStatus: "off"
+  discountEnabled: false
 };
 
 describe("bulkPromotion", () => {
@@ -28,7 +29,7 @@ describe("bulkPromotion", () => {
     expect(applyBulkPromotion(item, { amount: 200, mode: "amount", percent: 15 })).toEqual({
       ...item,
       discountPrice: 1099,
-      discountStatus: "on"
+      discountEnabled: true
     });
   });
 });

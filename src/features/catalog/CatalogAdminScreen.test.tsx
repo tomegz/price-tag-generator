@@ -8,10 +8,9 @@ const products: CatalogProduct[] = [
   {
     brand: "Kross",
     discountPrice: 0,
-    discountStatus: "off",
+    discountEnabled: false,
     id: "item-2026",
     model: "Level",
-    name: "Kross",
     price: 1000,
     year: 2026,
     yearLabel: "2026"
@@ -19,10 +18,9 @@ const products: CatalogProduct[] = [
   {
     brand: "Giant",
     discountPrice: 0,
-    discountStatus: "off",
+    discountEnabled: false,
     id: "item-2025",
     model: "Talon",
-    name: "Giant",
     price: 2000,
     year: 2025,
     yearLabel: "2025"
@@ -30,10 +28,9 @@ const products: CatalogProduct[] = [
   {
     brand: "Trek",
     discountPrice: 0,
-    discountStatus: "off",
+    discountEnabled: false,
     id: "item-2024",
     model: "Marlin",
-    name: "Trek",
     price: 3000,
     year: 2024,
     yearLabel: "2024"

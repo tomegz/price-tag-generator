@@ -5,7 +5,11 @@ import {
   type CatalogErrorHandler,
   type RepositoryError
 } from "../../app/catalogErrors";
-import type { CatalogBrands, CatalogItemsById } from "../../domains/catalog/catalog";
+import type { CatalogBrands } from "../../domains/catalog/catalog";
+import {
+  legacyCatalogItemsToCatalogItems,
+  type CatalogItemsById
+} from "../../domains/catalog/catalogItem";
 import type { CatalogReadRepository } from "../../services/firebase";
 import {
   observability as defaultObservability,
@@ -64,15 +68,16 @@ export function useCatalog(
 
     const unsubscribeItems = repository.subscribeCatalogItems({
       next: items => {
+        const catalogItems = legacyCatalogItemsToCatalogItems(items);
         setCatalogData(currentData => ({
           ...currentData,
           error: "",
-          items,
+          items: catalogItems,
           itemsLoadedForUid: activeUid
         }));
         if (!trackedCatalogLoadsRef.current.has(activeUid)) {
           observability.trackEvent("catalog_load_success", {
-            item_count: Object.keys(items).length
+            item_count: Object.keys(catalogItems).length
           });
           trackedCatalogLoadsRef.current.add(activeUid);
         }

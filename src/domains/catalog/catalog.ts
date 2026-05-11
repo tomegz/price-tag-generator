@@ -14,7 +14,7 @@ export type LegacyCatalogItem = {
   year: string | number;
 };
 
-export type CatalogItemsById = Record<string, LegacyCatalogItem>;
+export type LegacyCatalogItemsById = Record<string, LegacyCatalogItem>;
 export type CatalogBrands = string[];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -48,10 +48,10 @@ export function parseLegacyCatalogItem(value: unknown): LegacyCatalogItem | null
   };
 }
 
-export function parseLegacyCatalogItems(value: unknown): CatalogItemsById {
+export function parseLegacyCatalogItems(value: unknown): LegacyCatalogItemsById {
   if (!isRecord(value)) return {};
 
-  return Object.entries(value).reduce<CatalogItemsById>((items, [id, item]) => {
+  return Object.entries(value).reduce<LegacyCatalogItemsById>((items, [id, item]) => {
     const parsed = parseLegacyCatalogItem(item);
     if (parsed) {
       items[id] = parsed;
@@ -65,7 +65,7 @@ export function parseLegacyCatalogBrands(value: unknown): CatalogBrands {
   return value.filter((brand): brand is string => typeof brand === 'string' && brand.length > 0);
 }
 
-export function filterCatalogItemIds(items: CatalogItemsById, query: string): string[] {
+export function filterCatalogItemIds(items: LegacyCatalogItemsById, query: string): string[] {
   const normalizedQuery = query.toLowerCase();
 
   return Object.keys(items).filter(key => {

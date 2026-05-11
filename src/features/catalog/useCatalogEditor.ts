@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { LegacyCatalogItem } from "../../domains/catalog/catalog";
+import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
 import {
   catalogDraftToItem,
   draftFromItem,
@@ -24,8 +24,8 @@ type FilterOption = {
 type UseCatalogEditorOptions = {
   brands: string[];
   products: CatalogProduct[];
-  onAddProduct(item: LegacyCatalogItem): Promise<void>;
-  onUpdateProduct(productId: string, item: LegacyCatalogItem): Promise<void>;
+  onAddProduct(item: CatalogItemInput): Promise<void>;
+  onUpdateProduct(productId: string, item: CatalogItemInput): Promise<void>;
 };
 
 export type CatalogEditorState = {
@@ -144,7 +144,7 @@ export function useCatalogEditor({
   const startAdding = useCallback(() => {
     setNewDraft({
       ...emptyCatalogDraft(),
-      name: activeBrand === ALL_BRANDS ? "" : activeBrand,
+      brand: activeBrand === ALL_BRANDS ? "" : activeBrand,
       year: activeYear === ALL_YEARS ? String(new Date().getFullYear()) : activeYear
     });
     setAdding(true);

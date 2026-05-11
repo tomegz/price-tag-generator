@@ -1,4 +1,4 @@
-import type { CatalogItemsById } from "../domains/catalog/catalog";
+import type { CatalogItemsById } from "../domains/catalog/catalogItem";
 import type { PrintQueue } from "../domains/printQueue/printQueue";
 import { buildPrintTagRenderQueue } from "../domains/printTagRendering/printTagRendering";
 import PrintTag from "./PrintTag";

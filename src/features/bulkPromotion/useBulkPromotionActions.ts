@@ -1,5 +1,8 @@
 import { useCallback } from "react";
-import type { CatalogItemsById } from "../../domains/catalog/catalog";
+import {
+  catalogItemsToLegacyCatalogItems,
+  type CatalogItemsById
+} from "../../domains/catalog/catalogItem";
 import {
   type CatalogWriteRepository,
   toFirebaseRepositoryError
@@ -42,9 +45,9 @@ export function useBulkPromotionActions({
     if (updates.length === 0) return;
 
     try {
-      await repository.saveCatalogItems(Object.fromEntries(
+      await repository.saveCatalogItems(catalogItemsToLegacyCatalogItems(Object.fromEntries(
         updates.map(({ productId, item }) => [productId, item])
-      ));
+      )));
       observability.trackEvent("bulk_promotion_apply", {
         discount_mode: options.mode,
         selected_item_count: updates.length

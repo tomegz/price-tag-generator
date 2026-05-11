@@ -7,10 +7,9 @@ import DeleteConfirmModal from "./DeleteConfirmModal";
 const product: CatalogProduct = {
   brand: "Kross",
   discountPrice: 0,
-  discountStatus: "off",
+  discountEnabled: false,
   id: "item1",
   model: "Hexagon",
-  name: "Kross",
   price: 1299,
   year: 2026,
   yearLabel: "2026"

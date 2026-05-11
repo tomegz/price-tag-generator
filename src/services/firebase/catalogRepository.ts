@@ -6,8 +6,8 @@ import {
   parseLegacyCatalogItem,
   parseLegacyCatalogItems,
   type CatalogBrands,
-  type CatalogItemsById,
-  type LegacyCatalogItem
+  type LegacyCatalogItem,
+  type LegacyCatalogItemsById
 } from '../../domains/catalog/catalog';
 
 export const defaultStoreId = 'profi-bike';
@@ -32,13 +32,13 @@ export type SubscriptionHandlers<T> = {
 };
 
 export type CatalogReadRepository = {
-  subscribeCatalogItems(handlers: SubscriptionHandlers<CatalogItemsById>): () => void;
+  subscribeCatalogItems(handlers: SubscriptionHandlers<LegacyCatalogItemsById>): () => void;
   subscribeCatalogBrands(handlers: SubscriptionHandlers<CatalogBrands>): () => void;
 };
 
 export type CatalogWriteRepository = {
   saveCatalogItem(itemId: string, item: LegacyCatalogItem): Promise<void>;
-  saveCatalogItems(items: CatalogItemsById): Promise<void>;
+  saveCatalogItems(items: LegacyCatalogItemsById): Promise<void>;
   deleteCatalogItem(itemId: string): Promise<void>;
   deleteCatalogItems(itemIds: string[]): Promise<void>;
 };
@@ -101,7 +101,7 @@ export function createCatalogRepository(
       return set(ref(database, catalogPaths.item(itemId, storeId)), ensureWritableCatalogItem(item));
     },
     saveCatalogItems(items) {
-      const writableItems = Object.entries(items).reduce<CatalogItemsById>((nextItems, [itemId, item]) => {
+      const writableItems = Object.entries(items).reduce<LegacyCatalogItemsById>((nextItems, [itemId, item]) => {
         nextItems[itemId] = ensureWritableCatalogItem(item);
         return nextItems;
       }, {});

@@ -95,21 +95,21 @@
 
 ## Milestone 5: Rules Coverage
 
-- [ ] Owner can read and write `profi-bike/brands`.
-- [ ] Owner can read and write `profi-bike/items`.
-- [ ] Owner can read `profi-bike/owners`.
-- [ ] Owner can read `profi-bike/ownerUids`.
-- [ ] Client writes to `owners` are denied.
-- [ ] Client writes to `ownerUids` are denied.
-- [ ] Unauthenticated reads and writes are denied.
-- [ ] Non-owner reads and writes are denied.
-- [ ] Unrelated root paths are denied.
-- [ ] Owner batch delete succeeds.
-- [ ] Malformed `discountStatus` is rejected.
-- [ ] Malformed `discountPrice` is rejected.
-- [ ] Malformed `price` is rejected.
-- [ ] Malformed `year` is rejected.
-- [ ] Keep `ownerUids` as the rules source of truth.
+- [x] Owner can read and write `profi-bike/brands`.
+- [x] Owner can read and write `profi-bike/items`.
+- [x] Owner can read `profi-bike/owners`.
+- [x] Owner can read `profi-bike/ownerUids`.
+- [x] Client writes to `owners` are denied.
+- [x] Client writes to `ownerUids` are denied.
+- [x] Unauthenticated reads and writes are denied.
+- [x] Non-owner reads and writes are denied.
+- [x] Unrelated root paths are denied.
+- [x] Owner batch delete succeeds.
+- [x] Malformed `discountStatus` is rejected.
+- [x] Malformed `discountPrice` is rejected.
+- [x] Malformed `price` is rejected.
+- [x] Malformed `year` is rejected.
+- [x] Keep `ownerUids` as the rules source of truth.
 
 ## Milestone 6: Bundle And Observability Readiness
 

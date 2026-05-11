@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  createCatalogItemsDeletePayload,
   catalogPaths,
   ensureWritableCatalogItem,
   isPermissionDenied,
@@ -40,6 +41,15 @@ describe('ensureWritableCatalogItem', () => {
         year: 2026
       })
     ).toThrow('Invalid catalog item');
+  });
+});
+
+describe('createCatalogItemsDeletePayload', () => {
+  it('creates a multi-location null update for bulk item deletion', () => {
+    expect(createCatalogItemsDeletePayload(['item1', 'item2'])).toEqual({
+      item1: null,
+      item2: null
+    });
   });
 });
 

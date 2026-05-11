@@ -1,3 +1,5 @@
+import { getPolishPlural } from '../language/polishPlural';
+
 export type PrintQueue = Record<string, number>;
 
 export function addToPrintQueue(queue: PrintQueue, itemId: string, quantity: number): PrintQueue {
@@ -28,18 +30,35 @@ export function getPrintQueueTotal(queue: PrintQueue): number {
 }
 
 export function getPriceCountWord(count: number): "cena" | "ceny" | "cen" {
-  if (!Number.isFinite(count)) return "cen";
+  return getPolishPlural(count, {
+    one: "cena",
+    few: "ceny",
+    many: "cen"
+  });
+}
 
-  const normalizedCount = Math.abs(Math.trunc(count));
-  if (normalizedCount === 1) return "cena";
+export function getTagCountWord(count: number): "etykietę" | "etykiety" | "etykiet" {
+  return getPolishPlural(count, {
+    one: "etykietę",
+    few: "etykiety",
+    many: "etykiet"
+  });
+}
 
-  const lastDigit = normalizedCount % 10;
-  const lastTwoDigits = normalizedCount % 100;
-  if (lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)) {
-    return "ceny";
-  }
+export function getPrintableTagCountWord(count: number): "etykieta" | "etykiety" | "etykiet" {
+  return getPolishPlural(count, {
+    one: "etykieta",
+    few: "etykiety",
+    many: "etykiet"
+  });
+}
 
-  return "cen";
+export function getPrintSheetCountWord(count: number): "arkusz" | "arkusze" | "arkuszy" {
+  return getPolishPlural(count, {
+    one: "arkusz",
+    few: "arkusze",
+    many: "arkuszy"
+  });
 }
 
 export function parsePrintQueue(value: unknown): PrintQueue {

@@ -24,12 +24,6 @@ const ProductRow = ({ inQueue, onAdd, product }: ProductRowProps) => {
       data-in-queue={inQueue > 0 ? "true" : "false"}
       data-product-id={product.id}
       data-testid="product-row"
-      onKeyDown={event => {
-        if (event.key === "Enter") onAdd(product.id, quantity);
-      }}
-      onClick={() => onAdd(product.id, quantity)}
-      role="button"
-      tabIndex={0}
     >
       <span className="product-row__identity">
         <strong>{product.brand}</strong>
@@ -45,9 +39,9 @@ const ProductRow = ({ inQueue, onAdd, product }: ProductRowProps) => {
         )}
       </span>
       <span className="product-row__status">
-        {onPromo ? <span className="product-row__promo-chip pb-mono">PROMOCJA</span> : <span className="pb-mono">CENA REGULARNA</span>}
+        {onPromo ? <span className="product-row__promo-chip pb-mono">PROMOCJA</span> : <span className="pb-mono">CENA KATALOGOWA</span>}
       </span>
-      <span className="product-row__actions" onClick={event => event.stopPropagation()}>
+      <span className="product-row__actions">
         <QuantityStepper
           ariaLabel={`Ilość etykiet dla ${product.brand} ${product.model}`}
           onChange={setQuantity}

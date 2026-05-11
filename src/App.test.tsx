@@ -25,6 +25,7 @@ it('tracks screen changes and print workflow events', async () => {
   };
   const catalog: CatalogRepository = {
     deleteCatalogItem: vi.fn(async () => undefined),
+    deleteCatalogItems: vi.fn(async () => undefined),
     saveCatalogItem: vi.fn(async () => undefined),
     saveCatalogItems: vi.fn(async () => undefined),
     subscribeCatalogBrands: vi.fn(handlers => {

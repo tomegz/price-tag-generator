@@ -3,8 +3,11 @@ import { describe, expect, it } from 'vitest';
 import {
   addToPrintQueue,
   clearPrintQueue,
+  getPrintableTagCountWord,
   getPriceCountWord,
+  getPrintSheetCountWord,
   getPrintQueueTotal,
+  getTagCountWord,
   parsePrintQueue,
   removeFromPrintQueue
 } from './printQueue';
@@ -63,6 +66,28 @@ describe('getPriceCountWord', () => {
     expect(getPriceCountWord(32)).toBe('ceny');
     expect(getPriceCountWord(112)).toBe('cen');
     expect(getPriceCountWord(122)).toBe('ceny');
+  });
+});
+
+describe('print queue count labels', () => {
+  it('uses Polish count forms for tag labels', () => {
+    expect(getTagCountWord(0)).toBe('etykiet');
+    expect(getTagCountWord(1)).toBe('etykietę');
+    expect(getTagCountWord(2)).toBe('etykiety');
+    expect(getTagCountWord(5)).toBe('etykiet');
+    expect(getTagCountWord(22)).toBe('etykiety');
+    expect(getPrintableTagCountWord(0)).toBe('etykiet');
+    expect(getPrintableTagCountWord(1)).toBe('etykieta');
+    expect(getPrintableTagCountWord(2)).toBe('etykiety');
+    expect(getPrintableTagCountWord(5)).toBe('etykiet');
+    expect(getPrintableTagCountWord(22)).toBe('etykiety');
+  });
+
+  it('uses Polish count forms for sheet labels', () => {
+    expect(getPrintSheetCountWord(1)).toBe('arkusz');
+    expect(getPrintSheetCountWord(2)).toBe('arkusze');
+    expect(getPrintSheetCountWord(5)).toBe('arkuszy');
+    expect(getPrintSheetCountWord(22)).toBe('arkusze');
   });
 });
 

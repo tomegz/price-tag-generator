@@ -6,7 +6,9 @@ import {
 } from "../../domains/catalog/catalogDraft";
 import {
   ALL_BRANDS,
-  filterCatalogProducts
+  ALL_YEARS,
+  filterCatalogProducts,
+  getCatalogYears
 } from "../../domains/catalog/catalogFilter";
 import {
   catalogItemsToProducts,
@@ -57,9 +59,21 @@ describe("catalog domain view models", () => {
   it("composes case-insensitive search and brand filtering", () => {
     const products = catalogItemsToProducts(catalogItems);
 
-    expect(filterCatalogProducts(products, { brand: "Kross", query: "hex" })).toHaveLength(1);
-    expect(filterCatalogProducts(products, { brand: "Kross", query: "marlin" })).toHaveLength(0);
-    expect(filterCatalogProducts(products, { brand: ALL_BRANDS, query: "TREK" })[0].id).toBe("item2");
+    expect(filterCatalogProducts(products, { brand: "Kross", query: "hex", year: ALL_YEARS })).toHaveLength(1);
+    expect(filterCatalogProducts(products, { brand: "Kross", query: "marlin", year: ALL_YEARS })).toHaveLength(0);
+    expect(filterCatalogProducts(products, { brand: ALL_BRANDS, query: "TREK", year: "2025" })[0].id).toBe("item2");
+    expect(filterCatalogProducts(products, { brand: ALL_BRANDS, query: "TREK", year: "2026" })).toHaveLength(0);
+  });
+
+  it("derives all distinct rocznik filters from products", () => {
+    const products = catalogItemsToProducts({
+      ...catalogItems,
+      item3: { ...catalogItems.item1, model: "Older", year: "2024" },
+      item4: { ...catalogItems.item1, model: "Duplicate", year: 2026 },
+      item5: { ...catalogItems.item1, model: "Unknown", year: "" }
+    });
+
+    expect(getCatalogYears(products)).toEqual(["2026", "2025", "2024"]);
   });
 
   it("sorts catalog products for the main list controls", () => {

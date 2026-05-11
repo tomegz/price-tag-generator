@@ -7,7 +7,6 @@ import type { AppMode } from "./app/appMode";
 import PrintTagRenderer from "./components/PrintTagRenderer";
 import LoginScreen from "./features/auth/LoginScreen";
 import { useAuthSession } from "./features/auth/useAuthSession";
-import BulkPromotionModal from "./features/bulkPromotion/BulkPromotionModal";
 import { useBulkPromotionActions } from "./features/bulkPromotion/useBulkPromotionActions";
 import CatalogAdminScreen from "./features/catalog/CatalogAdminScreen";
 import { getUserInitials } from "./app/authUser";
@@ -44,7 +43,6 @@ function App({
   print = () => window.print(),
   storage = localStorage
 }: AppProps = {}) {
-  const [bulkPromotionOpen, setBulkPromotionOpen] = useState(false);
   const [mode, setMode] = useState<AppMode>("print");
   const {
     authError,
@@ -71,6 +69,7 @@ function App({
   const {
     addCatalogItem,
     removeCatalogItem,
+    removeCatalogItems,
     updateCatalogItem
   } = useCatalogMutations({
     handleCatalogError,
@@ -88,7 +87,6 @@ function App({
   const handleLogout = useCallback(async () => {
     await logout();
     setMode("print");
-    setBulkPromotionOpen(false);
   }, [logout]);
 
   const handlePrint = useCallback(() => {
@@ -103,9 +101,9 @@ function App({
   useEffect(() => {
     if (!currentUser) return;
     observability.trackEvent("screen_view", {
-      screen: bulkPromotionOpen ? "bulk_promotion" : mode
+      screen: mode
     });
-  }, [bulkPromotionOpen, currentUser, mode, observability]);
+  }, [currentUser, mode, observability]);
 
   if (authLoading) {
     return (
@@ -156,22 +154,14 @@ function App({
           brands={brands}
           catalogError={catalogError}
           onAddProduct={addCatalogItem}
+          onApplyBulkPromotion={applyPromotionToItems}
           onBackToPrint={() => setMode("print")}
           onDeleteProduct={removeCatalogItem}
-          onOpenBulkPromotion={() => setBulkPromotionOpen(true)}
+          onDeleteProducts={removeCatalogItems}
           onUpdateProduct={updateCatalogItem}
           products={products}
         />
       )}
-
-      {bulkPromotionOpen ? (
-        <BulkPromotionModal
-          brands={brands}
-          onApply={applyPromotionToItems}
-          onClose={() => setBulkPromotionOpen(false)}
-          products={products}
-        />
-      ) : null}
     </AppShell>
   );
 }

@@ -28,7 +28,7 @@ type ProductListProps = {
 const sortOptionsBase: Array<{ label: string; value: CatalogSortMode }> = [
   { label: "Marka", value: "brand" },
   { label: "Cena", value: "price" },
-  { label: "Rok", value: "year" },
+  { label: "Rocznik", value: "year" },
   { label: "Promo", value: "promo" }
 ];
 
@@ -121,7 +121,7 @@ const ProductList = ({ brands, onAdd, printQueue, products }: ProductListProps) 
 
       <div className="product-table__header">
         <span>PRODUKT</span>
-        <span>ROK</span>
+        <span>ROCZNIK</span>
         <span>CENA</span>
         <span>STATUS</span>
         <span>ILOŚĆ</span>

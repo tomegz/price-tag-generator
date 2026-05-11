@@ -21,6 +21,7 @@ type UseCatalogMutationsOptions = {
 export type CatalogMutations = {
   addCatalogItem(item: LegacyCatalogItem): Promise<void>;
   removeCatalogItem(itemId: string): Promise<void>;
+  removeCatalogItems(itemIds: string[]): Promise<void>;
   updateCatalogItem(itemId: string, updatedItem: LegacyCatalogItem): Promise<void>;
 };
 
@@ -66,27 +67,41 @@ export function useCatalogMutations({
     }
   }, [handleCatalogError, observability, repository]);
 
-  const removeCatalogItem = useCallback(async (id: string) => {
+  const removeCatalogItems = useCallback(async (ids: string[]) => {
+    if (ids.length === 0) return;
+
     try {
-      await repository.deleteCatalogItem(id);
-      onCatalogItemRemoved(id);
-      observability.trackEvent("catalog_item_delete");
+      if (ids.length === 1) {
+        await repository.deleteCatalogItem(ids[0]);
+        observability.trackEvent("catalog_item_delete");
+      } else {
+        await repository.deleteCatalogItems(ids);
+        observability.trackEvent("catalog_item_delete", { item_count: ids.length });
+      }
+      ids.forEach(id => onCatalogItemRemoved(id));
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);
       handleCatalogError(repositoryError);
       observability.captureError(error, {
         operation: "catalog.delete",
         params: {
-          error_code: repositoryError.code
+          error_code: repositoryError.code,
+          item_count: ids.length
         }
       });
       throw error;
     }
   }, [handleCatalogError, observability, onCatalogItemRemoved, repository]);
 
+  const removeCatalogItem = useCallback(
+    (id: string) => removeCatalogItems([id]),
+    [removeCatalogItems]
+  );
+
   return {
     addCatalogItem,
     removeCatalogItem,
+    removeCatalogItems,
     updateCatalogItem
   };
 }

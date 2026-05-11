@@ -8,6 +8,7 @@ import { useBulkPromotionActions } from "./useBulkPromotionActions";
 function createCatalogRepository(): CatalogRepository {
   return {
     deleteCatalogItem: vi.fn(async () => undefined),
+    deleteCatalogItems: vi.fn(async () => undefined),
     saveCatalogItem: vi.fn(async () => undefined),
     saveCatalogItems: vi.fn(async () => undefined),
     subscribeCatalogBrands: vi.fn(() => vi.fn()),

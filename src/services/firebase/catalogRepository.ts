@@ -40,6 +40,7 @@ export type CatalogWriteRepository = {
   saveCatalogItem(itemId: string, item: LegacyCatalogItem): Promise<void>;
   saveCatalogItems(items: CatalogItemsById): Promise<void>;
   deleteCatalogItem(itemId: string): Promise<void>;
+  deleteCatalogItems(itemIds: string[]): Promise<void>;
 };
 
 export type CatalogRepository = CatalogReadRepository & CatalogWriteRepository;
@@ -68,6 +69,13 @@ export function ensureWritableCatalogItem(item: LegacyCatalogItem): LegacyCatalo
     throw new Error('Invalid catalog item. Refusing to write malformed legacy DB data.');
   }
   return parsed;
+}
+
+export function createCatalogItemsDeletePayload(itemIds: string[]): Record<string, null> {
+  return itemIds.reduce<Record<string, null>>((payload, itemId) => {
+    payload[itemId] = null;
+    return payload;
+  }, {});
 }
 
 export function createCatalogRepository(
@@ -103,6 +111,10 @@ export function createCatalogRepository(
     },
     deleteCatalogItem(itemId) {
       return remove(ref(database, catalogPaths.item(itemId, storeId)));
+    },
+    deleteCatalogItems(itemIds) {
+      if (itemIds.length === 0) return Promise.resolve();
+      return update(ref(database, catalogPaths.items(storeId)), createCatalogItemsDeletePayload(itemIds));
     }
   };
 }

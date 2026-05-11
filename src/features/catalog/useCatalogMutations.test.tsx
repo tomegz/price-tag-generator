@@ -8,6 +8,7 @@ import { useCatalogMutations } from "./useCatalogMutations";
 function createCatalogRepository(): CatalogRepository {
   return {
     deleteCatalogItem: vi.fn(async () => undefined),
+    deleteCatalogItems: vi.fn(async () => undefined),
     saveCatalogItem: vi.fn(async () => undefined),
     saveCatalogItems: vi.fn(async () => undefined),
     subscribeCatalogBrands: vi.fn(() => vi.fn()),
@@ -85,6 +86,29 @@ describe("useCatalogMutations", () => {
     expect(repository.deleteCatalogItem).toHaveBeenCalledWith("item1");
     expect(onCatalogItemRemoved).toHaveBeenCalledWith("item1");
     expect(observability.trackEvent).toHaveBeenCalledWith("catalog_item_delete");
+  });
+
+  it("removes multiple catalog items through one repository call", async () => {
+    const repository = createCatalogRepository();
+    const onCatalogItemRemoved = vi.fn();
+    const observability = createTestObservability();
+    const { result } = renderHook(() =>
+      useCatalogMutations({
+        handleCatalogError: vi.fn(),
+        observability,
+        onCatalogItemRemoved,
+        repository
+      })
+    );
+
+    await result.current.removeCatalogItems(["item1", "item2"]);
+
+    expect(repository.deleteCatalogItems).toHaveBeenCalledWith(["item1", "item2"]);
+    expect(onCatalogItemRemoved).toHaveBeenCalledWith("item1");
+    expect(onCatalogItemRemoved).toHaveBeenCalledWith("item2");
+    expect(observability.trackEvent).toHaveBeenCalledWith("catalog_item_delete", {
+      item_count: 2
+    });
   });
 
   it("captures repository failures without catalog payloads", async () => {

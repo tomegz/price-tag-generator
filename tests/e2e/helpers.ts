@@ -17,7 +17,7 @@ export async function gotoApp(page: Page): Promise<void> {
 
 export async function login(page: Page, email = ownerEmail, password = ownerPassword): Promise<void> {
   await page.goto('./');
-  await page.getByLabel('Email').fill(email);
+  await page.getByLabel('E-mail').fill(email);
   await page.getByLabel('Hasło').fill(password);
   await page.getByRole('button', { name: 'Zaloguj' }).click();
 }
@@ -32,10 +32,6 @@ export function printQueueItem(page: Page, productId: string): Locator {
 
 export function adminProductRow(page: Page, productId: string): Locator {
   return page.locator(`[data-testid="admin-product-row"][data-product-id="${productId}"]`);
-}
-
-export function bulkProductRow(page: Page, productId: string): Locator {
-  return page.locator(`[data-testid="bulk-product-row"][data-product-id="${productId}"]`);
 }
 
 export async function openCatalogAdmin(page: Page): Promise<void> {

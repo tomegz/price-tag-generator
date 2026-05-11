@@ -2,8 +2,10 @@ import Button from "../../design-system/Button";
 import Icon from "../../design-system/Icon";
 import QuantityStepper from "../../design-system/QuantityStepper";
 import {
-  getPriceCountWord,
+  getPrintableTagCountWord,
+  getPrintSheetCountWord,
   getPrintQueueTotal,
+  getTagCountWord,
   type PrintQueue
 } from "../../domains/printQueue/printQueue";
 import { getPrintSheetCount } from "../../domains/printTagRendering/printTagRendering";
@@ -42,14 +44,14 @@ const PrintQueuePanel = ({
         <div className="print-queue-panel__meta">
           <span className="pb-mono">Kolejka druku</span>
           <span className="pb-mono">
-            {totalPages} {totalPages === 1 ? "arkusz" : totalPages > 1 && totalPages < 5 ? "arkusze" : "arkuszy"}
+            {totalPages} {getPrintSheetCountWord(totalPages)}
           </span>
         </div>
         <div className="print-queue-panel__total">
           <strong className="pb-mono" data-testid="print-queue-total" id="print-queue-title">
             {String(totalTags).padStart(2, "0")}
           </strong>
-          <span>{getPriceCountWord(totalTags)} do druku</span>
+          <span>{getPrintableTagCountWord(totalTags)} do druku</span>
         </div>
       </header>
 
@@ -98,7 +100,7 @@ const PrintQueuePanel = ({
           Wyczyść
         </Button>
         <Button className="print-queue-panel__print" disabled={empty} icon="print" onClick={onPrint} variant="accent">
-          <span>Drukuj <span className="pb-mono">{totalTags}</span> etykiet</span>
+          <span>Drukuj <span className="pb-mono">{totalTags}</span> {getTagCountWord(totalTags)}</span>
         </Button>
       </footer>
     </aside>

@@ -1,5 +1,5 @@
 import Button from "../design-system/Button";
-import Icon from "../design-system/Icon";
+import BrandMark from "../design-system/BrandMark";
 import ProfileMenu from "./ProfileMenu";
 
 type AppHeaderProps = {
@@ -12,7 +12,7 @@ type AppHeaderProps = {
 const AppHeader = ({ onEditCatalog, onLogout, userEmail, userInitials }: AppHeaderProps) => (
   <header className="app-shell-header">
     <div className="app-shell-header__brand">
-      <Icon name="bike" size={23} />
+      <BrandMark size={22} />
       <strong>Profi Bike</strong>
       <span className="pb-mono">CENNIK</span>
     </div>

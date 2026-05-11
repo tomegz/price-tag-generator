@@ -43,7 +43,7 @@ export function useAuthSession(
       await service.signIn(email, password);
       observability.trackEvent("login_success");
     } catch (error) {
-      setAuthError("Nieprawidłowy email lub hasło.");
+      setAuthError("Nieprawidłowy e-mail lub hasło.");
       observability.trackEvent("login_failure");
       observability.captureError(error, { operation: "auth.login" });
       throw error;

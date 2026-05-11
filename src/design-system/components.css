@@ -120,6 +120,11 @@
   padding: 3px;
 }
 
+.ds-pills--grow {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .ds-pill,
 .ds-segmented__button {
   background: transparent;
@@ -132,6 +137,10 @@
   font-weight: 500;
   padding: 5px 11px;
   white-space: nowrap;
+}
+
+.ds-pill[data-mono="true"] {
+  font-family: var(--pb-font-mono);
 }
 
 .ds-pill[data-active="true"],

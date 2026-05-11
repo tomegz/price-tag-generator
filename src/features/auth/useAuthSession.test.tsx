@@ -62,7 +62,7 @@ describe("useAuthSession", () => {
     });
 
     expect(service.signIn).toHaveBeenCalledWith("owner@example.test", "wrong");
-    expect(result.current.authError).toBe("Nieprawidłowy email lub hasło.");
+    expect(result.current.authError).toBe("Nieprawidłowy e-mail lub hasło.");
     expect(observability.trackEvent).toHaveBeenCalledWith("login_failure");
     expect(observability.captureError).toHaveBeenCalledWith(error, { operation: "auth.login" });
   });

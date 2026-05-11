@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from "react";
+import BrandMark from "../../design-system/BrandMark";
 import Button from "../../design-system/Button";
-import Icon from "../../design-system/Icon";
 import TextField from "../../design-system/TextField";
+import LoginWheelBackdrop from "./LoginWheelBackdrop";
 
 type LoginScreenProps = {
   error: string;
@@ -21,7 +22,7 @@ const LoginScreen = ({ error, loading, onLogin }: LoginScreenProps) => {
     try {
       await onLogin(email, password);
     } catch {
-      setSubmitError("Nieprawidłowy email lub hasło.");
+      setSubmitError("Nieprawidłowy e-mail lub hasło.");
     }
   };
 
@@ -29,21 +30,22 @@ const LoginScreen = ({ error, loading, onLogin }: LoginScreenProps) => {
 
   return (
     <main className="login-screen">
+      <LoginWheelBackdrop />
       <section aria-labelledby="login-title" className="login-card">
         <div className="login-card__brand">
-          <Icon name="bike" size={27} />
+          <BrandMark size={26} />
           <strong>Profi Bike</strong>
           <span className="login-card__badge pb-mono">CENNIK</span>
         </div>
 
-        <p className="login-card__kicker pb-mono">PROFI BIKE · INTERNAL</p>
+        <p className="login-card__kicker pb-mono">Witaj ponownie</p>
         <h1 id="login-title">Zaloguj się</h1>
 
         <form className="login-card__form" onSubmit={handleSubmit}>
           <TextField
             autoComplete="email"
             id="email"
-            label="Email"
+            label="E-mail"
             onChange={event => setEmail(event.target.value)}
             required
             type="email"
@@ -69,6 +71,10 @@ const LoginScreen = ({ error, loading, onLogin }: LoginScreenProps) => {
             {loading ? "Logowanie..." : "Zaloguj"}
           </Button>
         </form>
+
+        <p className="login-card__footer">
+          Wewnętrzne narzędzie sklepu · v2.0
+        </p>
       </section>
     </main>
   );

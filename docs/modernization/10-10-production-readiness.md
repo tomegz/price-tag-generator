@@ -113,20 +113,20 @@
 
 ## Milestone 6: Bundle And Observability Readiness
 
-- [ ] Split React vendor code into a separate production chunk.
-- [ ] Split Firebase vendor code into a separate production chunk.
-- [ ] Split Sentry and observability code into a separate production chunk.
-- [ ] Remove the Vite large chunk warning.
-- [ ] Keep source maps hidden and uploaded only when Sentry build secrets exist.
-- [ ] Tighten telemetry URL and request metadata sanitization.
-- [ ] Test that telemetry excludes email.
-- [ ] Test that telemetry excludes product names.
-- [ ] Test that telemetry excludes prices.
-- [ ] Test that telemetry excludes search text.
-- [ ] Test that telemetry excludes passwords.
-- [ ] Test that telemetry excludes item IDs.
-- [ ] Test that telemetry excludes catalog payloads.
-- [ ] Confirm telemetry remains disabled in test and emulator modes.
+- [x] Split React vendor code into a separate production chunk.
+- [x] Split Firebase vendor code into a separate production chunk.
+- [x] Split Sentry and observability code into a separate production chunk.
+- [x] Remove the Vite large chunk warning.
+- [x] Keep source maps hidden and uploaded only when Sentry build secrets exist.
+- [x] Tighten telemetry URL and request metadata sanitization.
+- [x] Test that telemetry excludes email.
+- [x] Test that telemetry excludes product names.
+- [x] Test that telemetry excludes prices.
+- [x] Test that telemetry excludes search text.
+- [x] Test that telemetry excludes passwords.
+- [x] Test that telemetry excludes item IDs.
+- [x] Test that telemetry excludes catalog payloads.
+- [x] Confirm telemetry remains disabled in test and emulator modes.
 
 ## Milestone 7: Production Cutover
 

@@ -174,4 +174,64 @@ describe("createBrowserObservabilityService", () => {
       }
     });
   });
+
+  it("sanitizes Sentry event users, workflow contexts, and request URLs before send", () => {
+    const dependencies = createDependencies();
+    createBrowserObservabilityService(app, config, asDependencies(dependencies));
+    const sentryOptions = dependencies.sentry.init.mock.calls[0][0] as {
+      beforeSend(event: {
+        contexts?: Record<string, unknown>;
+        extra?: Record<string, unknown>;
+        request?: Record<string, string>;
+        user?: Record<string, string>;
+      }): unknown;
+    };
+
+    expect(
+      sentryOptions.beforeSend({
+        contexts: {
+          workflow: {
+            itemId: "item-123",
+            operation: "catalog.update",
+            price: 1299,
+            queue_item_count: 2,
+            searchText: "kross"
+          }
+        },
+        extra: {
+          catalogPayload: "full catalog",
+          email: "owner@example.test",
+          model: "Scarp",
+          password: "password123",
+          productName: "KTM Scarp",
+          safe_count: 1
+        },
+        request: {
+          headers: "Authorization: secret",
+          method: "POST",
+          url: "https://example.com/catalog/item-123?q=kross&password=password123#secret"
+        },
+        user: {
+          email: "owner@example.test",
+          id: "owner"
+        }
+      })
+    ).toEqual({
+      contexts: {
+        workflow: {
+          operation: "catalog.update",
+          queue_item_count: 2
+        }
+      },
+      extra: {
+        safe_count: 1
+      },
+      request: {
+        url: "https://example.com/catalog/:redacted"
+      },
+      user: {
+        id: "owner"
+      }
+    });
+  });
 });

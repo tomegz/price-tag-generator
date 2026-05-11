@@ -12,12 +12,12 @@ if (!rootElement) {
   throw new Error('Root element #root not found.');
 }
 
-initializeObservability(firebaseServices);
-
-createRoot(rootElement).render(
-  <StrictMode>
-    <ObservabilityErrorBoundary>
-      <App />
-    </ObservabilityErrorBoundary>
-  </StrictMode>
-);
+void initializeObservability(firebaseServices).finally(() => {
+  createRoot(rootElement).render(
+    <StrictMode>
+      <ObservabilityErrorBoundary>
+        <App />
+      </ObservabilityErrorBoundary>
+    </StrictMode>
+  );
+});

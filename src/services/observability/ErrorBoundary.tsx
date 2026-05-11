@@ -1,8 +1,13 @@
-import type { ReactNode } from "react";
-import * as Sentry from "@sentry/react";
+import { Component, type ErrorInfo, type ReactNode } from "react";
+
+import { observability } from "./singleton";
 
 type ObservabilityErrorBoundaryProps = {
   children: ReactNode;
+};
+
+type ObservabilityErrorBoundaryState = {
+  hasError: boolean;
 };
 
 const fallback = (
@@ -13,10 +18,29 @@ const fallback = (
   </div>
 );
 
-export function ObservabilityErrorBoundary({ children }: ObservabilityErrorBoundaryProps) {
-  return (
-    <Sentry.ErrorBoundary fallback={fallback} showDialog={false}>
-      {children}
-    </Sentry.ErrorBoundary>
-  );
+export class ObservabilityErrorBoundary extends Component<
+  ObservabilityErrorBoundaryProps,
+  ObservabilityErrorBoundaryState
+> {
+  state: ObservabilityErrorBoundaryState = {
+    hasError: false
+  };
+
+  static getDerivedStateFromError(): ObservabilityErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown, errorInfo: ErrorInfo): void {
+    observability.captureError(error, {
+      operation: "react.error_boundary",
+      params: {
+        component_stack_present: Boolean(errorInfo.componentStack)
+      }
+    });
+  }
+
+  render() {
+    if (this.state.hasError) return fallback;
+    return this.props.children;
+  }
 }

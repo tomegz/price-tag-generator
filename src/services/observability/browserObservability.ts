@@ -11,7 +11,10 @@ import * as Sentry from "@sentry/react";
 
 import type { ObservabilityConfig } from "./config";
 import { createNoopObservabilityService } from "./noop";
-import { sanitizeTelemetryParams } from "./sanitize";
+import {
+  sanitizeTelemetryParams,
+  sanitizeTelemetryUrl
+} from "./sanitize";
 import type {
   ObservabilityEventName,
   ObservabilityService,
@@ -88,8 +91,15 @@ export function createBrowserObservabilityService(
         if (event.extra) {
           event.extra = sanitizeTelemetryParams(event.extra as TelemetryParams);
         }
+        if (event.contexts?.workflow) {
+          event.contexts = {
+            ...event.contexts,
+            workflow: sanitizeTelemetryParams(event.contexts.workflow as TelemetryParams)
+          };
+        }
         if (event.request) {
-          event.request = event.request.url ? { url: event.request.url } : undefined;
+          const url = sanitizeTelemetryUrl(event.request.url);
+          event.request = url ? { url } : undefined;
         }
 
         return event;
@@ -210,19 +220,6 @@ function toAnalyticsParams(params: TelemetryParams): Record<string, string | num
       return nextParams;
     },
     {}
-  );
-}
-
-export function countTelemetryItems(items: Record<string, number>): {
-  itemCount: number;
-  totalCount: number;
-} {
-  return Object.values(items).reduce(
-    (counts, quantity) => ({
-      itemCount: quantity > 0 ? counts.itemCount + 1 : counts.itemCount,
-      totalCount: counts.totalCount + quantity
-    }),
-    { itemCount: 0, totalCount: 0 }
   );
 }
 

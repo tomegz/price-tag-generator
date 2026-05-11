@@ -28,6 +28,8 @@ Do not expand this into a larger product unless the user explicitly asks. The co
 
 The Profi Bike redesign has been implemented on `develop`. Preserve the Carbon design-system direction unless the user explicitly replaces it.
 
+The current redesign includes the admin v2 flow: `Edycja` and `Edycja zbiorcza` modes live in the price editor, bulk selection happens in the table, the bulk promotion dialog is one-step configuration/preview for selected rows, bulk delete uses typed `USUŃ` confirmation, and inline single-row delete uses a quick confirm modal.
+
 ## Current Firebase Context
 
 Production Firebase project: `pricetag-generator`
@@ -183,7 +185,7 @@ When implementing emulator support, make it difficult to accidentally write to p
 
 Use pnpm for the modernized app. Pin the package manager through the `packageManager` field and commit `pnpm-lock.yaml`. Do not keep both `package-lock.json` and `pnpm-lock.yaml` after the package-manager migration is complete.
 
-Milestones 02, 03, 04, and 05 are complete on `develop`. The redesign milestones `R0` through `R8` are complete. Legacy parity-only Milestones 06 and 07 are superseded by the redesign track. Playwright e2e coverage and the observability service layer are now part of the modern app.
+Milestones 02, 03, 04, and 05 are complete on `develop`. The redesign milestones `R0` through `R8` are complete, and the later admin v2 bulk-selection revision is implemented. Legacy parity-only Milestones 06 and 07 are superseded by the redesign track. Playwright e2e coverage and the observability service layer are now part of the modern app.
 
 ## Modernization Implementation Notes
 
@@ -191,6 +193,10 @@ Prefer this architecture:
 
 ```text
 src/
+  app/
+    AppHeader.tsx
+    AppShell.tsx
+    ProfileMenu.tsx
   design-system/
     tokens.css
     base.css
@@ -204,6 +210,7 @@ src/
     bulkPromotion/
   domains/
     catalog/
+    language/
     pricing/
     printQueue/
     printTagRendering/
@@ -226,10 +233,16 @@ Feature components should consume domain/service data through typed view models.
 
 - User initials are derived from the Firebase user identity.
 - Brand filters are data-backed from the DB `brands` node plus item-derived fallback brands.
+- The DB `brands` node is a separate legacy list. Deleting all products for a brand does not automatically delete that brand entry. If changing this behavior, decide deliberately whether filters should use product-derived brands only or also maintain/clean the DB brands list.
 - Design-system primitives live in `src/design-system/`; screen/domain components live in `src/features/`.
 - Keep print tag rendering separate from app chrome. The physical output still uses `PrintTag` and `PrintTag.css`.
 - Print queue state is persisted through the storage domain, not directly through ad hoc localStorage calls outside the print queue hook.
 - Catalog writes go through the repository layer and rely on realtime subscriptions to refresh catalog state.
+- New catalog item IDs are generated as collision-resistant `item-<uuid>` values in `useCatalogMutations`; preserve existing legacy IDs when reading/updating/deleting.
+- Polish copy is intentional: use `Rocznik`, `Cena katalogowa`, `Cena promocyjna`, and `etykieta/etykiety/etykiet` pluralization helpers from `src/domains/language/`.
+- Main product rows are not clickable add targets. Keep adding explicit through the `Dodaj` button and quantity stepper to avoid accidental queue additions and invalid nested interactive semantics.
+- `FilterPills` owns subtle left/right overflow fades for Windows discoverability while keeping thin scrollbars. Keep the fade inside the component border so the 1px border remains crisp.
+- The main print screen has a narrow desktop fallback below `1200px` for Windows laptops/scaling. Keep normal desktop layout unchanged above that breakpoint and do not let responsive app chrome changes affect `@media print`.
 
 React implementation rules:
 
@@ -297,7 +310,19 @@ At minimum, add tests for:
 - Print queue and print layout rendering
 - Observability event names, privacy scrubbing, UID-only identity, and disabled local/test defaults when touching telemetry
 
-Rules and repository integration tests live under `tests/` and use `vitest.rules.config.ts`. With the Docker Firebase emulator running, use:
+Rules and repository integration tests live under `tests/` and use `vitest.rules.config.ts`. The default rules-test script starts a Dockerized database emulator and does not require Java on the host:
+
+```sh
+pnpm test:rules
+```
+
+If you already have a local JDK and want to use Firebase CLI `emulators:exec` directly, use:
+
+```sh
+pnpm test:rules:native
+```
+
+If a compatible emulator is already running and you only need the Vitest rules suite, use:
 
 ```sh
 pnpm exec vitest run --config vitest.rules.config.ts
@@ -328,7 +353,7 @@ pnpm lint
 pnpm build
 ```
 
-Run `pnpm audit --prod` after dependency changes. Run `pnpm test:e2e` when changing user workflows, print queue behavior, auth flow, catalog admin behavior, or Playwright-owned selectors. Run the rules/repository test with the Docker emulator when touching Firebase rules or repository behavior.
+Run `pnpm audit --prod` after dependency changes. Run `pnpm test:e2e` when changing user workflows, print queue behavior, auth flow, catalog admin behavior, or Playwright-owned selectors. Run `pnpm test:rules` when touching Firebase rules, repository behavior, rules test config, or emulator test helpers.
 
 ## Known Legacy Issues
 

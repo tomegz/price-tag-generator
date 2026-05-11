@@ -688,10 +688,14 @@
   width: 100%;
 }
 
-.admin-filters__years .ds-pills,
-.admin-filters__brands .ds-pills {
+.admin-filters__years .ds-pills-frame,
+.admin-filters__brands .ds-pills-frame {
   flex: 1 1 0;
   min-width: 0;
+}
+
+.admin-filters__years .ds-pills,
+.admin-filters__brands .ds-pills {
   scrollbar-color: var(--pb-line) transparent;
   scrollbar-width: thin;
 }

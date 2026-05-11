@@ -109,6 +109,43 @@
   padding-left: 34px;
 }
 
+.ds-pills-frame {
+  min-width: 0;
+  position: relative;
+}
+
+.ds-pills-frame::before,
+.ds-pills-frame::after {
+  bottom: 1px;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 1px;
+  transition: opacity 120ms ease;
+  width: 26px;
+  z-index: 2;
+}
+
+.ds-pills-frame::before {
+  background: linear-gradient(90deg, var(--pb-surface) 0%, var(--pb-surface) 18%, rgba(255, 255, 255, 0) 100%);
+  border-bottom-left-radius: calc(var(--pb-radius-control) - 1px);
+  border-top-left-radius: calc(var(--pb-radius-control) - 1px);
+  left: 1px;
+}
+
+.ds-pills-frame::after {
+  background: linear-gradient(270deg, var(--pb-surface) 0%, var(--pb-surface) 18%, rgba(255, 255, 255, 0) 100%);
+  border-bottom-right-radius: calc(var(--pb-radius-control) - 1px);
+  border-top-right-radius: calc(var(--pb-radius-control) - 1px);
+  right: 1px;
+}
+
+.ds-pills-frame[data-overflow-left="true"]::before,
+.ds-pills-frame[data-overflow-right="true"]::after {
+  opacity: 1;
+}
+
 .ds-pills,
 .ds-segmented {
   background: var(--pb-surface);
@@ -118,6 +155,10 @@
   gap: 4px;
   overflow-x: auto;
   padding: 3px;
+}
+
+.ds-pills {
+  width: 100%;
 }
 
 .ds-pills--grow {

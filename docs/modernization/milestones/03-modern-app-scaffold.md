@@ -2,7 +2,7 @@
 
 ## Status
 
-Done on `develop`.
+Done in the modern app.
 
 Verification:
 
@@ -81,7 +81,7 @@ Replace the obsolete Create React App shell with a modern Vite, React, TypeScrip
 
 ## Rollback
 
-- Keep changes on `develop`.
+- Keep changes on a feature branch until they are ready to merge to `master`.
 - If migration blocks, the production app remains deployed from the old branch/state.
 
 ## Risks

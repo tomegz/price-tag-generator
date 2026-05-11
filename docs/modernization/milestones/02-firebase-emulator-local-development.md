@@ -2,7 +2,7 @@
 
 ## Status
 
-Done on `develop`.
+Done in the modern app.
 
 Manual verification completed by the user. Docker-based emulator verification also passed locally:
 

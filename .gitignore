@@ -21,7 +21,7 @@
 .env.production.local
 
 # local Firebase/prod data exports
-/pricetag-generator-export.json
+/pricetag-generator-export*.json
 /firebase-export/
 /emulator-data/
 /emulator-data-e2e/

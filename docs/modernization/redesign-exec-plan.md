@@ -85,7 +85,7 @@ Extract reusable primitives, not full product screens. Components that know abou
 
 ## Completed Implementation
 
-Completed on `develop`.
+Completed in the modern app.
 
 - Added `src/design-system/` with Carbon tokens, base CSS, icons, buttons, inputs, filters, segmented controls, steppers, promo price treatment, and modal primitives.
 - Added `src/features/` for auth, catalog, print queue, and bulk promotion screens.

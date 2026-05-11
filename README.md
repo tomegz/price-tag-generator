@@ -134,6 +134,13 @@ Do not commit production exports, secrets, service account keys, or local emulat
 
 ## Deployment
 
+Branch policy:
+
+- Feature branches merge directly to `master`.
+- `master` is the production branch.
+- `gh-pages` is the generated static deployment branch served by GitHub Pages.
+- `develop` is not a long-lived integration branch for this project.
+
 Build output goes to `dist/`, with GitHub Pages deployment available through:
 
 ```bash

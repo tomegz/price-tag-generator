@@ -2,7 +2,7 @@
 
 ## Project Summary
 
-This is a small React/Firebase app used by one production user to manage a bike-shop catalog and print price tags. The live production app may still be the old GitHub Pages deployment, but the current `develop` work is the active modernized app.
+This is a small React/Firebase app used by one production user to manage a bike-shop catalog and print price tags. The live production app may still be the old GitHub Pages deployment, but the current working branch contains the active modernized app.
 
 Keep the product focused. The current stack is:
 
@@ -16,7 +16,7 @@ Keep the product focused. The current stack is:
 - Firebase Realtime Database retained for now
 - Firebase Analytics and Sentry observability
 
-Current `develop` source standards:
+Current modern app source standards:
 
 - All app source under `src/` is TypeScript or TSX; do not add new JS/JSX files there.
 - React components are function components using hooks; do not add class components.
@@ -26,7 +26,7 @@ Current `develop` source standards:
 
 Do not expand this into a larger product unless the user explicitly asks. The core workflow is catalog search/editing, print queue management, discounts, and reliable price-tag printing.
 
-The Profi Bike redesign has been implemented on `develop`. Preserve the Carbon design-system direction unless the user explicitly replaces it.
+The Profi Bike redesign has been implemented in the modern app. Preserve the Carbon design-system direction unless the user explicitly replaces it.
 
 The current redesign includes the admin v2 flow: `Edycja` and `Edycja zbiorcza` modes live in the price editor, bulk selection happens in the table, the bulk promotion dialog is one-step configuration/preview for selected rows, bulk delete uses typed `USUŃ` confirmation, and inline single-row delete uses a quick confirm modal.
 
@@ -50,7 +50,7 @@ profi-bike/
   ownerUids/
 ```
 
-The exported production data is in `pricetag-generator-export.json` when present locally. It contains one store, 9 brands, 649 items, and 4 owner UIDs. Treat this as production data. Do not commit it unless the user explicitly asks.
+The exported production data is in `pricetag-generator-export.json` when present locally. It contains one store, 9 brands, 652 items, and 2 owner UIDs. Treat this as production data. Do not commit it unless the user explicitly asks.
 
 Realtime Database is JSON, not relational tables. Keep this in mind when discussing schema changes.
 
@@ -185,7 +185,7 @@ When implementing emulator support, make it difficult to accidentally write to p
 
 Use pnpm for the modernized app. Pin the package manager through the `packageManager` field and commit `pnpm-lock.yaml`. Do not keep both `package-lock.json` and `pnpm-lock.yaml` after the package-manager migration is complete.
 
-Milestones 02, 03, 04, and 05 are complete on `develop`. The redesign milestones `R0` through `R8` are complete, and the later admin v2 bulk-selection revision is implemented. Legacy parity-only Milestones 06 and 07 are superseded by the redesign track. Playwright e2e coverage and the observability service layer are now part of the modern app.
+Milestones 02, 03, 04, and 05 are complete in the modern app. The redesign milestones `R0` through `R8` are complete, and the later admin v2 bulk-selection revision is implemented. Legacy parity-only Milestones 06 and 07 are superseded by the redesign track. Playwright e2e coverage and the observability service layer are now part of the modern app.
 
 ## Modernization Implementation Notes
 
@@ -361,12 +361,12 @@ The legacy production app could not run on modern Node versions such as Node 24 
 
 Do not try to solve legacy dependency issues with `npm audit fix --force`. The correct fix is modernization. If the old app must be run temporarily, use an old compatible Node runtime and do not treat that as the target state.
 
-The legacy code had known risks that have mostly been addressed on `develop`:
+The legacy code had known risks that have mostly been addressed in the modern app:
 
 - React 15 and CRA 1 are obsolete.
 - Firebase 4 and `re-base` should be replaced with the modular Firebase SDK.
 
-Current known risks on `develop`:
+Current known risks:
 
 - Production cutover may still need verification against the live GitHub Pages/Firebase deployment.
 - Production Realtime Database rules may need a deliberate deploy and owner UID data check even though the repository rules are hardened.
@@ -379,4 +379,4 @@ The user may have uncommitted local changes. Do not revert them unless explicitl
 
 Do not commit or upload production exports, secrets, Firebase service account keys, or local emulator state unless explicitly requested.
 
-If creating branches for modernization, use `develop` as the integration branch unless the user requests another branch.
+Feature branches should merge directly to `master`. `master` is the production branch, and `gh-pages` is the generated GitHub Pages deployment branch.

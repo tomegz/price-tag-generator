@@ -16,6 +16,9 @@ The target state is a current React app that keeps the existing product behavior
 - Replace Firebase 4 and `re-base` with the Firebase modular SDK.
 - UI parity-only work has been superseded by the dedicated redesign execution plan.
 - Avoid any silent rewrite of production data.
+- Feature branches merge directly to `master`.
+- `master` is the production branch.
+- `gh-pages` is the generated GitHub Pages deployment branch.
 
 ## Target Stack
 
@@ -68,7 +71,7 @@ optional shared dev:
 
 ## Redesign Track
 
-The original parity-only UI scope is now replaced by the [Profi Bike Redesign Execution Plan](redesign-exec-plan.md), which is complete on `develop`.
+The original parity-only UI scope is now replaced by the [Profi Bike Redesign Execution Plan](redesign-exec-plan.md), which is complete in the modern app.
 
 Do not implement Milestone 6 or the old Milestone 7 as written if the next user-facing release is the new Profi Bike redesign. The redesign milestones `R0` through `R8` now cover the user-facing app surface, while keeping the Firebase schema, emulator workflow, service layer, and production cutover principles from this modernization plan.
 
@@ -76,7 +79,7 @@ Do not implement Milestone 6 or the old Milestone 7 as written if the next user-
 
 ### Milestone 2
 
-Completed on `develop`.
+Completed in the modern app.
 
 - Added Firebase emulator configuration for Auth and Realtime Database.
 - Added Dockerized emulator runtime so local development does not require a host JDK.
@@ -87,7 +90,7 @@ Completed on `develop`.
 
 ### Milestone 3
 
-Completed on `develop`.
+Completed in the modern app.
 
 - Replaced CRA/react-scripts with Vite.
 - Migrated dependency management from npm to pnpm.
@@ -98,7 +101,7 @@ Completed on `develop`.
 
 ### Milestone 4
 
-Completed on `develop`.
+Completed in the modern app.
 
 - Established Catalog, Pricing, Print Queue, Print Tag Rendering, and Storage as explicit domain modules.
 - Renamed active UI components and props to use Catalog, Print Queue, and Print Tag vocabulary.
@@ -107,7 +110,7 @@ Completed on `develop`.
 
 ### Milestone 5
 
-Completed on `develop`.
+Completed in the modern app.
 
 - Split Firebase setup into config/app initialization, Auth service, and Catalog repository modules.
 - Kept React components away from direct Firebase SDK imports.

@@ -2,7 +2,7 @@
 
 ## Status
 
-Done on `develop`.
+Done in the modern app.
 
 The current milestone extracts typed and tested domain modules for Catalog, Pricing, Print Queue, Print Tag Rendering, and Storage. The existing UI remains visually unchanged, but active component and prop names now use the new domain vocabulary.
 

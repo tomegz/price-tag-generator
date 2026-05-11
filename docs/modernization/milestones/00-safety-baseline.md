@@ -6,7 +6,8 @@ Capture the current production state and put guardrails in place before any prod
 
 ## Prerequisites
 
-- Current branch is `develop`.
+- Current work may happen on any feature branch.
+- Release target is `master`.
 - Latest production Realtime Database export exists locally.
 - Access to Firebase Console for `pricetag-generator`.
 - Agreement on which Firebase Auth UID should be the production owner.

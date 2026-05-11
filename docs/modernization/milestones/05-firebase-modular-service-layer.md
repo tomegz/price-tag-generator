@@ -2,7 +2,7 @@
 
 ## Status
 
-Done on `develop`.
+Done in the modern app.
 
 The app now uses `src/services/firebase/` for Firebase config, app initialization, auth, and catalog repository access. React components do not import Firebase SDK modules directly.
 

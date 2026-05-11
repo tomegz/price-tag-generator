@@ -9,6 +9,7 @@ import {
 } from '@firebase/rules-unit-testing';
 import { ref, set, type Database } from 'firebase/database';
 
+import { readRulesDatabaseEmulatorConfig } from './rulesEmulatorConfig.js';
 import {
   createCatalogRepository,
   isPermissionDenied,
@@ -18,6 +19,7 @@ import {
 import type { CatalogItemsById, LegacyCatalogItem } from '../src/domains/catalog/catalog';
 
 let testEnv: RulesTestEnvironment;
+const databaseEmulator = readRulesDatabaseEmulatorConfig();
 
 const validItem: LegacyCatalogItem = {
   name: 'Kross',
@@ -33,8 +35,7 @@ beforeAll(async () => {
     projectId: 'demo-price-tag-generator',
     database: {
       rules: readFileSync('database.rules.json', 'utf8'),
-      host: '127.0.0.1',
-      port: 9000
+      ...databaseEmulator
     }
   });
 });
@@ -44,7 +45,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await testEnv.cleanup();
+  await testEnv?.cleanup();
 });
 
 async function seedOwner(uid = 'owner-uid'): Promise<void> {

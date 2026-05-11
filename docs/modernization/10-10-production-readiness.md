@@ -34,9 +34,9 @@
 - [x] Decide that only the 2 `ownerUids` users keep access after hardened rules deploy.
 - [x] Refresh local emulator seed data from the latest production export.
 - [ ] Keep current production rules unchanged until rules tests and cutover checks pass.
-- [ ] Add GitHub Actions production Firebase env vars/secrets.
-- [ ] Add optional Sentry secrets/vars if production observability is enabled.
-- [ ] Confirm GitHub Pages still serves from `gh-pages`.
+- [x] Add GitHub Actions production Firebase env vars/secrets.
+- [x] Add optional Sentry secrets/vars if production observability is enabled.
+- [x] Confirm GitHub Pages still serves from `gh-pages`.
 - [ ] Identify a known-good rollback deployment or commit before cutover.
 
 ## Milestone 1: Branch And Repo Hygiene
@@ -52,21 +52,22 @@
 
 ## Milestone 2: Master CI And Auto Deploy
 
-- [ ] Change CI triggers from `develop` to `master`.
-- [ ] Run PR CI against `master`.
-- [ ] Run push-to-`master` CI before deployment.
-- [ ] Use `pnpm install --frozen-lockfile`.
-- [ ] Run `pnpm typecheck`.
-- [ ] Run `pnpm lint`.
-- [ ] Run `pnpm test`.
-- [ ] Run `pnpm test:rules`.
-- [ ] Run `pnpm test:e2e`.
-- [ ] Run `pnpm build`.
-- [ ] Run `pnpm audit --prod`.
-- [ ] Build production app with GitHub secrets/vars.
-- [ ] Set `VITE_SENTRY_RELEASE` from the commit SHA.
-- [ ] Deploy `dist/` to `gh-pages` only after gates pass.
-- [ ] Keep database rules deployment separate and manual.
+- [x] Change CI triggers from `develop` to `master`.
+- [x] PR workflow runs on pull requests targeting `master`.
+- [x] Deploy workflow runs on pushes to `master`.
+- [x] Deploy workflow starts only after the required CI gates pass.
+- [x] CI installs dependencies with `pnpm install --frozen-lockfile`.
+- [x] CI typechecks with `pnpm typecheck`.
+- [x] CI lints with `pnpm lint`.
+- [x] CI runs unit tests with `pnpm test`.
+- [x] CI runs Firebase rules tests with `pnpm test:rules`.
+- [x] CI runs browser E2E tests with `pnpm test:e2e`.
+- [x] CI verifies the production build with `pnpm build`.
+- [x] CI checks production dependency advisories with `pnpm audit --prod`.
+- [x] Deploy workflow builds the production app with GitHub repository variables/secrets.
+- [x] Deploy workflow sets `VITE_SENTRY_RELEASE` from the commit SHA.
+- [x] Deploy `dist/` to `gh-pages` only after gates pass.
+- [x] Keep database rules deployment separate and manual.
 
 ## Milestone 3: Internal Catalog Adapter
 

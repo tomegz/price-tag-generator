@@ -73,10 +73,16 @@ pnpm test:e2e:install
 pnpm test:e2e
 ```
 
-Rules and repository tests use the Firebase emulator:
+Rules and repository tests use the Docker Firebase emulator by default, so they do not require Java on the host:
 
 ```bash
 pnpm test:rules
+```
+
+If you have a local JDK and want to use `firebase emulators:exec` directly:
+
+```bash
+pnpm test:rules:native
 ```
 
 Run `pnpm audit --prod` after dependency changes.
@@ -141,7 +147,9 @@ Branch policy:
 - `gh-pages` is the generated static deployment branch served by GitHub Pages.
 - `develop` is not a long-lived integration branch for this project.
 
-Build output goes to `dist/`, with GitHub Pages deployment available through:
+CI runs on pull requests targeting `master`. Pushes to `master` run the same quality gates and deploy `dist/` to `gh-pages` after they pass. Database rules are not deployed by the app workflow.
+
+Build output goes to `dist/`, with manual GitHub Pages deployment still available through:
 
 ```bash
 pnpm deploy

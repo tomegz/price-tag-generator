@@ -1,27 +1,32 @@
 import { readFileSync } from 'node:fs';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import {
   assertFails,
   assertSucceeds,
   initializeTestEnvironment
 } from '@firebase/rules-unit-testing';
 import { get, ref, set } from 'firebase/database';
+import { readRulesDatabaseEmulatorConfig } from './rulesEmulatorConfig.js';
 
 let testEnv;
+const databaseEmulator = readRulesDatabaseEmulatorConfig();
 
 beforeAll(async () => {
   testEnv = await initializeTestEnvironment({
     projectId: 'demo-price-tag-generator',
     database: {
       rules: readFileSync('database.rules.json', 'utf8'),
-      host: '127.0.0.1',
-      port: 9000
+      ...databaseEmulator
     }
   });
 });
 
 afterEach(async () => {
   await testEnv.clearDatabase();
+});
+
+afterAll(async () => {
+  await testEnv?.cleanup();
 });
 
 describe('Realtime Database rules', () => {

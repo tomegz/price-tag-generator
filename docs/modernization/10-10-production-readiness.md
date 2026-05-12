@@ -130,25 +130,25 @@
 
 ## Milestone 7: Production Cutover
 
-- [ ] Confirm your production Auth user and owner UID access.
-- [ ] Take a fresh production DB export.
-- [ ] Run `pnpm typecheck`.
-- [ ] Run `pnpm lint`.
-- [ ] Run `pnpm test`.
-- [ ] Run `pnpm test:rules`.
-- [ ] Run `pnpm test:e2e`.
-- [ ] Run `pnpm build`.
-- [ ] Run `pnpm audit --prod`.
+- [x] Confirm your production Auth user and owner UID access.
+- [x] Take a fresh production DB export.
+- [x] Run `pnpm typecheck`.
+- [x] Run `pnpm lint`.
+- [x] Run `pnpm test`.
+- [x] Run `pnpm test:rules`.
+- [x] Run `pnpm test:e2e`.
+- [x] Run `pnpm build`.
+- [x] Run `pnpm audit --prod`.
 - [x] Run `pnpm validate:prod-export`.
 - [x] Import the latest production export into the emulator.
-- [ ] Smoke-test login locally.
-- [ ] Smoke-test catalog load and search locally.
-- [ ] Smoke-test temporary create and delete locally.
-- [ ] Smoke-test print queue and print action locally.
+- [x] Smoke-test login locally.
+- [x] Smoke-test catalog load and search locally.
+- [x] Smoke-test temporary create and delete locally.
+- [x] Smoke-test print queue and print action locally.
 - [x] Confirm latest production DB export contains the intended `ownerUids` allowlist.
-- [ ] Manually deploy hardened Realtime Database rules.
-- [ ] Confirm current broad production rules are replaced.
-- [ ] Keep app deployment and DB rules deployment as separate actions.
+- [x] Manually deploy hardened Realtime Database rules.
+- [x] Confirm current broad production rules are replaced.
+- [x] Keep app deployment and DB rules deployment as separate actions.
 - [ ] Merge feature branch to `master`.
 - [ ] Verify master CI deploys to GitHub Pages.
 - [ ] Smoke-test production owner login.

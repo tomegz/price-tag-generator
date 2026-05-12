@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
 import CatalogAdminScreen from "./CatalogAdminScreen";
@@ -37,18 +38,23 @@ const products: CatalogProduct[] = [
   }
 ];
 
-function renderCatalogAdmin(catalogProducts = products) {
+function renderCatalogAdmin(catalogProducts = products, overrides: Partial<ComponentProps<typeof CatalogAdminScreen>> = {}) {
+  const props = {
+    brands: ["Giant", "Kross", "Trek"],
+    catalogError: "",
+    onAddProduct: vi.fn(async () => undefined),
+    onApplyBulkPromotion: vi.fn(async () => undefined),
+    onBackToPrint: vi.fn(),
+    onDeleteProduct: vi.fn(async () => undefined),
+    onDeleteProducts: vi.fn(async () => undefined),
+    onUpdateProduct: vi.fn(async () => undefined),
+    products: catalogProducts,
+    ...overrides
+  };
+
   return render(
     <CatalogAdminScreen
-      brands={["Giant", "Kross", "Trek"]}
-      catalogError=""
-      onAddProduct={vi.fn(async () => undefined)}
-      onApplyBulkPromotion={vi.fn(async () => undefined)}
-      onBackToPrint={vi.fn()}
-      onDeleteProduct={vi.fn(async () => undefined)}
-      onDeleteProducts={vi.fn(async () => undefined)}
-      onUpdateProduct={vi.fn(async () => undefined)}
-      products={catalogProducts}
+      {...props}
     />
   );
 }
@@ -136,5 +142,73 @@ describe("CatalogAdminScreen", () => {
     const addRow = screen.getByTestId("admin-add-row");
     expect(within(addRow).getByLabelText("Marka")).toHaveValue("");
     expect(within(addRow).getByLabelText("Rocznik")).toHaveValue(String(new Date().getFullYear()));
+  });
+
+  it("preserves inactive promotion status when an item has a stored promotion price", async () => {
+    const user = userEvent.setup();
+    const onUpdateProduct = vi.fn(async () => undefined);
+    const catalogProducts: CatalogProduct[] = [
+      {
+        brand: "Kross",
+        discountPrice: 14500,
+        discountEnabled: false,
+        id: "item-dormant-promo",
+        model: "Moon",
+        price: 14999,
+        year: 2026,
+        yearLabel: "2026"
+      }
+    ];
+    renderCatalogAdmin(catalogProducts, { onUpdateProduct });
+
+    const row = screen.getByTestId("admin-product-row");
+    expect(within(row).getByText("—")).toBeInTheDocument();
+
+    await user.click(within(row).getByRole("button", { name: "Edytuj" }));
+
+    const editedRow = screen.getByTestId("admin-product-row");
+    expect(within(editedRow).getByRole("checkbox", { name: "Promocja aktywna" })).not.toBeChecked();
+    expect(within(editedRow).getByLabelText("Cena promocyjna")).toHaveValue("14500");
+    expect(within(editedRow).getByLabelText("Cena promocyjna")).toBeDisabled();
+
+    await user.clear(within(editedRow).getByLabelText("Model"));
+    await user.type(within(editedRow).getByLabelText("Model"), "Moon Edited");
+    await user.click(within(editedRow).getByRole("button", { name: "Zapisz" }));
+
+    expect(onUpdateProduct).toHaveBeenCalledWith("item-dormant-promo", expect.objectContaining({
+      discountPrice: 14500,
+      discountEnabled: false,
+      model: "Moon Edited"
+    }));
+  });
+
+  it("enables promotion explicitly from the edit row toggle", async () => {
+    const user = userEvent.setup();
+    const onUpdateProduct = vi.fn(async () => undefined);
+    const catalogProducts: CatalogProduct[] = [
+      {
+        brand: "Kross",
+        discountPrice: 14500,
+        discountEnabled: false,
+        id: "item-dormant-promo",
+        model: "Moon",
+        price: 14999,
+        year: 2026,
+        yearLabel: "2026"
+      }
+    ];
+    renderCatalogAdmin(catalogProducts, { onUpdateProduct });
+
+    const row = screen.getByTestId("admin-product-row");
+    await user.click(within(row).getByRole("button", { name: "Edytuj" }));
+
+    const editedRow = screen.getByTestId("admin-product-row");
+    await user.click(within(editedRow).getByRole("checkbox", { name: "Promocja aktywna" }));
+    await user.click(within(editedRow).getByRole("button", { name: "Zapisz" }));
+
+    expect(onUpdateProduct).toHaveBeenCalledWith("item-dormant-promo", expect.objectContaining({
+      discountPrice: 14500,
+      discountEnabled: true
+    }));
   });
 });

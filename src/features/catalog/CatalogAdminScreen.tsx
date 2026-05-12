@@ -45,9 +45,11 @@ type CatalogAdminScreenProps = {
   onUpdateProduct(productId: string, item: CatalogItemInput): Promise<void>;
 };
 
-const draftFields: Array<keyof CatalogDraft> = ["brand", "model", "year", "price", "discountPrice"];
+type CatalogDraftTextField = Exclude<keyof CatalogDraft, "discountEnabled">;
 
-function fieldPlaceholder(field: keyof CatalogDraft): string {
+const draftFields: CatalogDraftTextField[] = ["brand", "model", "year", "price", "discountPrice"];
+
+function fieldPlaceholder(field: CatalogDraftTextField): string {
   return {
     brand: "Marka",
     model: "Model",
@@ -57,7 +59,12 @@ function fieldPlaceholder(field: keyof CatalogDraft): string {
   }[field];
 }
 
+function isNumericDraftField(field: CatalogDraftTextField): boolean {
+  return field === "price" || field === "discountPrice" || field === "year";
+}
+
 function isFieldDirty(product: CatalogItem, draft: CatalogDraft, field: keyof CatalogDraft): boolean {
+  if (field === "discountEnabled") return draft.discountEnabled !== product.discountEnabled;
   if (field === "discountPrice") return Number(draft.discountPrice || 0) !== Number(product.discountPrice);
   if (field === "price") return Number(draft.price) !== Number(product.price);
   if (field === "year") return String(draft.year) !== String(product.year);
@@ -281,14 +288,23 @@ const CatalogAdminScreen = ({
           <div className={`admin-row admin-row--editing${bulkMode ? " admin-row--bulk-editing" : ""}`} data-testid="admin-add-row">
             {bulkMode ? <span /> : null}
             {draftFields.map(field => (
-              <TextField
-                aria-label={fieldPlaceholder(field)}
-                key={field}
-                numeric={field === "price" || field === "discountPrice" || field === "year"}
-                onChange={event => updateNewDraft(field, event.target.value)}
-                placeholder={fieldPlaceholder(field)}
-                value={newDraft[field]}
-              />
+              field === "discountPrice" ? (
+                <PromoDraftCell
+                  draft={newDraft}
+                  key={field}
+                  onDiscountEnabledChange={value => updateNewDraft("discountEnabled", value)}
+                  onDiscountPriceChange={value => updateNewDraft("discountPrice", value)}
+                />
+              ) : (
+                <TextField
+                  aria-label={fieldPlaceholder(field)}
+                  key={field}
+                  numeric={isNumericDraftField(field)}
+                  onChange={event => updateNewDraft(field, event.target.value)}
+                  placeholder={fieldPlaceholder(field)}
+                  value={newDraft[field]}
+                />
+              )
             ))}
             <div className="admin-row__actions">
               <Button onClick={() => setAdding(false)} variant="ghost">Anuluj</Button>
@@ -314,15 +330,28 @@ const CatalogAdminScreen = ({
               >
                 {bulkMode ? <span /> : null}
                 {draftFields.map(field => (
-                  <TextField
-                    aria-label={fieldPlaceholder(field)}
-                    className={isFieldDirty(product, draft, field) ? "admin-input--dirty" : ""}
-                    key={field}
-                    numeric={field === "price" || field === "discountPrice" || field === "year"}
-                    onChange={event => updateDraft(product.id, field, event.target.value)}
-                    placeholder={fieldPlaceholder(field)}
-                    value={draft[field]}
-                  />
+                  field === "discountPrice" ? (
+                    <PromoDraftCell
+                      dirty={
+                        isFieldDirty(product, draft, "discountPrice") ||
+                        isFieldDirty(product, draft, "discountEnabled")
+                      }
+                      draft={draft}
+                      key={field}
+                      onDiscountEnabledChange={value => updateDraft(product.id, "discountEnabled", value)}
+                      onDiscountPriceChange={value => updateDraft(product.id, "discountPrice", value)}
+                    />
+                  ) : (
+                    <TextField
+                      aria-label={fieldPlaceholder(field)}
+                      className={isFieldDirty(product, draft, field) ? "admin-input--dirty" : ""}
+                      key={field}
+                      numeric={isNumericDraftField(field)}
+                      onChange={event => updateDraft(product.id, field, event.target.value)}
+                      placeholder={fieldPlaceholder(field)}
+                      value={draft[field]}
+                    />
+                  )
                 ))}
                 <div className="admin-row__actions">
                   <Button onClick={() => cancelEdit(product.id)} variant="ghost">Anuluj</Button>
@@ -369,8 +398,10 @@ const CatalogAdminScreen = ({
                     aria-label={`Usuń ${product.brand} ${product.model}`}
                     icon="trash"
                     onClick={() => openInlineDeleteConfirm(product)}
-                    variant="icon"
-                  />
+                    variant="ghost"
+                  >
+                    Usuń
+                  </Button>
                 </div>
               ) : null}
             </div>
@@ -413,6 +444,45 @@ const CatalogAdminScreen = ({
     </main>
   );
 };
+
+type PromoDraftCellProps = {
+  draft: CatalogDraft;
+  dirty?: boolean;
+  onDiscountEnabledChange(value: boolean): void;
+  onDiscountPriceChange(value: string): void;
+};
+
+const PromoDraftCell = ({
+  dirty = false,
+  draft,
+  onDiscountEnabledChange,
+  onDiscountPriceChange
+}: PromoDraftCellProps) => (
+  <div className="admin-promo-cell">
+    <label
+      className="admin-promo-toggle"
+      data-active={draft.discountEnabled ? "true" : "false"}
+      title="Promocja aktywna"
+    >
+      <input
+        aria-label="Promocja aktywna"
+        checked={draft.discountEnabled}
+        onChange={event => onDiscountEnabledChange(event.currentTarget.checked)}
+        type="checkbox"
+      />
+      <span className="admin-promo-switch" aria-hidden="true" />
+    </label>
+    <TextField
+      aria-label={fieldPlaceholder("discountPrice")}
+      className={dirty ? "admin-input--dirty" : ""}
+      disabled={!draft.discountEnabled}
+      numeric
+      onChange={event => onDiscountPriceChange(event.target.value)}
+      placeholder={fieldPlaceholder("discountPrice")}
+      value={draft.discountPrice}
+    />
+  </div>
+);
 
 type SelectionPillProps = {
   hiddenSelectedCount: number;

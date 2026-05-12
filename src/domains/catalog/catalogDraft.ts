@@ -6,6 +6,7 @@ export type CatalogDraft = {
   year: string;
   price: string;
   discountPrice: string;
+  discountEnabled: boolean;
 };
 
 export function draftFromItem(item: CatalogItem): CatalogDraft {
@@ -14,7 +15,8 @@ export function draftFromItem(item: CatalogItem): CatalogDraft {
     model: item.model,
     year: String(item.year || ""),
     price: String(item.price || ""),
-    discountPrice: item.discountPrice ? String(item.discountPrice) : ""
+    discountPrice: item.discountPrice ? String(item.discountPrice) : "",
+    discountEnabled: item.discountEnabled
   };
 }
 
@@ -24,7 +26,8 @@ export function emptyCatalogDraft(defaultYear = new Date().getFullYear()): Catal
     model: "",
     year: String(defaultYear),
     price: "",
-    discountPrice: ""
+    discountPrice: "",
+    discountEnabled: false
   };
 }
 
@@ -39,7 +42,8 @@ export function isDraftValid(draft: CatalogDraft): boolean {
     Number.isFinite(price) &&
     price >= 0 &&
     Number.isFinite(discountPrice) &&
-    discountPrice >= 0
+    discountPrice >= 0 &&
+    (!draft.discountEnabled || discountPrice > 0)
   );
 }
 
@@ -52,7 +56,7 @@ export function catalogDraftToItem(draft: CatalogDraft): CatalogItemInput {
     year: draft.year.trim(),
     price: Number(draft.price),
     discountPrice,
-    discountEnabled: discountPrice > 0
+    discountEnabled: draft.discountEnabled
   };
 }
 

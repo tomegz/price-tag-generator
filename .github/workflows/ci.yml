@@ -207,4 +207,9 @@ jobs:
           VITE_USE_FIREBASE_EMULATORS: ${{ vars.VITE_USE_FIREBASE_EMULATORS }}
 
       - name: Deploy to gh-pages
-        run: pnpm exec gh-pages -d dist -u "github-actions <github-actions@users.noreply.github.com>"
+        run: >
+          pnpm exec gh-pages -d dist
+          -u "github-actions <github-actions@users.noreply.github.com>"
+          -r "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

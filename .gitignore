@@ -5,9 +5,13 @@
 
 # testing
 /coverage
+/playwright/.auth/
+/playwright-report/
+/test-results/
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -16,6 +20,18 @@
 .env.test.local
 .env.production.local
 
+# local Firebase/prod data exports
+/pricetag-generator-export*.json
+/firebase-export/
+/emulator-data/
+/emulator-data-e2e/
+/.firebase/
+firebase-debug.log*
+database-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*

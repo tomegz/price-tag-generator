@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+coverage
+.git
+.firebase
+emulator-data
+firebase-export
+pricetag-generator-export.json
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*

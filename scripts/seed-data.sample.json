@@ -1,0 +1,25 @@
+{
+  "profi-bike": {
+    "brands": ["Kross", "Giant"],
+    "items": {
+      "item-demo-1": {
+        "discountPrice": 1499,
+        "discountStatus": "on",
+        "model": "Trans Demo",
+        "name": "Kross",
+        "price": 1699,
+        "year": 2026
+      },
+      "item-demo-2": {
+        "discountPrice": 2999,
+        "discountStatus": "off",
+        "model": "Roam Demo",
+        "name": "Giant",
+        "price": 2999,
+        "year": 2026
+      }
+    },
+    "owners": [],
+    "ownerUids": {}
+  }
+}

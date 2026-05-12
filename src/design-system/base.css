@@ -1,0 +1,54 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--pb-bg);
+  color: var(--pb-ink);
+  font-family: var(--pb-font-ui);
+  font-size: var(--pb-text-body);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--pb-accent) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.pb-mono {
+  font-family: var(--pb-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.pb-sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

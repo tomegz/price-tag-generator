@@ -139,13 +139,13 @@
 - [ ] Run `pnpm test:e2e`.
 - [ ] Run `pnpm build`.
 - [ ] Run `pnpm audit --prod`.
-- [ ] Run `pnpm validate:prod-export`.
-- [ ] Import the latest production export into the emulator.
+- [x] Run `pnpm validate:prod-export`.
+- [x] Import the latest production export into the emulator.
 - [ ] Smoke-test login locally.
 - [ ] Smoke-test catalog load and search locally.
 - [ ] Smoke-test temporary create and delete locally.
 - [ ] Smoke-test print queue and print action locally.
-- [ ] Confirm latest production DB export contains the intended `ownerUids` allowlist.
+- [x] Confirm latest production DB export contains the intended `ownerUids` allowlist.
 - [ ] Manually deploy hardened Realtime Database rules.
 - [ ] Confirm current broad production rules are replaced.
 - [ ] Keep app deployment and DB rules deployment as separate actions.

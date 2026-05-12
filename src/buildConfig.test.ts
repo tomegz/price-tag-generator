@@ -13,8 +13,9 @@ describe("Vite production build config", () => {
     expect(getProductionChunkName("/project/node_modules/@firebase/database/dist/index.js")).toBe("vendor-firebase");
     expect(getProductionChunkName("/project/node_modules/@sentry/react/build/index.js")).toBe("vendor-observability");
     expect(getProductionChunkName("/project/node_modules/.pnpm/@sentry-internal+replay@10.52.0/node_modules/@sentry-internal/replay/build/npm/index.js")).toBe("vendor-sentry-replay");
-    expect(getProductionChunkName("/project/src/services/observability/browserObservability.ts")).toBe("observability");
-    expect(getProductionChunkName("/project/src/services/observability/singleton.ts")).toBe("observability");
+    expect(getProductionChunkName("/project/src/services/observability/browserObservability.ts")).toBeUndefined();
+    expect(getProductionChunkName("/project/src/services/observability/index.ts")).toBeUndefined();
+    expect(getProductionChunkName("/project/src/services/observability/singleton.ts")).toBeUndefined();
   });
 
   it("enables hidden source maps only when Sentry upload credentials exist", () => {

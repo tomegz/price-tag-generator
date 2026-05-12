@@ -29,11 +29,6 @@ export const productionCodeSplittingGroups = [
     priority: 30
   },
   {
-    name: 'observability',
-    test: /src[\\/]services[\\/]observability[\\/]/,
-    priority: 20
-  },
-  {
     name: 'vendor',
     test: /node_modules[\\/]/,
     priority: 10

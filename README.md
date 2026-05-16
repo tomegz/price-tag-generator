@@ -12,6 +12,10 @@ Small React/Firebase app for managing a bike-shop catalog and printing handlebar
 - Vitest, React Testing Library, and Playwright
 - Firebase Analytics and Sentry for production observability
 
+## Codebase Guide
+
+Architecture, data, development, observability, and verification notes live in [`docs/codebase.md`](docs/codebase.md).
+
 ## Local Development
 
 Local development uses Firebase emulators by default so it does not write to production.
@@ -123,9 +127,15 @@ SENTRY_PROJECT=<sentry project slug>
 
 Telemetry uses Firebase UID only. It must not include email, product names, prices, search text, passwords, or catalog payloads. Sentry runs with `sendDefaultPii: false`; replay masks text, inputs, and media, and does not capture request or response bodies.
 
-## Firebase Data
+## Firebase
 
-The production project is `pricetag-generator`, and the current Realtime Database data lives under:
+Production project:
+
+```text
+pricetag-generator
+```
+
+Realtime Database path:
 
 ```text
 profi-bike/
@@ -134,8 +144,6 @@ profi-bike/
   owners/
   ownerUids/
 ```
-
-Database rules deny by default and allow reads/writes to catalog data only for authenticated UIDs listed under `profi-bike/ownerUids`.
 
 Do not commit production exports, secrets, service account keys, or local emulator state.
 
@@ -148,16 +156,12 @@ Branch policy:
 - `gh-pages` is the generated static deployment branch served by GitHub Pages.
 - `develop` is not a long-lived integration branch for this project.
 
-CI runs on pull requests targeting `master`. Pushes to `master` run the same quality gates and deploy `dist/` to `gh-pages` after they pass. Database rules are not deployed by the app workflow.
+CI runs on pull requests targeting `master`. Pushes to `master` run the same quality gates and deploy `dist/` to `gh-pages` after they pass.
 
-Build output goes to `dist/`, with manual GitHub Pages deployment still available through:
+Build output goes to `dist/`, with manual GitHub Pages deployment available through:
 
 ```bash
 pnpm deploy
 ```
 
 `predeploy` runs `pnpm build`.
-
-## License
-
-This project is licensed under the MIT License.

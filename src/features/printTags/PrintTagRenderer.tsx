@@ -1,6 +1,6 @@
-import type { CatalogItemsById } from "../domains/catalog/catalogItem";
-import type { PrintQueue } from "../domains/printQueue/printQueue";
-import { buildPrintTagRenderQueue } from "../domains/printTagRendering/printTagRendering";
+import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
+import type { PrintQueue } from "../../domains/printQueue/printQueue";
+import { buildPrintTagRenderQueue } from "../../domains/printTagRendering/printTagRendering";
 import PrintTag from "./PrintTag";
 
 type PrintTagRendererProps = {

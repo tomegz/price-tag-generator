@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
 import { editingRowsLabel } from "../../domains/language/catalogCopy";
@@ -8,15 +8,10 @@ import CatalogAdminFilters from "./CatalogAdminFilters";
 import CatalogAdminHeader from "./CatalogAdminHeader";
 import CatalogAdminTable from "./CatalogAdminTable";
 import CatalogSelectionPill from "./CatalogSelectionPill";
-import type { CatalogAdminMode } from "./catalogAdminTypes";
 import DeleteConfirmModal from "./DeleteConfirmModal";
+import { useCatalogAdminWorkflow } from "./useCatalogAdminWorkflow";
 import { useCatalogEditor } from "./useCatalogEditor";
 import { useCatalogSelection } from "./useCatalogSelection";
-
-type DeleteConfirmState = {
-  mode: "quick" | "phrase";
-  products: CatalogProduct[];
-};
 
 type CatalogAdminScreenProps = {
   brands: string[];
@@ -41,10 +36,6 @@ const CatalogAdminScreen = ({
   onUpdateProduct,
   products
 }: CatalogAdminScreenProps) => {
-  const [adminMode, setAdminMode] = useState<CatalogAdminMode>("edit");
-  const [bulkPromotionOpen, setBulkPromotionOpen] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<DeleteConfirmState | null>(null);
-  const bulkMode = adminMode === "bulk";
   const {
     adding,
     addProduct,
@@ -92,52 +83,32 @@ const CatalogAdminScreen = ({
     products,
     selectableFilteredProducts
   });
-
-  const toggleAdminMode = (nextMode: CatalogAdminMode) => {
-    setAdminMode(nextMode);
-    if (nextMode === "edit") {
-      clearSelection();
-      setBulkPromotionOpen(false);
-    }
-  };
-
-  const openBulkPromotion = () => {
-    if (selectedCount === 0) return;
-    setBulkPromotionOpen(true);
-  };
-
-  const openBulkDeleteConfirm = () => {
-    if (selectedCount === 0) return;
-    setDeleteConfirm({ mode: "phrase", products: selectedProducts });
-  };
-
-  const openInlineDeleteConfirm = (product: CatalogProduct) => {
-    setDeleteConfirm({ mode: "quick", products: [product] });
-  };
-
-  const confirmDelete = async () => {
-    if (!deleteConfirm || deleteConfirm.products.length === 0) return;
-    const productIds = deleteConfirm.products.map(product => product.id);
-
-    try {
-      if (deleteConfirm.mode === "quick") {
-        await onDeleteProduct(productIds[0]);
-      } else {
-        await onDeleteProducts(productIds);
-        clearSelection();
-      }
-      setDeleteConfirm(null);
-    } catch {
-      // The mutation layer sets catalogError; keep the dialog open so the user can retry or cancel.
-    }
-  };
+  const {
+    adminMode,
+    bulkMode,
+    bulkPromotionOpen,
+    closeBulkPromotion,
+    closeDeleteConfirm,
+    confirmDelete,
+    deleteConfirm,
+    openBulkDeleteConfirm,
+    openBulkPromotion,
+    openInlineDeleteConfirm,
+    setAdminMode
+  } = useCatalogAdminWorkflow({
+    clearSelection,
+    onDeleteProduct,
+    onDeleteProducts,
+    selectedCount,
+    selectedProducts
+  });
 
   return (
     <main className="admin-screen">
       <CatalogAdminHeader
         mode={adminMode}
         onBackToPrint={onBackToPrint}
-        onModeChange={toggleAdminMode}
+        onModeChange={setAdminMode}
         onStartAdding={startAdding}
       />
 
@@ -195,7 +166,7 @@ const CatalogAdminScreen = ({
       {bulkPromotionOpen ? (
         <BulkPromotionModal
           onApply={onApplyBulkPromotion}
-          onClose={() => setBulkPromotionOpen(false)}
+          onClose={closeBulkPromotion}
           products={selectedProducts}
         />
       ) : null}
@@ -203,7 +174,7 @@ const CatalogAdminScreen = ({
       {deleteConfirm ? (
         <DeleteConfirmModal
           mode={deleteConfirm.mode}
-          onCancel={() => setDeleteConfirm(null)}
+          onCancel={closeDeleteConfirm}
           onConfirm={() => void confirmDelete()}
           products={deleteConfirm.products}
         />

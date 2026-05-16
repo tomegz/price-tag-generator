@@ -8,6 +8,13 @@ import {
   type LegacyCatalogItem,
   type LegacyCatalogItemsById
 } from '../../domains/catalog/catalog';
+import {
+  catalogItemsToLegacyCatalogItems,
+  catalogItemToLegacyCatalogItem,
+  legacyCatalogItemsToCatalogItems,
+  type CatalogItemInput,
+  type CatalogItemsById
+} from '../../domains/catalog/catalogItem';
 import type { RepositoryError } from './repositoryError';
 
 export const defaultStoreId = 'profi-bike';
@@ -32,13 +39,13 @@ export type SubscriptionHandlers<T> = {
 };
 
 export type CatalogReadRepository = {
-  subscribeCatalogItems(handlers: SubscriptionHandlers<LegacyCatalogItemsById>): () => void;
+  subscribeCatalogItems(handlers: SubscriptionHandlers<CatalogItemsById>): () => void;
   subscribeCatalogBrands(handlers: SubscriptionHandlers<CatalogBrands>): () => void;
 };
 
 export type CatalogWriteRepository = {
-  saveCatalogItem(itemId: string, item: LegacyCatalogItem): Promise<void>;
-  saveCatalogItems(items: LegacyCatalogItemsById): Promise<void>;
+  saveCatalogItem(itemId: string, item: CatalogItemInput): Promise<void>;
+  saveCatalogItems(items: Record<string, CatalogItemInput>): Promise<void>;
   deleteCatalogItem(itemId: string): Promise<void>;
   deleteCatalogItems(itemIds: string[]): Promise<void>;
 };
@@ -86,7 +93,7 @@ export function createCatalogRepository(
     subscribeCatalogItems({ next, error }) {
       return onValue(
         ref(database, catalogPaths.items(storeId)),
-        snapshot => next(parseLegacyCatalogItems(snapshot.val())),
+        snapshot => next(legacyCatalogItemsToCatalogItems(parseLegacyCatalogItems(snapshot.val()))),
         firebaseError => error?.(toFirebaseRepositoryError(firebaseError))
       );
     },
@@ -98,10 +105,14 @@ export function createCatalogRepository(
       );
     },
     saveCatalogItem(itemId, item) {
-      return set(ref(database, catalogPaths.item(itemId, storeId)), ensureWritableCatalogItem(item));
+      return set(
+        ref(database, catalogPaths.item(itemId, storeId)),
+        ensureWritableCatalogItem(catalogItemToLegacyCatalogItem(item))
+      );
     },
     saveCatalogItems(items) {
-      const writableItems = Object.entries(items).reduce<LegacyCatalogItemsById>((nextItems, [itemId, item]) => {
+      const legacyItems = catalogItemsToLegacyCatalogItems(items);
+      const writableItems = Object.entries(legacyItems).reduce<LegacyCatalogItemsById>((nextItems, [itemId, item]) => {
         nextItems[itemId] = ensureWritableCatalogItem(item);
         return nextItems;
       }, {});

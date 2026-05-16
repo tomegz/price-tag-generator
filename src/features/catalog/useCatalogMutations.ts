@@ -1,8 +1,5 @@
 import { useCallback } from "react";
-import {
-  catalogItemToLegacyCatalogItem,
-  type CatalogItemInput
-} from "../../domains/catalog/catalogItem";
+import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
 import {
   type CatalogWriteRepository,
   toFirebaseRepositoryError
@@ -39,7 +36,7 @@ export function useCatalogMutations({
   const addCatalogItem = useCallback(async (item: CatalogItemInput) => {
     const key = createCatalogItemId();
     try {
-      await repository.saveCatalogItem(key, catalogItemToLegacyCatalogItem(item));
+      await repository.saveCatalogItem(key, item);
       workflowTelemetry.trackCatalogItemCreate(observability);
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);
@@ -56,7 +53,7 @@ export function useCatalogMutations({
 
   const updateCatalogItem = useCallback(async (key: string, updatedItem: CatalogItemInput) => {
     try {
-      await repository.saveCatalogItem(key, catalogItemToLegacyCatalogItem(updatedItem));
+      await repository.saveCatalogItem(key, updatedItem);
       workflowTelemetry.trackCatalogItemUpdate(observability);
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);

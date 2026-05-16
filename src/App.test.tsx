@@ -35,10 +35,11 @@ it('tracks screen changes and print workflow events', async () => {
     subscribeCatalogItems: vi.fn(handlers => {
       handlers.next({
         item1: {
+          brand: 'KTM',
           discountPrice: 0,
-          discountStatus: 'off',
+          discountEnabled: false,
+          id: 'item1',
           model: 'Scarp',
-          name: 'KTM',
           price: 12999,
           year: 2026
         }

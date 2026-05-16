@@ -1,13 +1,10 @@
 import { useCallback } from "react";
-import {
-  catalogItemsToLegacyCatalogItems,
-  type CatalogItemsById
-} from "../../domains/catalog/catalogItem";
+import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
 import {
   type CatalogWriteRepository,
   toFirebaseRepositoryError
 } from "../../services/firebase";
-import type { CatalogErrorHandler } from "../catalog/catalogErrors";
+import type { RepositoryError } from "../../services/firebase/repositoryError";
 import {
   observability as defaultObservability,
   type ObservabilityService,
@@ -16,11 +13,11 @@ import {
 import {
   applyBulkPromotion,
   type BulkPromotionOptions
-} from "./bulkPromotion";
+} from "../../domains/pricing/bulkPromotion";
 
 type UseBulkPromotionActionsOptions = {
   catalogItems: CatalogItemsById;
-  handleCatalogError: CatalogErrorHandler;
+  handleCatalogError(error: RepositoryError): void;
   observability?: ObservabilityService;
   repository: CatalogWriteRepository;
 };
@@ -46,9 +43,9 @@ export function useBulkPromotionActions({
     if (updates.length === 0) return;
 
     try {
-      await repository.saveCatalogItems(catalogItemsToLegacyCatalogItems(Object.fromEntries(
+      await repository.saveCatalogItems(Object.fromEntries(
         updates.map(({ productId, item }) => [productId, item])
-      )));
+      ));
       workflowTelemetry.trackBulkPromotionApply(observability, options.mode, updates.length);
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);

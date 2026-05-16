@@ -1,7 +1,8 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { AuthUser } from "../../domains/auth/authUser";
-import type { CatalogBrands, LegacyCatalogItemsById } from "../../domains/catalog/catalog";
+import type { CatalogBrands } from "../../domains/catalog/catalog";
+import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
 import type {
   CatalogReadRepository,
   FirebaseRepositoryError
@@ -15,7 +16,7 @@ type SubscriptionHandlers<T> = {
 };
 
 function createCatalogRepository() {
-  let itemHandlers: SubscriptionHandlers<LegacyCatalogItemsById> | null = null;
+  let itemHandlers: SubscriptionHandlers<CatalogItemsById> | null = null;
   let brandHandlers: SubscriptionHandlers<CatalogBrands> | null = null;
   const unsubscribeItems = vi.fn();
   const unsubscribeBrands = vi.fn();
@@ -34,7 +35,7 @@ function createCatalogRepository() {
     emitBrands(brands: CatalogBrands) {
       act(() => brandHandlers?.next(brands));
     },
-    emitItems(items: LegacyCatalogItemsById) {
+    emitItems(items: CatalogItemsById) {
       act(() => itemHandlers?.next(items));
     },
     failItems(error: FirebaseRepositoryError) {
@@ -49,10 +50,11 @@ function createCatalogRepository() {
 const user: AuthUser = { displayName: null, email: "owner@example.test", uid: "owner" };
 
 const item = {
+  brand: "KTM",
   discountPrice: 0,
-  discountStatus: "off" as const,
+  discountEnabled: false,
+  id: "item1",
   model: "Scarp",
-  name: "KTM",
   price: 12999,
   year: 2026
 };
@@ -85,15 +87,7 @@ describe("useCatalog", () => {
     });
     expect(result.current.catalogLoading).toBe(false);
     expect(result.current.catalogItems).toEqual({
-      item1: {
-        brand: "KTM",
-        discountEnabled: false,
-        discountPrice: 0,
-        id: "item1",
-        model: "Scarp",
-        price: 12999,
-        year: 2026
-      }
+      item1: item
     });
     expect(result.current.products).toEqual([
       {

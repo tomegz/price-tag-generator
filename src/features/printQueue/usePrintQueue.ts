@@ -12,9 +12,9 @@ import {
   type StorageLike
 } from "../../domains/storage/printQueueStorage";
 import {
-  countTelemetryItems,
   observability as defaultObservability,
-  type ObservabilityService
+  type ObservabilityService,
+  workflowTelemetry
 } from "../../services/observability";
 
 export type PrintQueueActions = {
@@ -51,12 +51,7 @@ export function usePrintQueue(
     const nextQueue = addToPrintQueueState(printQueueRef.current, itemId, quantity);
     printQueueRef.current = nextQueue;
     setPrintQueue(nextQueue);
-    const counts = countTelemetryItems(nextQueue);
-    observability.trackEvent("print_queue_add", {
-      quantity: Math.floor(quantity),
-      queue_item_count: counts.itemCount,
-      total_tag_count: counts.totalCount
-    });
+    workflowTelemetry.trackPrintQueueAdd(observability, quantity, nextQueue);
   }, [observability]);
 
   const setPrintQueueQuantity = useCallback((itemId: string, quantity: number) => {
@@ -65,37 +60,25 @@ export function usePrintQueue(
       : {
           ...printQueueRef.current,
           [itemId]: Math.floor(quantity)
-        };
+    };
     printQueueRef.current = nextQueue;
     setPrintQueue(nextQueue);
-    const counts = countTelemetryItems(nextQueue);
-    observability.trackEvent(quantity <= 0 ? "print_queue_remove" : "print_queue_quantity_change", {
-      quantity: quantity <= 0 ? 0 : Math.floor(quantity),
-      queue_item_count: counts.itemCount,
-      total_tag_count: counts.totalCount
-    });
+    workflowTelemetry.trackPrintQueueQuantityChange(observability, quantity, nextQueue);
   }, [observability]);
 
   const removeFromPrintQueue = useCallback((itemId: string) => {
     const nextQueue = removeFromPrintQueueState(printQueueRef.current, itemId);
     printQueueRef.current = nextQueue;
     setPrintQueue(nextQueue);
-    const counts = countTelemetryItems(nextQueue);
-    observability.trackEvent("print_queue_remove", {
-      queue_item_count: counts.itemCount,
-      total_tag_count: counts.totalCount
-    });
+    workflowTelemetry.trackPrintQueueRemove(observability, nextQueue);
   }, [observability]);
 
   const clearPrintQueue = useCallback(() => {
-    const counts = countTelemetryItems(printQueueRef.current);
+    const previousQueue = printQueueRef.current;
     const nextQueue = clearPrintQueueState();
     printQueueRef.current = nextQueue;
     setPrintQueue(nextQueue);
-    observability.trackEvent("print_queue_clear", {
-      queue_item_count: counts.itemCount,
-      total_tag_count: counts.totalCount
-    });
+    workflowTelemetry.trackPrintQueueClear(observability, previousQueue);
   }, [observability]);
 
   return {

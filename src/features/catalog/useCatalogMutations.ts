@@ -7,7 +7,8 @@ import {
 import type { CatalogErrorHandler } from "./catalogErrors";
 import {
   observability as defaultObservability,
-  type ObservabilityService
+  type ObservabilityService,
+  workflowTelemetry
 } from "../../services/observability";
 
 type UseCatalogMutationsOptions = {
@@ -36,16 +37,16 @@ export function useCatalogMutations({
     const key = createCatalogItemId();
     try {
       await repository.saveCatalogItem(key, item);
-      observability.trackEvent("catalog_item_create");
+      workflowTelemetry.trackCatalogItemCreate(observability);
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);
       handleCatalogError(repositoryError);
-      observability.captureError(error, {
-        operation: "catalog.create",
-        params: {
-          error_code: repositoryError.code
-        }
-      });
+      workflowTelemetry.captureCatalogMutationFailure(
+        observability,
+        "catalog.create",
+        error,
+        repositoryError
+      );
       throw error;
     }
   }, [createCatalogItemId, handleCatalogError, observability, repository]);
@@ -53,16 +54,16 @@ export function useCatalogMutations({
   const updateCatalogItem = useCallback(async (key: string, updatedItem: CatalogItemInput) => {
     try {
       await repository.saveCatalogItem(key, updatedItem);
-      observability.trackEvent("catalog_item_update");
+      workflowTelemetry.trackCatalogItemUpdate(observability);
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);
       handleCatalogError(repositoryError);
-      observability.captureError(error, {
-        operation: "catalog.update",
-        params: {
-          error_code: repositoryError.code
-        }
-      });
+      workflowTelemetry.captureCatalogMutationFailure(
+        observability,
+        "catalog.update",
+        error,
+        repositoryError
+      );
       throw error;
     }
   }, [handleCatalogError, observability, repository]);
@@ -73,22 +74,22 @@ export function useCatalogMutations({
     try {
       if (ids.length === 1) {
         await repository.deleteCatalogItem(ids[0]);
-        observability.trackEvent("catalog_item_delete");
+        workflowTelemetry.trackCatalogItemDelete(observability);
       } else {
         await repository.deleteCatalogItems(ids);
-        observability.trackEvent("catalog_item_delete", { item_count: ids.length });
+        workflowTelemetry.trackCatalogItemDelete(observability, ids.length);
       }
       ids.forEach(id => onCatalogItemRemoved(id));
     } catch (error) {
       const repositoryError = toFirebaseRepositoryError(error);
       handleCatalogError(repositoryError);
-      observability.captureError(error, {
-        operation: "catalog.delete",
-        params: {
-          error_code: repositoryError.code,
-          item_count: ids.length
-        }
-      });
+      workflowTelemetry.captureCatalogMutationFailure(
+        observability,
+        "catalog.delete",
+        error,
+        repositoryError,
+        ids.length
+      );
       throw error;
     }
   }, [handleCatalogError, observability, onCatalogItemRemoved, repository]);

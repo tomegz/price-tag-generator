@@ -3,7 +3,8 @@ import type { AuthUser } from "../../domains/auth/authUser";
 import type { AuthService } from "../../services/firebase";
 import {
   observability as defaultObservability,
-  type ObservabilityService
+  type ObservabilityService,
+  workflowTelemetry
 } from "../../services/observability";
 
 export type AuthSession = {
@@ -28,9 +29,9 @@ export function useAuthSession(
       setAuthLoading(false);
       setAuthError("");
       if (user) {
-        observability.identifyUser({ uid: user.uid });
+        workflowTelemetry.identifyAuthUser(observability, user.uid);
       } else {
-        observability.clearUser();
+        workflowTelemetry.clearAuthUser(observability);
       }
     });
 
@@ -41,19 +42,17 @@ export function useAuthSession(
     setAuthError("");
     try {
       await service.signIn(email, password);
-      observability.trackEvent("login_success");
+      workflowTelemetry.trackLoginSuccess(observability);
     } catch (error) {
       setAuthError("Nieprawidłowy e-mail lub hasło.");
-      observability.trackEvent("login_failure");
-      observability.captureError(error, { operation: "auth.login" });
+      workflowTelemetry.trackLoginFailure(observability, error);
       throw error;
     }
   }, [observability, service]);
 
   const logout = useCallback(async () => {
     await service.signOut();
-    observability.trackEvent("logout");
-    observability.clearUser();
+    workflowTelemetry.trackLogout(observability);
   }, [observability, service]);
 
   return {

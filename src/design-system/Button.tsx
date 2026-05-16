@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import Icon, { type IconName } from "./Icon";
-import "./components.css";
+import "./Button.css";
 
 type ButtonVariant = "primary" | "accent" | "ghost" | "darkGhost" | "icon";
 

@@ -1,0 +1,134 @@
+.print-queue-panel {
+  background: var(--pb-surface);
+  border-left: 1px solid var(--pb-line);
+  display: flex;
+  flex: 0 0 400px;
+  flex-direction: column;
+  min-height: 0;
+  width: 400px;
+}
+
+.print-queue-panel__header {
+  border-bottom: 1px solid var(--pb-line);
+  padding: 18px 20px;
+}
+
+.print-queue-panel__meta {
+  align-items: baseline;
+  color: var(--pb-muted);
+  display: flex;
+  font-size: 11px;
+  justify-content: space-between;
+}
+
+.print-queue-panel__total {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.print-queue-panel__total strong {
+  font-size: 36px;
+  font-weight: 600;
+}
+
+.print-queue-panel__total span {
+  color: var(--pb-muted);
+}
+
+.print-queue-panel__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.print-queue-panel__empty {
+  align-items: center;
+  color: var(--pb-muted);
+  display: flex;
+  flex-direction: column;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.print-queue-panel__empty-icon {
+  align-items: center;
+  border: 1px dashed var(--pb-line);
+  border-radius: var(--pb-radius-card);
+  display: flex;
+  height: 56px;
+  justify-content: center;
+  margin-bottom: 14px;
+  width: 56px;
+}
+
+.print-queue-panel__empty strong {
+  color: var(--pb-ink);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.print-queue-panel__empty p {
+  margin: 0;
+}
+
+.print-queue-item {
+  align-items: center;
+  border-bottom: 1px dashed var(--pb-line);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr auto auto;
+  padding: 12px 20px;
+}
+
+.print-queue-item__copy {
+  min-width: 0;
+}
+
+.print-queue-item__copy strong {
+  display: block;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.print-queue-item__copy span {
+  color: var(--pb-muted);
+  display: block;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.print-queue-panel__footer {
+  border-top: 1px solid var(--pb-line);
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+}
+
+.print-queue-panel__print {
+  flex: 1;
+}
+
+@media screen and (max-width: 1199px) {
+  .print-queue-panel {
+    flex-basis: 344px;
+    width: 344px;
+  }
+
+  .print-queue-panel__header {
+    padding: 16px;
+  }
+
+  .print-queue-item {
+    gap: 8px;
+    padding: 12px 16px;
+  }
+
+  .print-queue-panel__footer {
+    gap: 8px;
+    padding: 12px;
+  }
+}

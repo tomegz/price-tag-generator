@@ -17,6 +17,7 @@ import {
 } from "../../domains/catalog/catalogSort";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
 import ProductRow from "./ProductRow";
+import "./ProductList.css";
 
 type ProductListProps = {
   brands: string[];

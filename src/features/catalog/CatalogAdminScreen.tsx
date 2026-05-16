@@ -12,6 +12,7 @@ import DeleteConfirmModal from "./DeleteConfirmModal";
 import { useCatalogAdminWorkflow } from "./useCatalogAdminWorkflow";
 import { useCatalogEditor } from "./useCatalogEditor";
 import { useCatalogSelection } from "./useCatalogSelection";
+import "./CatalogAdminScreen.css";
 
 type CatalogAdminScreenProps = {
   brands: string[];

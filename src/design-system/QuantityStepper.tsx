@@ -1,5 +1,5 @@
 import Icon from "./Icon";
-import "./components.css";
+import "./QuantityStepper.css";
 
 type QuantityStepperProps = {
   ariaLabel: string;

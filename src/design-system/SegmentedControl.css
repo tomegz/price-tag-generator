@@ -1,0 +1,27 @@
+.ds-segmented {
+  background: var(--pb-surface);
+  border: 1px solid var(--pb-line);
+  border-radius: var(--pb-radius-control);
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 3px;
+}
+
+.ds-segmented__button {
+  background: transparent;
+  border: 0;
+  border-radius: var(--pb-radius-chip);
+  color: var(--pb-muted);
+  cursor: pointer;
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 11px;
+  white-space: nowrap;
+}
+
+.ds-segmented__button[data-active="true"] {
+  background: var(--pb-ink);
+  color: var(--pb-bg);
+}

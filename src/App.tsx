@@ -23,9 +23,9 @@ import {
 } from "./services/firebase";
 import type { StorageLike } from "./domains/storage/printQueueStorage";
 import {
-  countTelemetryItems,
   observability as defaultObservability,
-  type ObservabilityService
+  type ObservabilityService,
+  workflowTelemetry
 } from "./services/observability";
 
 type AppProps = {
@@ -90,19 +90,13 @@ function App({
   }, [logout]);
 
   const handlePrint = useCallback(() => {
-    const counts = countTelemetryItems(printQueue);
-    observability.trackEvent("print_started", {
-      queue_item_count: counts.itemCount,
-      total_tag_count: counts.totalCount
-    });
+    workflowTelemetry.trackPrintStarted(observability, printQueue);
     print();
   }, [observability, print, printQueue]);
 
   useEffect(() => {
     if (!currentUser) return;
-    observability.trackEvent("screen_view", {
-      screen: mode
-    });
+    workflowTelemetry.trackScreenView(observability, mode);
   }, [currentUser, mode, observability]);
 
   if (authLoading) {

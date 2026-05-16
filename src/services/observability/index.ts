@@ -10,6 +10,7 @@ export { countTelemetryItems };
 export { readObservabilityConfig } from "./config";
 export { createNoopObservabilityService };
 export { observability };
+export { workflowTelemetry } from "./workflowTelemetry";
 export type {
   ErrorContext,
   ObservabilityEventName,

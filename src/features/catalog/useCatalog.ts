@@ -13,7 +13,8 @@ import {
 import type { CatalogReadRepository } from "../../services/firebase";
 import {
   observability as defaultObservability,
-  type ObservabilityService
+  type ObservabilityService,
+  workflowTelemetry
 } from "../../services/observability";
 import {
   catalogItemsToProducts,
@@ -76,23 +77,13 @@ export function useCatalog(
           itemsLoadedForUid: activeUid
         }));
         if (!trackedCatalogLoadsRef.current.has(activeUid)) {
-          observability.trackEvent("catalog_load_success", {
-            item_count: Object.keys(catalogItems).length
-          });
+          workflowTelemetry.trackCatalogLoadSuccess(observability, Object.keys(catalogItems).length);
           trackedCatalogLoadsRef.current.add(activeUid);
         }
       },
       error: error => {
         handleCatalogError(error);
-        observability.trackEvent("catalog_load_failure", {
-          error_code: error.code
-        });
-        observability.captureError(error.cause || error, {
-          operation: "catalog.subscribe_items",
-          params: {
-            error_code: error.code
-          }
-        });
+        workflowTelemetry.trackCatalogLoadFailure(observability, "catalog.subscribe_items", error);
       }
     });
 
@@ -106,15 +97,7 @@ export function useCatalog(
       },
       error: error => {
         handleCatalogError(error);
-        observability.trackEvent("catalog_load_failure", {
-          error_code: error.code
-        });
-        observability.captureError(error.cause || error, {
-          operation: "catalog.subscribe_brands",
-          params: {
-            error_code: error.code
-          }
-        });
+        workflowTelemetry.trackCatalogLoadFailure(observability, "catalog.subscribe_brands", error);
       }
     });
 

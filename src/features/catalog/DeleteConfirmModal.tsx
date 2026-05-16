@@ -2,11 +2,11 @@ import { useState } from "react";
 import Button from "../../design-system/Button";
 import Icon from "../../design-system/Icon";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
-import { formatPLN } from "../../domains/pricing/priceFormatting";
 import {
   additionalItemsLabel,
   productCountLabel
-} from "./catalogAdminCopy";
+} from "../../domains/language/catalogCopy";
+import { formatPLN } from "../../domains/pricing/priceFormatting";
 
 type DeleteConfirmMode = "quick" | "phrase";
 

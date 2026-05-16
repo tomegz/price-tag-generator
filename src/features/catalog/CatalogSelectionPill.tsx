@@ -2,7 +2,7 @@ import Icon from "../../design-system/Icon";
 import {
   hiddenRowsLabel,
   selectedRowsLabel
-} from "./catalogAdminCopy";
+} from "../../domains/language/catalogCopy";
 
 type CatalogSelectionPillProps = {
   hiddenSelectedCount: number;

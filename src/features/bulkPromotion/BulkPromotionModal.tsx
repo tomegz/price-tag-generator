@@ -4,16 +4,16 @@ import Icon from "../../design-system/Icon";
 import Modal from "../../design-system/Modal";
 import SegmentedControl from "../../design-system/SegmentedControl";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
-import { formatPLN } from "../../domains/pricing/priceFormatting";
 import {
   productCountLabel,
   productGenitiveCountLabel
-} from "../catalog/catalogAdminCopy";
+} from "../../domains/language/catalogCopy";
+import { formatPLN } from "../../domains/pricing/priceFormatting";
 import {
   calculateBulkDiscountPrice,
   type BulkPromotionMode,
   type BulkPromotionOptions
-} from "./bulkPromotion";
+} from "../../domains/pricing/bulkPromotion";
 
 type BulkPromotionModalProps = {
   products: CatalogProduct[];

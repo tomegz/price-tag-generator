@@ -15,9 +15,9 @@ import {
   isPermissionDenied,
   type CatalogRepository,
   type FirebaseRepositoryError
-} from '../src/services/firebase/catalogRepository';
-import type { LegacyCatalogItem } from '../src/domains/catalog/catalog';
-import type { CatalogItemInput, CatalogItemsById } from '../src/domains/catalog/catalogItem';
+} from '@/services/firebase/catalogRepository';
+import type { LegacyCatalogItem } from '@/domains/catalog/catalog';
+import type { CatalogItemInput, CatalogItemsById } from '@/domains/catalog/catalogItem';
 
 let testEnv: RulesTestEnvironment;
 const databaseEmulator = readRulesDatabaseEmulatorConfig();

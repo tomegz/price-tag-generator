@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestObservability } from "../../test/observability";
+import { createTestObservability } from "@/test/observability";
 import { workflowTelemetry } from "./workflowTelemetry";
 
 describe("workflowTelemetry", () => {

@@ -1,6 +1,6 @@
-import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
-import type { CatalogDraft } from "../../domains/catalog/catalogDraft";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import type { CatalogItemInput } from "@/domains/catalog/catalogItem";
+import type { CatalogDraft } from "@/domains/catalog/catalogDraft";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import type { CatalogFilterOption } from "./catalogAdminTypes";
 import { useCatalogAddFlow } from "./useCatalogAddFlow";
 import { useCatalogDraftEditor } from "./useCatalogDraftEditor";

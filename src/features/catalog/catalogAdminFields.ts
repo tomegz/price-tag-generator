@@ -1,5 +1,5 @@
-import type { CatalogItem } from "../../domains/catalog/catalogItem";
-import type { CatalogDraft } from "../../domains/catalog/catalogDraft";
+import type { CatalogItem } from "@/domains/catalog/catalogItem";
+import type { CatalogDraft } from "@/domains/catalog/catalogDraft";
 
 export type CatalogAdminDraftTextField = Exclude<keyof CatalogDraft, "discountEnabled">;
 

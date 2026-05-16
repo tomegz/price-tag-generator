@@ -1,5 +1,5 @@
-import type { CatalogDraft } from "../../domains/catalog/catalogDraft";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import type { CatalogDraft } from "@/domains/catalog/catalogDraft";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import CatalogAdminAddRow from "./CatalogAdminAddRow";
 import CatalogAdminEditRow from "./CatalogAdminEditRow";
 import CatalogAdminReadRow from "./CatalogAdminReadRow";

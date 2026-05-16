@@ -1,21 +1,21 @@
-import Button from "../../design-system/Button";
-import Icon from "../../design-system/Icon";
-import QuantityStepper from "../../design-system/QuantityStepper";
+import Button from "@/design-system/Button";
+import Icon from "@/design-system/Icon";
+import QuantityStepper from "@/design-system/QuantityStepper";
 import {
   getPrintableTagCountWord,
   getPrintSheetCountWord,
   getTagCountWord
-} from "../../domains/language/printCopy";
+} from "@/domains/language/printCopy";
 import {
   getPrintQueueTotal,
   type PrintQueue
-} from "../../domains/printQueue/printQueue";
-import { getPrintSheetCount } from "../../domains/printTagRendering/printTagRendering";
+} from "@/domains/printQueue/printQueue";
+import { getPrintSheetCount } from "@/domains/printTagRendering/printTagRendering";
 import {
   formatPLN,
   getEffectivePrice
-} from "../../domains/pricing/priceFormatting";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+} from "@/domains/pricing/priceFormatting";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 
 type PrintQueuePanelProps = {
   printQueue: PrintQueue;

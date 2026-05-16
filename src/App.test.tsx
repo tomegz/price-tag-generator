@@ -2,9 +2,9 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import App from './App';
-import type { AuthService, CatalogRepository } from './services/firebase';
-import type { StorageLike } from './domains/storage/printQueueStorage';
-import { createTestObservability } from './test/observability';
+import type { AuthService, CatalogRepository } from '@/services/firebase';
+import type { StorageLike } from '@/domains/storage/printQueueStorage';
+import { createTestObservability } from '@/test/observability';
 
 it('renders login screen without crashing', async () => {
   render(<App />);

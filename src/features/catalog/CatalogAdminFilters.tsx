@@ -1,5 +1,5 @@
-import FilterPills from "../../design-system/FilterPills";
-import SearchInput from "../../design-system/SearchInput";
+import FilterPills from "@/design-system/FilterPills";
+import SearchInput from "@/design-system/SearchInput";
 import type { CatalogFilterOption } from "./catalogAdminTypes";
 
 type CatalogAdminFiltersProps = {

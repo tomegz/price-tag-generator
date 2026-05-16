@@ -1,5 +1,5 @@
-import type { CatalogItem, CatalogItemsById } from '../catalog/catalogItem';
-import type { PrintQueue } from '../printQueue/printQueue';
+import type { CatalogItem, CatalogItemsById } from '@/domains/catalog/catalogItem';
+import type { PrintQueue } from '@/domains/printQueue/printQueue';
 
 export type PrintTagRenderEntry = {
   key: string;

@@ -1,11 +1,11 @@
-import Button from "../../design-system/Button";
-import TextField from "../../design-system/TextField";
+import Button from "@/design-system/Button";
+import TextField from "@/design-system/TextField";
 import {
   isDraftDirty,
   isDraftValid,
   type CatalogDraft
-} from "../../domains/catalog/catalogDraft";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+} from "@/domains/catalog/catalogDraft";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import {
   catalogAdminDraftFields,
   getCatalogAdminFieldLabel,

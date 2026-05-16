@@ -1,9 +1,9 @@
-import Button from "../../design-system/Button";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import Button from "@/design-system/Button";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import {
   formatPLN,
   hasActivePromotion
-} from "../../domains/pricing/priceFormatting";
+} from "@/domains/pricing/priceFormatting";
 
 type CatalogAdminReadRowProps = {
   bulkMode: boolean;

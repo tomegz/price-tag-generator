@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { AuthUser } from "../../domains/auth/authUser";
+import type { AuthUser } from "@/domains/auth/authUser";
 import {
   addToPrintQueue as addToPrintQueueState,
   clearPrintQueue as clearPrintQueueState,
   removeFromPrintQueue as removeFromPrintQueueState,
   type PrintQueue as PrintQueueState
-} from "../../domains/printQueue/printQueue";
+} from "@/domains/printQueue/printQueue";
 import {
   loadPrintQueueFromStorage,
   savePrintQueueToStorage,
   type StorageLike
-} from "../../domains/storage/printQueueStorage";
+} from "@/domains/storage/printQueueStorage";
 import {
   observability as defaultObservability,
   type ObservabilityService,
   workflowTelemetry
-} from "../../services/observability";
+} from "@/services/observability";
 
 export type PrintQueueActions = {
   addToPrintQueue(itemId: string, quantity: number): void;

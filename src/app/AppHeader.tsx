@@ -1,5 +1,5 @@
-import Button from "../design-system/Button";
-import BrandMark from "../design-system/BrandMark";
+import Button from "@/design-system/Button";
+import BrandMark from "@/design-system/BrandMark";
 import ProfileMenu from "./ProfileMenu";
 
 type AppHeaderProps = {

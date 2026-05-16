@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
-import type { CatalogRepository } from "../../services/firebase";
-import { createTestObservability } from "../../test/observability";
+import type { CatalogItemsById } from "@/domains/catalog/catalogItem";
+import type { CatalogRepository } from "@/services/firebase";
+import { createTestObservability } from "@/test/observability";
 import { useBulkPromotionActions } from "./useBulkPromotionActions";
 
 function createCatalogRepository(): CatalogRepository {

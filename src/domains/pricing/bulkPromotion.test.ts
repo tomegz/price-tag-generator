@@ -3,7 +3,7 @@ import {
   applyBulkPromotion,
   calculateBulkDiscountPrice
 } from "./bulkPromotion";
-import type { CatalogItem } from "../catalog/catalogItem";
+import type { CatalogItem } from "@/domains/catalog/catalogItem";
 
 const item: CatalogItem = {
   id: "item1",

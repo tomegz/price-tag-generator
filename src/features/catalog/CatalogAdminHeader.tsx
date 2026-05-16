@@ -1,6 +1,6 @@
-import Button from "../../design-system/Button";
-import Icon from "../../design-system/Icon";
-import SegmentedControl from "../../design-system/SegmentedControl";
+import Button from "@/design-system/Button";
+import Icon from "@/design-system/Icon";
+import SegmentedControl from "@/design-system/SegmentedControl";
 import type { CatalogAdminMode } from "./catalogAdminTypes";
 
 type CatalogAdminHeaderProps = {

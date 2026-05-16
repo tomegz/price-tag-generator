@@ -1,4 +1,4 @@
-import type { FirebaseServiceInstances } from "../firebase";
+import type { FirebaseServiceInstances } from "@/services/firebase";
 
 import { countTelemetryItems } from "./countTelemetryItems";
 import { readObservabilityConfig } from "./config";

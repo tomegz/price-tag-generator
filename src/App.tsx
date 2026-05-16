@@ -1,28 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 
-import AppHeader from "./app/AppHeader";
-import AppShell from "./app/AppShell";
-import type { AppMode } from "./app/appMode";
-import PrintTagRenderer from "./features/printTags/PrintTagRenderer";
-import LoginScreen from "./features/auth/LoginScreen";
-import { useAuthSession } from "./features/auth/useAuthSession";
-import { useBulkPromotionActions } from "./features/bulkPromotion/useBulkPromotionActions";
-import CatalogAdminScreen from "./features/catalog/CatalogAdminScreen";
-import { getUserInitials } from "./domains/auth/authUser";
-import ProductList from "./features/catalog/ProductList";
-import { useCatalog } from "./features/catalog/useCatalog";
-import { useCatalogMutations } from "./features/catalog/useCatalogMutations";
-import PrintQueuePanel from "./features/printQueue/PrintQueuePanel";
-import { usePrintQueue } from "./features/printQueue/usePrintQueue";
-import type { AuthService, CatalogRepository } from "./services/firebase";
-import { authService, catalogRepository } from "./services/firebase/runtime";
-import type { StorageLike } from "./domains/storage/printQueueStorage";
+import AppHeader from "@/app/AppHeader";
+import AppShell from "@/app/AppShell";
+import type { AppMode } from "@/app/appMode";
+import PrintTagRenderer from "@/features/printTags/PrintTagRenderer";
+import LoginScreen from "@/features/auth/LoginScreen";
+import { useAuthSession } from "@/features/auth/useAuthSession";
+import { useBulkPromotionActions } from "@/features/bulkPromotion/useBulkPromotionActions";
+import CatalogAdminScreen from "@/features/catalog/CatalogAdminScreen";
+import { getUserInitials } from "@/domains/auth/authUser";
+import ProductList from "@/features/catalog/ProductList";
+import { useCatalog } from "@/features/catalog/useCatalog";
+import { useCatalogMutations } from "@/features/catalog/useCatalogMutations";
+import PrintQueuePanel from "@/features/printQueue/PrintQueuePanel";
+import { usePrintQueue } from "@/features/printQueue/usePrintQueue";
+import type { AuthService, CatalogRepository } from "@/services/firebase";
+import { authService, catalogRepository } from "@/services/firebase/runtime";
+import type { StorageLike } from "@/domains/storage/printQueueStorage";
 import {
   observability as defaultObservability,
   type ObservabilityService,
   workflowTelemetry
-} from "./services/observability";
+} from "@/services/observability";
 
 type AppProps = {
   auth?: AuthService;

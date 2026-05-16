@@ -1,8 +1,8 @@
-import Icon from "../../design-system/Icon";
+import Icon from "@/design-system/Icon";
 import {
   hiddenRowsLabel,
   selectedRowsLabel
-} from "../../domains/language/catalogCopy";
+} from "@/domains/language/catalogCopy";
 
 type CatalogSelectionPillProps = {
   hiddenSelectedCount: number;

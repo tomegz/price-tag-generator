@@ -1,4 +1,4 @@
-import type { CatalogItemInput } from "../catalog/catalogItem";
+import type { CatalogItemInput } from "@/domains/catalog/catalogItem";
 
 export function formatPLN(value: number | string | null | undefined): string {
   if (value === null || value === undefined || value === "") return "—";

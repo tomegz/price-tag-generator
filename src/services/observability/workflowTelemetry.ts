@@ -1,5 +1,5 @@
-import type { PrintQueue } from "../../domains/printQueue/printQueue";
-import type { RepositoryError } from "../firebase/repositoryError";
+import type { PrintQueue } from "@/domains/printQueue/printQueue";
+import type { RepositoryError } from "@/services/firebase/repositoryError";
 import { countTelemetryItems } from "./countTelemetryItems";
 import type { ObservabilityService } from "./types";
 

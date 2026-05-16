@@ -1,4 +1,4 @@
-import { parsePrintQueue, type PrintQueue } from '../printQueue/printQueue';
+import { parsePrintQueue, type PrintQueue } from '@/domains/printQueue/printQueue';
 
 export type StorageLike = Pick<Storage, 'getItem' | 'removeItem' | 'setItem'>;
 

@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import { useCatalogAdminWorkflow } from "./useCatalogAdminWorkflow";
 
 const products: CatalogProduct[] = [

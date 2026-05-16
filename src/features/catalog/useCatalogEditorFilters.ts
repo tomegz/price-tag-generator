@@ -4,8 +4,8 @@ import {
   ALL_YEARS,
   filterCatalogProducts,
   getCatalogYears
-} from "../../domains/catalog/catalogFilter";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+} from "@/domains/catalog/catalogFilter";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import type { CatalogFilterOption } from "./catalogAdminTypes";
 
 type UseCatalogEditorFiltersOptions = {

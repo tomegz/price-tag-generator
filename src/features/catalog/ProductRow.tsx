@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Button from "../../design-system/Button";
-import PromoPrice from "../../design-system/PromoPrice";
-import QuantityStepper from "../../design-system/QuantityStepper";
+import Button from "@/design-system/Button";
+import PromoPrice from "@/design-system/PromoPrice";
+import QuantityStepper from "@/design-system/QuantityStepper";
 import {
   formatPLN,
   hasActivePromotion
-} from "../../domains/pricing/priceFormatting";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+} from "@/domains/pricing/priceFormatting";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 
 type ProductRowProps = {
   product: CatalogProduct;

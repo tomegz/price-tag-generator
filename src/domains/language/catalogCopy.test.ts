@@ -6,9 +6,9 @@ import {
   productCountLabel,
   productGenitiveCountLabel,
   selectedRowsLabel
-} from "./catalogAdminCopy";
+} from "./catalogCopy";
 
-describe("catalogAdminCopy", () => {
+describe("catalogCopy", () => {
   it("uses Polish count forms for selected rows", () => {
     expect(selectedRowsLabel(0)).toBe("wybranych wierszy");
     expect(selectedRowsLabel(1)).toBe("wybrany wiersz");

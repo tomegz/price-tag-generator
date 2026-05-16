@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import { editingRowsLabel } from "../../domains/language/catalogCopy";
+import type { BulkPromotionOptions } from "../../domains/pricing/bulkPromotion";
 import BulkPromotionModal from "../bulkPromotion/BulkPromotionModal";
-import type { BulkPromotionOptions } from "../bulkPromotion/bulkPromotion";
-import { editingRowsLabel } from "./catalogAdminCopy";
 import CatalogAdminFilters from "./CatalogAdminFilters";
 import CatalogAdminHeader from "./CatalogAdminHeader";
 import CatalogAdminTable from "./CatalogAdminTable";

@@ -7,7 +7,7 @@ import {
   type CatalogWriteRepository,
   toFirebaseRepositoryError
 } from "../../services/firebase";
-import type { CatalogErrorHandler } from "../catalog/catalogErrors";
+import type { RepositoryError } from "../../services/firebase/repositoryError";
 import {
   observability as defaultObservability,
   type ObservabilityService
@@ -15,11 +15,11 @@ import {
 import {
   applyBulkPromotion,
   type BulkPromotionOptions
-} from "./bulkPromotion";
+} from "../../domains/pricing/bulkPromotion";
 
 type UseBulkPromotionActionsOptions = {
   catalogItems: CatalogItemsById;
-  handleCatalogError: CatalogErrorHandler;
+  handleCatalogError(error: RepositoryError): void;
   observability?: ObservabilityService;
   repository: CatalogWriteRepository;
 };

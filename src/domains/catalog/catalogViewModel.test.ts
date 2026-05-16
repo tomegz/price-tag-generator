@@ -1,29 +1,29 @@
 import { describe, expect, it } from "vitest";
-import { getUserInitials } from "../../domains/auth/authUser";
+import { getUserInitials } from "../auth/authUser";
 import {
   catalogDraftToItem,
   draftFromItem,
   isDraftDirty,
   isDraftValid
-} from "../../domains/catalog/catalogDraft";
+} from "./catalogDraft";
 import {
   ALL_BRANDS,
   ALL_YEARS,
   filterCatalogProducts,
   getCatalogYears
-} from "../../domains/catalog/catalogFilter";
+} from "./catalogFilter";
 import {
   catalogItemsToProducts,
   getCatalogBrands
-} from "../../domains/catalog/catalogProduct";
+} from "./catalogProduct";
 import {
   sortCatalogProducts
-} from "../../domains/catalog/catalogSort";
+} from "./catalogSort";
 import {
   formatPLN,
   hasActivePromotion
-} from "../../domains/pricing/priceFormatting";
-import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
+} from "../pricing/priceFormatting";
+import type { CatalogItemsById } from "./catalogItem";
 
 const catalogItems: CatalogItemsById = {
   item1: {

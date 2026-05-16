@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getUserInitials } from "../../app/authUser";
+import { getUserInitials } from "../../domains/auth/authUser";
 import {
   catalogDraftToItem,
   draftFromItem,

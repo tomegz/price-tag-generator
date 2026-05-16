@@ -9,7 +9,7 @@ import LoginScreen from "./features/auth/LoginScreen";
 import { useAuthSession } from "./features/auth/useAuthSession";
 import { useBulkPromotionActions } from "./features/bulkPromotion/useBulkPromotionActions";
 import CatalogAdminScreen from "./features/catalog/CatalogAdminScreen";
-import { getUserInitials } from "./app/authUser";
+import { getUserInitials } from "./domains/auth/authUser";
 import ProductList from "./features/catalog/ProductList";
 import { useCatalog } from "./features/catalog/useCatalog";
 import { useCatalogMutations } from "./features/catalog/useCatalogMutations";

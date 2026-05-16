@@ -1,6 +1,5 @@
 import { get, onValue, ref, remove, set, update, type Database } from 'firebase/database';
 
-import type { RepositoryError } from '../../app/catalogErrors';
 import {
   parseLegacyCatalogBrands,
   parseLegacyCatalogItem,
@@ -9,6 +8,7 @@ import {
   type LegacyCatalogItem,
   type LegacyCatalogItemsById
 } from '../../domains/catalog/catalog';
+import type { RepositoryError } from './repositoryError';
 
 export const defaultStoreId = 'profi-bike';
 

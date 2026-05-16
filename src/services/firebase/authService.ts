@@ -5,7 +5,7 @@ import {
   type Auth,
   type User
 } from 'firebase/auth';
-import type { AuthUser } from '../../app/authUser';
+import type { AuthUser } from '../../domains/auth/authUser';
 
 export type AuthService = {
   observeAuth(callback: (user: AuthUser | null) => void): () => void;

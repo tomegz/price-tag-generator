@@ -1,8 +1,4 @@
-export type RepositoryError = {
-  code: string;
-  message: string;
-  cause: unknown;
-};
+import type { RepositoryError } from "../../services/firebase/repositoryError";
 
 export type CatalogErrorHandler = (error: RepositoryError) => void;
 

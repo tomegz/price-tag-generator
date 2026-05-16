@@ -57,12 +57,9 @@ describe("useBulkPromotionActions", () => {
     });
 
     const promotedItem = {
-      name: "KTM",
-      model: "Scarp",
-      price: 1000,
+      ...catalogItems.item1,
       discountPrice: 700,
-      discountStatus: "on" as const,
-      year: 2026
+      discountEnabled: true
     };
     expect(repository.saveCatalogItems).toHaveBeenCalledWith({ item1: promotedItem });
     expect(repository.saveCatalogItem).not.toHaveBeenCalled();

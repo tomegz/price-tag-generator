@@ -25,15 +25,6 @@ const item: CatalogItemInput = {
   year: 2026
 };
 
-const legacyItem = {
-  discountPrice: 0,
-  discountStatus: "off" as const,
-  model: "Scarp",
-  name: "KTM",
-  price: 12999,
-  year: 2026
-};
-
 describe("useCatalogMutations", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -54,7 +45,7 @@ describe("useCatalogMutations", () => {
 
     await result.current.addCatalogItem(item);
 
-    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item123", legacyItem);
+    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item123", item);
     expect(observability.trackEvent).toHaveBeenCalledWith("catalog_item_create");
   });
 
@@ -72,7 +63,7 @@ describe("useCatalogMutations", () => {
     await result.current.addCatalogItem(item);
 
     expect(randomUUID).toHaveBeenCalled();
-    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item-00000000-0000-4000-8000-000000000000", legacyItem);
+    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item-00000000-0000-4000-8000-000000000000", item);
   });
 
   it("updates existing catalog items through the injected repository", async () => {
@@ -90,10 +81,7 @@ describe("useCatalogMutations", () => {
 
     await result.current.updateCatalogItem("item1", updatedItem);
 
-    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item1", {
-      ...legacyItem,
-      price: 9999
-    });
+    expect(repository.saveCatalogItem).toHaveBeenCalledWith("item1", updatedItem);
     expect(observability.trackEvent).toHaveBeenCalledWith("catalog_item_update");
   });
 

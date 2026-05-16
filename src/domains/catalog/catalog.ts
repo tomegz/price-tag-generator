@@ -1,3 +1,10 @@
+import {
+  isCatalogDisplayPrice,
+  isCatalogYear,
+  type CatalogDisplayPrice,
+  type CatalogYear
+} from "./catalogValues";
+
 export type DiscountStatus = 'on' | 'off';
 
 export const DiscountStatuses = {
@@ -8,10 +15,10 @@ export const DiscountStatuses = {
 export type LegacyCatalogItem = {
   name: string;
   model: string;
-  price: number;
-  discountPrice: number;
+  price: CatalogDisplayPrice;
+  discountPrice: CatalogDisplayPrice;
   discountStatus: DiscountStatus;
-  year: string | number;
+  year: CatalogYear;
 };
 
 export type LegacyCatalogItemsById = Record<string, LegacyCatalogItem>;
@@ -27,16 +34,10 @@ export function parseLegacyCatalogItem(value: unknown): LegacyCatalogItem | null
   const { name, model, price, discountPrice, discountStatus, year } = value;
   if (typeof name !== 'string' || name.length === 0) return null;
   if (typeof model !== 'string') return null;
-  if (typeof price !== 'number' || !Number.isFinite(price) || price < 0) return null;
-  if (
-    typeof discountPrice !== 'number' ||
-    !Number.isFinite(discountPrice) ||
-    discountPrice < 0
-  ) {
-    return null;
-  }
+  if (!isCatalogDisplayPrice(price)) return null;
+  if (!isCatalogDisplayPrice(discountPrice)) return null;
   if (discountStatus !== 'on' && discountStatus !== 'off') return null;
-  if (typeof year !== 'string' && typeof year !== 'number') return null;
+  if (!isCatalogYear(year)) return null;
 
   return {
     name,
@@ -63,16 +64,4 @@ export function parseLegacyCatalogItems(value: unknown): LegacyCatalogItemsById 
 export function parseLegacyCatalogBrands(value: unknown): CatalogBrands {
   if (!Array.isArray(value)) return [];
   return value.filter((brand): brand is string => typeof brand === 'string' && brand.length > 0);
-}
-
-export function filterCatalogItemIds(items: LegacyCatalogItemsById, query: string): string[] {
-  const normalizedQuery = query.toLowerCase();
-
-  return Object.keys(items).filter(key => {
-    const item = items[key];
-    const name = item.name.toLowerCase();
-    const model = item.model.toLowerCase();
-
-    return name.includes(normalizedQuery) || model.includes(normalizedQuery);
-  });
 }

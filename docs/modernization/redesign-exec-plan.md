@@ -403,7 +403,7 @@ Implement the two-step bulk promotion modal with product selection, discount con
    - Writes selected products only.
    - Closes on success.
    - Shows/save error state if any write fails.
-6. Keep the old `DiscountOptions` percent/rounding helper unchanged for legacy tests unless the new wizard moves to its own discount helper.
+6. Use the bulk-promotion helper as the active discount calculation path; do not keep obsolete discount helpers alive only for legacy tests.
 
 ### Deliverables
 

@@ -1,8 +1,4 @@
-import { firebaseServices } from './app';
-import { createAuthService } from './authService';
-import { createCatalogRepository } from './catalogRepository';
-
-export { firebaseServices, createFirebaseServiceInstances } from './app';
+export { createFirebaseServiceInstances } from './app';
 export type { FirebaseServiceInstances } from './app';
 export { createAuthService } from './authService';
 export type { AuthService } from './authService';
@@ -22,6 +18,3 @@ export type {
 } from './catalogRepository';
 export { readFirebaseRuntimeConfig } from './config';
 export type { RepositoryError } from './repositoryError';
-
-export const authService = createAuthService(firebaseServices.auth);
-export const catalogRepository = createCatalogRepository(firebaseServices.database);

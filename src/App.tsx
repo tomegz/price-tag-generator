@@ -15,12 +15,8 @@ import { useCatalog } from "./features/catalog/useCatalog";
 import { useCatalogMutations } from "./features/catalog/useCatalogMutations";
 import PrintQueuePanel from "./features/printQueue/PrintQueuePanel";
 import { usePrintQueue } from "./features/printQueue/usePrintQueue";
-import {
-  authService,
-  catalogRepository,
-  type AuthService,
-  type CatalogRepository
-} from "./services/firebase";
+import type { AuthService, CatalogRepository } from "./services/firebase";
+import { authService, catalogRepository } from "./services/firebase/runtime";
 import type { StorageLike } from "./domains/storage/printQueueStorage";
 import {
   observability as defaultObservability,

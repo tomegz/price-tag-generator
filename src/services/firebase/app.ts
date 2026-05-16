@@ -40,5 +40,3 @@ export function createFirebaseServiceInstances(
     runtimeConfig
   };
 }
-
-export const firebaseServices = createFirebaseServiceInstances();

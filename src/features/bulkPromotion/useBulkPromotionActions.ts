@@ -7,7 +7,7 @@ import {
   type CatalogWriteRepository,
   toFirebaseRepositoryError
 } from "../../services/firebase";
-import type { CatalogErrorHandler } from "../../app/catalogErrors";
+import type { CatalogErrorHandler } from "../catalog/catalogErrors";
 import {
   observability as defaultObservability,
   type ObservabilityService

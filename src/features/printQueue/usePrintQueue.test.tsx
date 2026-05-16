@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { AuthUser } from "../../app/authUser";
+import type { AuthUser } from "../../domains/auth/authUser";
 import { printQueueStorageKey, type StorageLike } from "../../domains/storage/printQueueStorage";
 import { createTestObservability } from "../../test/observability";
 import { usePrintQueue } from "./usePrintQueue";

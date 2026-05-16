@@ -22,6 +22,7 @@ export type {
   SubscriptionHandlers
 } from './catalogRepository';
 export { readFirebaseRuntimeConfig } from './config';
+export type { RepositoryError } from './repositoryError';
 
 export const authService = createAuthService(firebaseServices.auth);
 export const catalogRepository = createCatalogRepository(firebaseServices.database);

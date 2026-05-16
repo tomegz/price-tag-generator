@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { AuthUser } from "../../app/authUser";
+import type { AuthUser } from "../../domains/auth/authUser";
+import type { RepositoryError } from "../../services/firebase/repositoryError";
 import {
   getCatalogErrorMessage,
-  type CatalogErrorHandler,
-  type RepositoryError
-} from "../../app/catalogErrors";
+  type CatalogErrorHandler
+} from "./catalogErrors";
 import type { CatalogBrands } from "../../domains/catalog/catalog";
 import {
   legacyCatalogItemsToCatalogItems,

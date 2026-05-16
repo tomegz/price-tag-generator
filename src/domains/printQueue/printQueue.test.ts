@@ -9,7 +9,8 @@ import {
   getPrintQueueTotal,
   getTagCountWord,
   parsePrintQueue,
-  removeFromPrintQueue
+  removeFromPrintQueue,
+  setPrintQueueItemQuantity
 } from './printQueue';
 
 describe('addToPrintQueue', () => {
@@ -35,6 +36,21 @@ describe('addToPrintQueue', () => {
 describe('removeFromPrintQueue', () => {
   it('removes an item from the queue', () => {
     expect(removeFromPrintQueue({ item1: 2, item2: 1 }, 'item1')).toEqual({ item2: 1 });
+  });
+});
+
+describe('setPrintQueueItemQuantity', () => {
+  it('sets an item quantity', () => {
+    expect(setPrintQueueItemQuantity({ item1: 2 }, 'item1', 5)).toEqual({ item1: 5 });
+  });
+
+  it('floors decimal quantities to preserve current behavior', () => {
+    expect(setPrintQueueItemQuantity({ item1: 2 }, 'item1', 5.9)).toEqual({ item1: 5 });
+  });
+
+  it('removes an item when quantity is zero or lower', () => {
+    expect(setPrintQueueItemQuantity({ item1: 2, item2: 1 }, 'item1', 0)).toEqual({ item2: 1 });
+    expect(setPrintQueueItemQuantity({ item1: 2, item2: 1 }, 'item1', -2)).toEqual({ item2: 1 });
   });
 });
 

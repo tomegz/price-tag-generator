@@ -258,7 +258,7 @@ React implementation rules:
 - Preserve existing behavior when converting legacy code; do not bundle behavior fixes into mechanical typing or component-shape migrations.
 - Type DOM events explicitly when handlers are extracted, for example `ChangeEvent<HTMLInputElement | HTMLSelectElement>` and `FormEvent<HTMLFormElement>`.
 - Type refs explicitly, for example `useRef<HTMLInputElement>(null)` or `useRef<HTMLDivElement>(null)`.
-- Use domain types such as `LegacyCatalogItem`, `CatalogItemsById`, `PrintQueue`, and `DiscountOptions` rather than ad hoc object shapes.
+- Use domain types such as `LegacyCatalogItem`, `CatalogItemsById`, `CatalogDisplayPrice`, `CatalogYear`, `PrintQueue`, and `BulkPromotionOptions` rather than ad hoc object shapes.
 
 Current persisted catalog data still uses the legacy database shape:
 

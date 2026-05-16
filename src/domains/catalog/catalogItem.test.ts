@@ -66,4 +66,17 @@ describe("catalog item adapters", () => {
       }
     });
   });
+
+  it("rejects non-finite display prices before writing legacy catalog data", () => {
+    expect(() =>
+      catalogItemToLegacyCatalogItem({
+        brand: "Kross",
+        model: "Hexagon 3.0",
+        year: "2026",
+        price: Number.POSITIVE_INFINITY,
+        discountPrice: 1099,
+        discountEnabled: true
+      })
+    ).toThrow("price must be a non-negative finite display amount");
+  });
 });

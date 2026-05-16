@@ -1,11 +1,17 @@
 import type { LegacyCatalogItem, LegacyCatalogItemsById } from "./catalog";
+import {
+  assertCatalogDisplayPrice,
+  assertCatalogYear,
+  type CatalogDisplayPrice,
+  type CatalogYear
+} from "./catalogValues";
 
 export type CatalogItemInput = {
   brand: string;
   model: string;
-  year: string | number;
-  price: number;
-  discountPrice: number;
+  year: CatalogYear;
+  price: CatalogDisplayPrice;
+  discountPrice: CatalogDisplayPrice;
   discountEnabled: boolean;
 };
 
@@ -31,12 +37,14 @@ export function catalogItemToLegacyCatalogItem(item: CatalogItemInput): LegacyCa
   return {
     name: item.brand,
     model: item.model,
-    year: item.year,
-    price: item.price,
-    discountPrice: item.discountPrice,
+    year: assertCatalogYear(item.year),
+    price: assertCatalogDisplayPrice(item.price, "price"),
+    discountPrice: assertCatalogDisplayPrice(item.discountPrice, "discountPrice"),
     discountStatus: item.discountEnabled ? "on" : "off"
   };
 }
+
+export type { CatalogDisplayPrice, CatalogYear } from "./catalogValues";
 
 export function legacyCatalogItemsToCatalogItems(items: LegacyCatalogItemsById): CatalogItemsById {
   return Object.entries(items).reduce<CatalogItemsById>((nextItems, [id, item]) => {

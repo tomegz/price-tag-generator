@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  filterCatalogItemIds,
   parseLegacyCatalogBrands,
   parseLegacyCatalogItem,
   parseLegacyCatalogItems
@@ -53,6 +52,16 @@ describe('parseLegacyCatalogItem', () => {
         year: 2026
       })
     ).toBeNull();
+    expect(
+      parseLegacyCatalogItem({
+        name: 'KTM',
+        model: 'Macina',
+        price: Number.POSITIVE_INFINITY,
+        discountPrice: 100,
+        discountStatus: 'off',
+        year: 2026
+      })
+    ).toBeNull();
   });
 });
 
@@ -82,35 +91,6 @@ describe('parseLegacyCatalogItems', () => {
         year: 2026
       }
     });
-  });
-});
-
-describe('filterCatalogItemIds', () => {
-  const items = parseLegacyCatalogItems({
-    item1: {
-      name: 'KTM',
-      model: 'Macina Cross',
-      price: 16999,
-      discountPrice: 10999,
-      discountStatus: 'on',
-      year: 2026
-    },
-    item2: {
-      name: 'Kross',
-      model: 'Level',
-      price: 2999,
-      discountPrice: 2499,
-      discountStatus: 'off',
-      year: '2024'
-    }
-  });
-
-  it('matches catalog items by name', () => {
-    expect(filterCatalogItemIds(items, 'ktm')).toEqual(['item1']);
-  });
-
-  it('matches catalog items by model', () => {
-    expect(filterCatalogItemIds(items, 'level')).toEqual(['item2']);
   });
 });
 

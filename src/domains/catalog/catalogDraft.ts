@@ -1,4 +1,5 @@
 import type { CatalogItem, CatalogItemInput } from "./catalogItem";
+import { isCatalogDisplayPrice } from "./catalogValues";
 
 export type CatalogDraft = {
   brand: string;
@@ -39,10 +40,8 @@ export function isDraftValid(draft: CatalogDraft): boolean {
     draft.brand.trim().length > 0 &&
     draft.model.trim().length > 0 &&
     draft.year.trim().length > 0 &&
-    Number.isFinite(price) &&
-    price >= 0 &&
-    Number.isFinite(discountPrice) &&
-    discountPrice >= 0 &&
+    isCatalogDisplayPrice(price) &&
+    isCatalogDisplayPrice(discountPrice) &&
     (!draft.discountEnabled || discountPrice > 0)
   );
 }

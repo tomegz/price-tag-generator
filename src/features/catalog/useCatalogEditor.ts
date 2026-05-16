@@ -1,21 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
 import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
-import {
-  catalogDraftToItem,
-  draftFromItem,
-  emptyCatalogDraft,
-  isDraftDirty,
-  isDraftValid,
-  type CatalogDraft
-} from "../../domains/catalog/catalogDraft";
-import {
-  ALL_BRANDS,
-  ALL_YEARS,
-  filterCatalogProducts,
-  getCatalogYears
-} from "../../domains/catalog/catalogFilter";
+import type { CatalogDraft } from "../../domains/catalog/catalogDraft";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
 import type { CatalogFilterOption } from "./catalogAdminTypes";
+import { useCatalogAddFlow } from "./useCatalogAddFlow";
+import { useCatalogDraftEditor } from "./useCatalogDraftEditor";
+import { useCatalogEditorFilters } from "./useCatalogEditorFilters";
+import { useCatalogEditSave } from "./useCatalogEditSave";
 
 type UseCatalogEditorOptions = {
   brands: string[];
@@ -54,119 +44,40 @@ export function useCatalogEditor({
   onUpdateProduct,
   products
 }: UseCatalogEditorOptions): CatalogEditorState {
-  const [adding, setAdding] = useState(false);
-  const [brand, setBrand] = useState(ALL_BRANDS);
-  const [drafts, setDrafts] = useState<Record<string, CatalogDraft>>({});
-  const [newDraft, setNewDraft] = useState<CatalogDraft>(() => emptyCatalogDraft());
-  const [query, setQuery] = useState("");
-  const [year, setYear] = useState(ALL_YEARS);
-
-  const brandOptions = useMemo(
-    () => [
-      { label: "Wszystkie", value: ALL_BRANDS },
-      ...brands.map(item => ({ label: item, value: item }))
-    ],
-    [brands]
-  );
-
-  const yearOptions = useMemo(
-    () => [
-      { label: "Wszystkie", value: ALL_YEARS },
-      ...getCatalogYears(products).map(item => ({ label: item, value: item }))
-    ],
-    [products]
-  );
-
-  const productBrands = useMemo(
-    () => new Set(products.map(product => product.brand).filter(Boolean)),
-    [products]
-  );
-  const productYears = useMemo(
-    () => new Set(getCatalogYears(products)),
-    [products]
-  );
-
-  const activeBrand = brand === ALL_BRANDS || productBrands.has(brand) ? brand : ALL_BRANDS;
-  const activeYear = year === ALL_YEARS || productYears.has(year) ? year : ALL_YEARS;
-
-  const filteredProducts = useMemo(
-    () => filterCatalogProducts(products, { brand: activeBrand, query, year: activeYear }),
-    [activeBrand, activeYear, products, query]
-  );
-
-  const updateDraft = useCallback(<K extends keyof CatalogDraft>(productId: string, field: K, value: CatalogDraft[K]) => {
-    setDrafts(current => ({
-      ...current,
-      [productId]: {
-        ...current[productId],
-        [field]: value
-      }
-    }));
-  }, []);
-
-  const updateNewDraft = useCallback(<K extends keyof CatalogDraft>(field: K, value: CatalogDraft[K]) => {
-    setNewDraft(current => ({ ...current, [field]: value }));
-  }, []);
-
-  const startEdit = useCallback((product: CatalogProduct) => {
-    setDrafts(current => ({
-      ...current,
-      [product.id]: draftFromItem(product)
-    }));
-  }, []);
-
-  const cancelEdit = useCallback((productId: string) => {
-    setDrafts(current => {
-      const next = { ...current };
-      delete next[productId];
-      return next;
-    });
-  }, []);
-
-  const saveEdit = useCallback(async (product: CatalogProduct) => {
-    const draft = drafts[product.id];
-    if (!draft || !isDraftValid(draft) || !isDraftDirty(product, draft)) return;
-    await onUpdateProduct(product.id, catalogDraftToItem(draft));
-    cancelEdit(product.id);
-  }, [cancelEdit, drafts, onUpdateProduct]);
-
-  const addProduct = useCallback(async () => {
-    if (!isDraftValid(newDraft)) return;
-    await onAddProduct(catalogDraftToItem(newDraft));
-    setNewDraft(emptyCatalogDraft());
-    setAdding(false);
-  }, [newDraft, onAddProduct]);
-
-  const startAdding = useCallback(() => {
-    setNewDraft({
-      ...emptyCatalogDraft(),
-      brand: activeBrand === ALL_BRANDS ? "" : activeBrand,
-      year: activeYear === ALL_YEARS ? String(new Date().getFullYear()) : activeYear
-    });
-    setAdding(true);
-  }, [activeBrand, activeYear]);
+  const filters = useCatalogEditorFilters({ brands, products });
+  const draftEditor = useCatalogDraftEditor();
+  const addFlow = useCatalogAddFlow({
+    activeBrand: filters.brand,
+    activeYear: filters.year,
+    onAddProduct
+  });
+  const { saveEdit } = useCatalogEditSave({
+    drafts: draftEditor.drafts,
+    onSaved: draftEditor.cancelEdit,
+    onUpdateProduct
+  });
 
   return {
-    adding,
-    addProduct,
-    brand: activeBrand,
-    brandOptions,
-    cancelEdit,
-    drafts,
-    editedCount: Object.keys(drafts).length,
-    filteredProducts,
-    newDraft,
-    query,
+    adding: addFlow.adding,
+    addProduct: addFlow.addProduct,
+    brand: filters.brand,
+    brandOptions: filters.brandOptions,
+    cancelEdit: draftEditor.cancelEdit,
+    drafts: draftEditor.drafts,
+    editedCount: draftEditor.editedCount,
+    filteredProducts: filters.filteredProducts,
+    newDraft: addFlow.newDraft,
+    query: filters.query,
     saveEdit,
-    setAdding,
-    setBrand,
-    setQuery,
-    setYear,
-    startAdding,
-    startEdit,
-    updateDraft,
-    updateNewDraft,
-    year: activeYear,
-    yearOptions
+    setAdding: addFlow.setAdding,
+    setBrand: filters.setBrand,
+    setQuery: filters.setQuery,
+    setYear: filters.setYear,
+    startAdding: addFlow.startAdding,
+    startEdit: draftEditor.startEdit,
+    updateDraft: draftEditor.updateDraft,
+    updateNewDraft: addFlow.updateNewDraft,
+    year: filters.year,
+    yearOptions: filters.yearOptions
   };
 }

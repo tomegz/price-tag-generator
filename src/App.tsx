@@ -4,7 +4,7 @@ import "./App.css";
 import AppHeader from "./app/AppHeader";
 import AppShell from "./app/AppShell";
 import type { AppMode } from "./app/appMode";
-import PrintTagRenderer from "./components/PrintTagRenderer";
+import PrintTagRenderer from "./features/printTags/PrintTagRenderer";
 import LoginScreen from "./features/auth/LoginScreen";
 import { useAuthSession } from "./features/auth/useAuthSession";
 import { useBulkPromotionActions } from "./features/bulkPromotion/useBulkPromotionActions";

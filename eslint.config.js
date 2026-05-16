@@ -45,5 +45,16 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }]
     }
+  },
+  {
+    files: ['src/{features,services,domains}/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: ['../app/*', '../../app/*', '../../../app/*', '../../../../app/*'],
+          message: 'App-layer modules compose the application; move shared contracts into domains or services instead.'
+        }]
+      }]
+    }
   }
 );

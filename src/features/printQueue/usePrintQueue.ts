@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { AuthUser } from "../../app/authUser";
+import type { AuthUser } from "../../domains/auth/authUser";
 import {
   addToPrintQueue as addToPrintQueueState,
   clearPrintQueue as clearPrintQueueState,

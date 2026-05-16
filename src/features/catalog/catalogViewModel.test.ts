@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getUserInitials } from "../../app/authUser";
+import { getUserInitials } from "../../domains/auth/authUser";
 import {
   catalogDraftToItem,
+  draftFromItem,
+  isDraftDirty,
   isDraftValid
 } from "../../domains/catalog/catalogDraft";
 import {
@@ -112,7 +114,8 @@ describe("catalog domain view models", () => {
       model: "Talon",
       year: "2026",
       price: "2999",
-      discountPrice: "2499"
+      discountPrice: "2499",
+      discountEnabled: true
     };
 
     expect(isDraftValid(draft)).toBe(true);
@@ -124,6 +127,43 @@ describe("catalog domain view models", () => {
       discountPrice: 2499,
       discountEnabled: true
     });
+  });
+
+  it("keeps inactive legacy promotion prices separate from promotion status", () => {
+    const product = {
+      id: "item3",
+      brand: "Kross",
+      model: "Moon",
+      year: "2026",
+      price: 14999,
+      discountPrice: 14500,
+      discountEnabled: false
+    };
+    const draft = draftFromItem(product);
+
+    expect(draft).toMatchObject({
+      discountPrice: "14500",
+      discountEnabled: false
+    });
+    expect(isDraftValid(draft)).toBe(true);
+    expect(isDraftDirty(product, draft)).toBe(false);
+    expect(catalogDraftToItem(draft)).toMatchObject({
+      discountPrice: 14500,
+      discountEnabled: false
+    });
+  });
+
+  it("requires a positive promotion price when promotion is enabled", () => {
+    expect(
+      isDraftValid({
+        brand: "Kross",
+        model: "Level",
+        year: "2026",
+        price: "2999",
+        discountPrice: "",
+        discountEnabled: true
+      })
+    ).toBe(false);
   });
 
   it("derives user initials from display name or email", () => {

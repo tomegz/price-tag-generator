@@ -58,8 +58,10 @@ const CatalogAdminReadRow = ({
             aria-label={`Usuń ${product.brand} ${product.model}`}
             icon="trash"
             onClick={onDelete}
-            variant="icon"
-          />
+            variant="ghost"
+          >
+            Usuń
+          </Button>
         </div>
       ) : null}
     </div>

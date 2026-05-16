@@ -10,9 +10,9 @@ import {
   catalogAdminDraftFields,
   getCatalogAdminFieldLabel,
   isCatalogAdminFieldDirty,
-  isCatalogAdminNumericField,
-  type CatalogAdminDraftField
+  isCatalogAdminNumericField
 } from "./catalogAdminFields";
+import CatalogAdminPromoDraftCell from "./CatalogAdminPromoDraftCell";
 
 type CatalogAdminEditRowProps = {
   bulkMode: boolean;
@@ -20,7 +20,7 @@ type CatalogAdminEditRowProps = {
   product: CatalogProduct;
   onCancel(): void;
   onSave(): Promise<void>;
-  onUpdateDraft(field: CatalogAdminDraftField, value: string): void;
+  onUpdateDraft<K extends keyof CatalogDraft>(field: K, value: CatalogDraft[K]): void;
 };
 
 const CatalogAdminEditRow = ({
@@ -41,15 +41,28 @@ const CatalogAdminEditRow = ({
     >
       {bulkMode ? <span /> : null}
       {catalogAdminDraftFields.map(field => (
-        <TextField
-          aria-label={getCatalogAdminFieldLabel(field)}
-          className={isCatalogAdminFieldDirty(product, draft, field) ? "admin-input--dirty" : ""}
-          key={field}
-          numeric={isCatalogAdminNumericField(field)}
-          onChange={event => onUpdateDraft(field, event.target.value)}
-          placeholder={getCatalogAdminFieldLabel(field)}
-          value={draft[field]}
-        />
+        field === "discountPrice" ? (
+          <CatalogAdminPromoDraftCell
+            dirty={
+              isCatalogAdminFieldDirty(product, draft, "discountPrice") ||
+              isCatalogAdminFieldDirty(product, draft, "discountEnabled")
+            }
+            draft={draft}
+            key={field}
+            onDiscountEnabledChange={value => onUpdateDraft("discountEnabled", value)}
+            onDiscountPriceChange={value => onUpdateDraft("discountPrice", value)}
+          />
+        ) : (
+          <TextField
+            aria-label={getCatalogAdminFieldLabel(field)}
+            className={isCatalogAdminFieldDirty(product, draft, field) ? "admin-input--dirty" : ""}
+            key={field}
+            numeric={isCatalogAdminNumericField(field)}
+            onChange={event => onUpdateDraft(field, event.target.value)}
+            placeholder={getCatalogAdminFieldLabel(field)}
+            value={draft[field]}
+          />
+        )
       ))}
       <div className="admin-row__actions">
         <Button onClick={onCancel} variant="ghost">Anuluj</Button>

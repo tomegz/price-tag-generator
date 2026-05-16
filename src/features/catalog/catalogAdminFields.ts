@@ -1,9 +1,9 @@
 import type { CatalogItem } from "../../domains/catalog/catalogItem";
 import type { CatalogDraft } from "../../domains/catalog/catalogDraft";
 
-export type CatalogAdminDraftField = keyof CatalogDraft;
+export type CatalogAdminDraftTextField = Exclude<keyof CatalogDraft, "discountEnabled">;
 
-export const catalogAdminDraftFields: CatalogAdminDraftField[] = [
+export const catalogAdminDraftFields: CatalogAdminDraftTextField[] = [
   "brand",
   "model",
   "year",
@@ -11,7 +11,7 @@ export const catalogAdminDraftFields: CatalogAdminDraftField[] = [
   "discountPrice"
 ];
 
-export function getCatalogAdminFieldLabel(field: CatalogAdminDraftField): string {
+export function getCatalogAdminFieldLabel(field: CatalogAdminDraftTextField): string {
   return {
     brand: "Marka",
     model: "Model",
@@ -21,15 +21,16 @@ export function getCatalogAdminFieldLabel(field: CatalogAdminDraftField): string
   }[field];
 }
 
-export function isCatalogAdminNumericField(field: CatalogAdminDraftField): boolean {
+export function isCatalogAdminNumericField(field: CatalogAdminDraftTextField): boolean {
   return field === "price" || field === "discountPrice" || field === "year";
 }
 
 export function isCatalogAdminFieldDirty(
   product: CatalogItem,
   draft: CatalogDraft,
-  field: CatalogAdminDraftField
+  field: keyof CatalogDraft
 ): boolean {
+  if (field === "discountEnabled") return draft.discountEnabled !== product.discountEnabled;
   if (field === "discountPrice") return Number(draft.discountPrice || 0) !== Number(product.discountPrice);
   if (field === "price") return Number(draft.price) !== Number(product.price);
   if (field === "year") return String(draft.year) !== String(product.year);

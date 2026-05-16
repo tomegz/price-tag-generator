@@ -198,6 +198,7 @@ describe("CatalogAdminScreen", () => {
     await user.clear(within(addRow).getByLabelText("Rocznik"));
     await user.type(within(addRow).getByLabelText("Rocznik"), "2026");
     await user.type(within(addRow).getByLabelText("Cena katalogowa"), "4299");
+    await user.click(within(addRow).getByRole("checkbox", { name: "Promocja aktywna" }));
     await user.type(within(addRow).getByLabelText("Cena promocyjna"), "3999");
     await user.click(saveButton);
 
@@ -212,6 +213,78 @@ describe("CatalogAdminScreen", () => {
       });
     });
     await waitFor(() => expect(screen.queryByTestId("admin-add-row")).not.toBeInTheDocument());
+  });
+
+  it("preserves inactive promotion status when an item has a stored promotion price", async () => {
+    const user = userEvent.setup();
+    const onUpdateProduct = vi.fn(async () => undefined);
+    const catalogProducts: CatalogProduct[] = [
+      {
+        brand: "Kross",
+        discountPrice: 14500,
+        discountEnabled: false,
+        id: "item-dormant-promo",
+        model: "Moon",
+        price: 14999,
+        year: 2026,
+        yearLabel: "2026"
+      }
+    ];
+    renderCatalogAdmin(catalogProducts, { onUpdateProduct });
+
+    const row = screen.getByTestId("admin-product-row");
+    expect(within(row).getByText("—")).toBeInTheDocument();
+
+    await user.click(within(row).getByRole("button", { name: "Edytuj" }));
+
+    const editedRow = screen.getByTestId("admin-product-row");
+    expect(within(editedRow).getByRole("checkbox", { name: "Promocja aktywna" })).not.toBeChecked();
+    expect(within(editedRow).getByLabelText("Cena promocyjna")).toHaveValue("14500");
+    expect(within(editedRow).getByLabelText("Cena promocyjna")).toBeDisabled();
+
+    await user.clear(within(editedRow).getByLabelText("Model"));
+    await user.type(within(editedRow).getByLabelText("Model"), "Moon Edited");
+    await user.click(within(editedRow).getByRole("button", { name: "Zapisz" }));
+
+    await waitFor(() => {
+      expect(onUpdateProduct).toHaveBeenCalledWith("item-dormant-promo", expect.objectContaining({
+        discountPrice: 14500,
+        discountEnabled: false,
+        model: "Moon Edited"
+      }));
+    });
+  });
+
+  it("enables promotion explicitly from the edit row toggle", async () => {
+    const user = userEvent.setup();
+    const onUpdateProduct = vi.fn(async () => undefined);
+    const catalogProducts: CatalogProduct[] = [
+      {
+        brand: "Kross",
+        discountPrice: 14500,
+        discountEnabled: false,
+        id: "item-dormant-promo",
+        model: "Moon",
+        price: 14999,
+        year: 2026,
+        yearLabel: "2026"
+      }
+    ];
+    renderCatalogAdmin(catalogProducts, { onUpdateProduct });
+
+    const row = screen.getByTestId("admin-product-row");
+    await user.click(within(row).getByRole("button", { name: "Edytuj" }));
+
+    const editedRow = screen.getByTestId("admin-product-row");
+    await user.click(within(editedRow).getByRole("checkbox", { name: "Promocja aktywna" }));
+    await user.click(within(editedRow).getByRole("button", { name: "Zapisz" }));
+
+    await waitFor(() => {
+      expect(onUpdateProduct).toHaveBeenCalledWith("item-dormant-promo", expect.objectContaining({
+        discountPrice: 14500,
+        discountEnabled: true
+      }));
+    });
   });
 
   it("keeps bulk row and checkbox selection as a single toggle and clears selection when leaving bulk mode", async () => {

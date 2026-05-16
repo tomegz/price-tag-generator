@@ -44,8 +44,8 @@ export type CatalogEditorState = {
   setYear(year: string): void;
   startAdding(): void;
   startEdit(product: CatalogProduct): void;
-  updateDraft(productId: string, field: keyof CatalogDraft, value: string): void;
-  updateNewDraft(field: keyof CatalogDraft, value: string): void;
+  updateDraft<K extends keyof CatalogDraft>(productId: string, field: K, value: CatalogDraft[K]): void;
+  updateNewDraft<K extends keyof CatalogDraft>(field: K, value: CatalogDraft[K]): void;
 };
 
 export function useCatalogEditor({
@@ -94,7 +94,7 @@ export function useCatalogEditor({
     [activeBrand, activeYear, products, query]
   );
 
-  const updateDraft = useCallback((productId: string, field: keyof CatalogDraft, value: string) => {
+  const updateDraft = useCallback(<K extends keyof CatalogDraft>(productId: string, field: K, value: CatalogDraft[K]) => {
     setDrafts(current => ({
       ...current,
       [productId]: {
@@ -104,7 +104,7 @@ export function useCatalogEditor({
     }));
   }, []);
 
-  const updateNewDraft = useCallback((field: keyof CatalogDraft, value: string) => {
+  const updateNewDraft = useCallback(<K extends keyof CatalogDraft>(field: K, value: CatalogDraft[K]) => {
     setNewDraft(current => ({ ...current, [field]: value }));
   }, []);
 

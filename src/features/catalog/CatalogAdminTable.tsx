@@ -3,7 +3,6 @@ import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
 import CatalogAdminAddRow from "./CatalogAdminAddRow";
 import CatalogAdminEditRow from "./CatalogAdminEditRow";
 import CatalogAdminReadRow from "./CatalogAdminReadRow";
-import type { CatalogAdminDraftField } from "./catalogAdminFields";
 
 type CatalogAdminTableProps = {
   adding: boolean;
@@ -21,8 +20,8 @@ type CatalogAdminTableProps = {
   onStartEdit(product: CatalogProduct): void;
   onToggleAllFiltered(): void;
   onToggleProductSelection(productId: string): void;
-  onUpdateDraft(productId: string, field: CatalogAdminDraftField, value: string): void;
-  onUpdateNewDraft(field: CatalogAdminDraftField, value: string): void;
+  onUpdateDraft<K extends keyof CatalogDraft>(productId: string, field: K, value: CatalogDraft[K]): void;
+  onUpdateNewDraft<K extends keyof CatalogDraft>(field: K, value: CatalogDraft[K]): void;
 };
 
 const CatalogAdminTable = ({

@@ -1,5 +1,3 @@
-import { getPolishPlural } from '../language/polishPlural';
-
 export type PrintQueue = Record<string, number>;
 
 export function addToPrintQueue(queue: PrintQueue, itemId: string, quantity: number): PrintQueue {
@@ -27,38 +25,6 @@ export function clearPrintQueue(): PrintQueue {
 
 export function getPrintQueueTotal(queue: PrintQueue): number {
   return Object.values(queue).reduce((total, quantity) => total + quantity, 0);
-}
-
-export function getPriceCountWord(count: number): "cena" | "ceny" | "cen" {
-  return getPolishPlural(count, {
-    one: "cena",
-    few: "ceny",
-    many: "cen"
-  });
-}
-
-export function getTagCountWord(count: number): "etykietę" | "etykiety" | "etykiet" {
-  return getPolishPlural(count, {
-    one: "etykietę",
-    few: "etykiety",
-    many: "etykiet"
-  });
-}
-
-export function getPrintableTagCountWord(count: number): "etykieta" | "etykiety" | "etykiet" {
-  return getPolishPlural(count, {
-    one: "etykieta",
-    few: "etykiety",
-    many: "etykiet"
-  });
-}
-
-export function getPrintSheetCountWord(count: number): "arkusz" | "arkusze" | "arkuszy" {
-  return getPolishPlural(count, {
-    one: "arkusz",
-    few: "arkusze",
-    many: "arkuszy"
-  });
 }
 
 export function parsePrintQueue(value: unknown): PrintQueue {

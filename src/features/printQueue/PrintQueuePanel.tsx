@@ -4,8 +4,10 @@ import QuantityStepper from "../../design-system/QuantityStepper";
 import {
   getPrintableTagCountWord,
   getPrintSheetCountWord,
+  getTagCountWord
+} from "../../domains/language/printCopy";
+import {
   getPrintQueueTotal,
-  getTagCountWord,
   type PrintQueue
 } from "../../domains/printQueue/printQueue";
 import { getPrintSheetCount } from "../../domains/printTagRendering/printTagRendering";

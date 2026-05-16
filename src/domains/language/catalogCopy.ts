@@ -1,4 +1,4 @@
-import { getPolishPlural } from "../../domains/language/polishPlural";
+import { getPolishPlural } from "./polishPlural";
 
 export function selectedRowsLabel(count: number): string {
   return getPolishPlural(count, {

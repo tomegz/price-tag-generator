@@ -9,7 +9,6 @@ export type { AuthService } from './authService';
 export {
   catalogPaths,
   createCatalogRepository,
-  ensureWritableCatalogItem,
   isPermissionDenied,
   readCatalogBrands,
   toFirebaseRepositoryError

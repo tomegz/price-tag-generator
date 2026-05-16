@@ -16,7 +16,8 @@ import {
   type CatalogRepository,
   type FirebaseRepositoryError
 } from '../src/services/firebase/catalogRepository';
-import type { LegacyCatalogItem, LegacyCatalogItemsById } from '../src/domains/catalog/catalog';
+import type { LegacyCatalogItem } from '../src/domains/catalog/catalog';
+import type { CatalogItemInput, CatalogItemsById } from '../src/domains/catalog/catalogItem';
 
 let testEnv: RulesTestEnvironment;
 const databaseEmulator = readRulesDatabaseEmulatorConfig();
@@ -27,6 +28,15 @@ const validItem: LegacyCatalogItem = {
   price: 1000,
   discountPrice: 900,
   discountStatus: 'on',
+  year: 2026
+};
+
+const validCatalogItem: CatalogItemInput = {
+  brand: 'Kross',
+  model: 'Demo',
+  price: 1000,
+  discountPrice: 900,
+  discountEnabled: true,
   year: 2026
 };
 
@@ -70,7 +80,7 @@ async function seedCatalogData(): Promise<void> {
   });
 }
 
-function readItemsOnce(repository: CatalogRepository): Promise<LegacyCatalogItemsById> {
+function readItemsOnce(repository: CatalogRepository): Promise<CatalogItemsById> {
   return new Promise((resolve, reject) => {
     let unsubscribe: () => void = () => {};
     const timeout = setTimeout(() => {
@@ -138,13 +148,13 @@ describe('CatalogRepository security rules integration', () => {
 
     await assertSucceeds(set(ref(database, 'profi-bike/brands'), ['Kross']));
     await assertSucceeds(get(ref(database, 'profi-bike/brands')));
-    await assertSucceeds(repository.saveCatalogItem('item-1', validItem));
+    await assertSucceeds(repository.saveCatalogItem('item-1', validCatalogItem));
     await assertSucceeds(repository.saveCatalogItems({
-      'item-2': { ...validItem, model: 'Batch demo' }
+      'item-2': { ...validCatalogItem, model: 'Batch demo' }
     }));
     await expect(readItemsOnce(repository)).resolves.toEqual({
-      'item-1': validItem,
-      'item-2': { ...validItem, model: 'Batch demo' }
+      'item-1': { ...validCatalogItem, id: 'item-1' },
+      'item-2': { ...validCatalogItem, id: 'item-2', model: 'Batch demo' }
     });
 
     await assertSucceeds(repository.deleteCatalogItem('item-1'));
@@ -182,7 +192,7 @@ describe('CatalogRepository security rules integration', () => {
     const database = authenticatedDatabase('other-uid');
 
     await assertFails(get(ref(database, 'profi-bike/brands')));
-    await assertFails(repository.saveCatalogItem('item-1', validItem));
+    await assertFails(repository.saveCatalogItem('item-1', validCatalogItem));
     await assertFails(set(ref(database, 'profi-bike/brands'), ['Kross']));
     await assertFails(get(ref(database, 'profi-bike/owners')));
     await assertFails(get(ref(database, 'profi-bike/ownerUids')));
@@ -203,7 +213,7 @@ describe('CatalogRepository security rules integration', () => {
     await seedCatalogData();
 
     const repository = authenticatedRepository('owner-uid');
-    await assertSucceeds(repository.saveCatalogItem('item-2', { ...validItem, model: 'Second' }));
+    await assertSucceeds(repository.saveCatalogItem('item-2', { ...validCatalogItem, model: 'Second' }));
 
     await assertSucceeds(repository.deleteCatalogItems(['item-1', 'item-2']));
 
@@ -231,7 +241,7 @@ describe('CatalogRepository security rules integration', () => {
 
     const repository = authenticatedRepository('legacy-owner-uid');
 
-    await assertFails(repository.saveCatalogItem('item-1', validItem));
+    await assertFails(repository.saveCatalogItem('item-1', validCatalogItem));
     const deniedError = await readItemsDenied(repository);
     expect(isPermissionDenied(deniedError)).toBe(true);
   });

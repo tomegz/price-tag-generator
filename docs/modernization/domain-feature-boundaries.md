@@ -22,6 +22,8 @@ Put code in `features/` when it coordinates user intent with UI state or service
 
 Put code in `services/` when it talks to an external system or wraps an SDK. Firebase schema adapters, auth, repository writes, Analytics, Sentry, and telemetry facades belong here. Feature code should call the typed service facade rather than importing SDK modules.
 
+Keep service barrels side-effect-free. Export factories, types, and pure helpers from `services/*/index.ts`; put app boot singletons in explicit runtime modules so feature-level imports do not initialize SDK clients.
+
 Put code in `design-system/` only when it is reusable UI infrastructure. Do not add catalog, pricing, Firebase, observability, or print-queue knowledge to these components.
 
 ## Current Exceptions

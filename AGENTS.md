@@ -227,6 +227,14 @@ src/
       singleton.ts
 ```
 
+Domain/feature/service boundaries are documented in `docs/modernization/domain-feature-boundaries.md` and enforced by ESLint where the current codebase can support it. Use these placement rules:
+
+- Put pure business rules, parsing, calculations, stable model types, and reusable copy helpers in `src/domains/`. Domain code must not depend on React, app shell, feature workflows, service adapters, or design-system components.
+- Put screen workflows, hooks, view state, forms, modals, table composition, and user-action orchestration in `src/features/`. Feature code may consume domains, typed services, and design-system primitives, but must not import app-shell modules or Firebase/Sentry SDK modules directly.
+- Put Firebase, observability, and other external integration adapters in `src/services/` behind typed facades. Services may translate between external SDK/data shapes and domain types, but must not import feature UI, app shell, or design-system components.
+- Put generic UI primitives in `src/design-system/`. Design-system modules must not know about catalog, pricing, Firebase, observability, print queue, or app workflows.
+- Put top-level shell/routing/composition in `src/app/`. If app code accumulates reusable business rules, move that logic down into `domains/` or `services/`.
+
 React components must not import Firebase SDK modules directly. Use `authService` for authentication and `catalogRepository` for Realtime Database access. Use `src/services/observability` for Firebase Analytics and Sentry; feature code should receive or import the typed facade rather than importing SDKs.
 
 Feature components should consume domain/service data through typed view models. For the current redesign:

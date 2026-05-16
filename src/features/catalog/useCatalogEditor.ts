@@ -15,11 +15,7 @@ import {
   getCatalogYears
 } from "../../domains/catalog/catalogFilter";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
-
-type FilterOption = {
-  label: string;
-  value: string;
-};
+import type { CatalogFilterOption } from "./catalogAdminTypes";
 
 type UseCatalogEditorOptions = {
   brands: string[];
@@ -31,14 +27,14 @@ type UseCatalogEditorOptions = {
 export type CatalogEditorState = {
   adding: boolean;
   brand: string;
-  brandOptions: FilterOption[];
+  brandOptions: CatalogFilterOption[];
   drafts: Record<string, CatalogDraft>;
   editedCount: number;
   filteredProducts: CatalogProduct[];
   newDraft: CatalogDraft;
   query: string;
   year: string;
-  yearOptions: FilterOption[];
+  yearOptions: CatalogFilterOption[];
   addProduct(): Promise<void>;
   cancelEdit(productId: string): void;
   saveEdit(product: CatalogProduct): Promise<void>;

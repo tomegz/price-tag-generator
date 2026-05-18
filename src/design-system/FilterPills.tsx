@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import "./components.css";
+import "./FilterPills.css";
 
 export type FilterPillOption = {
   label: string;

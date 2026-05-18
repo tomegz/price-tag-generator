@@ -1,0 +1,236 @@
+.product-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.product-list__header {
+  align-items: center;
+  background: var(--pb-surface);
+  border-bottom: 1px solid var(--pb-line);
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  padding: 14px 24px;
+}
+
+.product-list__header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.product-list__header h2 span,
+.product-list__header p {
+  color: var(--pb-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.product-list__header p {
+  margin: 2px 0 0;
+}
+
+.product-list__search {
+  flex: 1 1 240px;
+  max-width: 340px;
+  min-width: 220px;
+}
+
+.product-list__tools {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 12px;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.product-list__sort {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.product-list__sort > span {
+  color: var(--pb-muted);
+  font-size: 12px;
+}
+
+.product-list__sort .ds-segmented {
+  background: var(--pb-bg);
+}
+
+.product-list__sort .ds-segmented__button[data-active="true"] {
+  background: var(--pb-surface);
+  color: var(--pb-ink);
+}
+
+.product-list__sort-option {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.product-list__sort-arrow {
+  flex: 0 0 auto;
+}
+
+.product-list__filters {
+  background: var(--pb-surface);
+  border-bottom: 1px solid var(--pb-line);
+  padding: 10px 24px;
+}
+
+.product-table__header,
+.product-row {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1.6fr) 60px minmax(0, 1.4fr) 130px 198px;
+}
+
+.product-table__header {
+  background: var(--pb-bg);
+  border-bottom: 1px solid var(--pb-line);
+  color: var(--pb-muted);
+  font-family: var(--pb-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  padding: 8px 18px;
+}
+
+.product-list__rows {
+  background: var(--pb-surface);
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.product-row {
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid var(--pb-line);
+  color: var(--pb-ink);
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.product-row[data-in-queue="true"] {
+  background: var(--pb-subtle);
+}
+
+.product-row:hover {
+  background: var(--pb-bg);
+}
+
+.product-row__identity {
+  min-width: 0;
+}
+
+.product-row__identity strong,
+.product-row__identity span {
+  display: inline;
+  font-size: 14px;
+}
+
+.product-row__identity strong {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.product-row__identity span {
+  color: var(--pb-muted);
+}
+
+.product-row__identity em {
+  color: var(--pb-accent-deep);
+  display: block;
+  font-size: 10.5px;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  margin-top: 3px;
+}
+
+.product-row__year,
+.product-row__status {
+  color: var(--pb-muted);
+  font-size: 11px;
+}
+
+.product-row__price strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.product-row__promo-chip {
+  background: var(--pb-accent);
+  border-radius: 999px;
+  color: var(--pb-accent-ink);
+  display: inline-flex;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+}
+
+.product-row__actions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.empty-state {
+  align-items: center;
+  color: var(--pb-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.empty-state strong {
+  color: var(--pb-ink);
+  font-size: 14px;
+}
+
+@media screen and (max-width: 1199px) {
+  .product-list__header {
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .product-list__search {
+    flex-basis: 190px;
+    min-width: 180px;
+  }
+
+  .product-list__tools {
+    gap: 8px;
+  }
+
+  .product-list__filters {
+    padding: 9px 16px;
+  }
+
+  .product-table__header,
+  .product-row {
+    gap: 12px;
+    grid-template-columns: minmax(0, 1.6fr) 56px minmax(92px, 1.15fr) 112px 174px;
+  }
+
+  .product-table__header,
+  .product-row {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .product-row__actions {
+    gap: 6px;
+  }
+}

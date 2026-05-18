@@ -52,3 +52,11 @@ select:focus-visible {
   white-space: nowrap;
   width: 1px;
 }
+
+.muted {
+  color: var(--pb-muted);
+}
+
+.accent {
+  color: var(--pb-accent);
+}

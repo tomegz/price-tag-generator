@@ -1,19 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import "./App.css";
 
-import AppHeader from "@/app/AppHeader";
 import AppShell from "@/app/AppShell";
 import type { AppMode } from "@/app/appMode";
+import PrintWorkflowScreen from "@/app/PrintWorkflowScreen";
+import CatalogAdminRoute from "@/app/CatalogAdminRoute";
 import PrintTagRenderer from "@/features/printTags/PrintTagRenderer";
 import LoginScreen from "@/features/auth/LoginScreen";
 import { useAuthSession } from "@/features/auth/useAuthSession";
 import { useBulkPromotionActions } from "@/features/bulkPromotion/useBulkPromotionActions";
-import CatalogAdminScreen from "@/features/catalog/CatalogAdminScreen";
 import { getUserInitials } from "@/domains/auth/authUser";
-import ProductList from "@/features/catalog/ProductList";
 import { useCatalog } from "@/features/catalog/useCatalog";
 import { useCatalogMutations } from "@/features/catalog/useCatalogMutations";
-import PrintQueuePanel from "@/features/printQueue/PrintQueuePanel";
 import { usePrintQueue } from "@/features/printQueue/usePrintQueue";
 import type { AuthService, CatalogRepository } from "@/services/firebase";
 import { authService, catalogRepository } from "@/services/firebase/runtime";
@@ -111,36 +108,24 @@ function App({
   return (
     <AppShell printTags={<PrintTagRenderer catalogItems={catalogItems} printQueue={printQueue} />}>
       {mode === "print" ? (
-        <>
-          <AppHeader
-            onEditCatalog={() => setMode("admin")}
-            onLogout={handleLogout}
-            userEmail={currentUser.email || ""}
-            userInitials={getUserInitials(currentUser)}
-          />
-
-          {catalogError ? <p className="app-error" role="alert">{catalogError}</p> : null}
-          {catalogLoading ? <p className="app-loading-line pb-mono">Ładowanie katalogu...</p> : null}
-
-          <main className="print-workflow">
-            <ProductList
-              brands={brands}
-              onAdd={addToPrintQueue}
-              printQueue={printQueue}
-              products={products}
-            />
-            <PrintQueuePanel
-              onClear={clearPrintQueue}
-              onPrint={handlePrint}
-              onRemove={removeFromPrintQueue}
-              onSetQuantity={setPrintQueueQuantity}
-              printQueue={printQueue}
-              products={products}
-            />
-          </main>
-        </>
+        <PrintWorkflowScreen
+          brands={brands}
+          catalogError={catalogError}
+          catalogLoading={catalogLoading}
+          onAddToPrintQueue={addToPrintQueue}
+          onClearPrintQueue={clearPrintQueue}
+          onEditCatalog={() => setMode("admin")}
+          onLogout={handleLogout}
+          onPrint={handlePrint}
+          onRemoveFromPrintQueue={removeFromPrintQueue}
+          onSetPrintQueueQuantity={setPrintQueueQuantity}
+          printQueue={printQueue}
+          products={products}
+          userEmail={currentUser.email || ""}
+          userInitials={getUserInitials(currentUser)}
+        />
       ) : (
-        <CatalogAdminScreen
+        <CatalogAdminRoute
           brands={brands}
           catalogError={catalogError}
           onAddProduct={addCatalogItem}

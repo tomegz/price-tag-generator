@@ -14,6 +14,7 @@ import {
   type BulkPromotionMode,
   type BulkPromotionOptions
 } from "@/domains/pricing/bulkPromotion";
+import "./BulkPromotionModal.css";
 
 type BulkPromotionModalProps = {
   products: CatalogProduct[];

@@ -1,6 +1,6 @@
 import type { InputHTMLAttributes } from "react";
 import Icon from "./Icon";
-import "./components.css";
+import "./SearchInput.css";
 
 type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 

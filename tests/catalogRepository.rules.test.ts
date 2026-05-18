@@ -140,15 +140,11 @@ function unauthenticatedDatabase(): Database {
 }
 
 describe('CatalogRepository security rules integration', () => {
-  it('keeps temporary owner access to legacy brands while allowing item writes', async () => {
+  it('allows an owner to read and write items', async () => {
     await seedOwner();
 
     const repository = authenticatedRepository('owner-uid');
-    const database = authenticatedDatabase('owner-uid');
 
-    // PR1 keeps this legacy node available for already deployed clients. PR2 will deny it.
-    await assertSucceeds(set(ref(database, 'profi-bike/brands'), ['Kross']));
-    await assertSucceeds(get(ref(database, 'profi-bike/brands')));
     await assertSucceeds(repository.saveCatalogItem('item-1', validCatalogItem));
     await assertSucceeds(repository.saveCatalogItems({
       'item-2': { ...validCatalogItem, model: 'Batch demo' }
@@ -161,6 +157,21 @@ describe('CatalogRepository security rules integration', () => {
     await assertSucceeds(repository.deleteCatalogItem('item-1'));
     await assertSucceeds(repository.deleteCatalogItem('item-2'));
     await expect(readItemsOnce(repository)).resolves.toEqual({});
+  });
+
+  it('denies legacy brands reads and writes for every client context', async () => {
+    await seedCatalogData();
+
+    const ownerDatabase = authenticatedDatabase('owner-uid');
+    const nonOwnerDatabase = authenticatedDatabase('other-uid');
+    const anonymousDatabase = unauthenticatedDatabase();
+
+    await assertFails(get(ref(ownerDatabase, 'profi-bike/brands')));
+    await assertFails(set(ref(ownerDatabase, 'profi-bike/brands'), ['Kross']));
+    await assertFails(get(ref(nonOwnerDatabase, 'profi-bike/brands')));
+    await assertFails(set(ref(nonOwnerDatabase, 'profi-bike/brands'), ['Kross']));
+    await assertFails(get(ref(anonymousDatabase, 'profi-bike/brands')));
+    await assertFails(set(ref(anonymousDatabase, 'profi-bike/brands'), ['Kross']));
   });
 
   it('allows an owner to read owners and ownerUids but denies client writes to both nodes', async () => {

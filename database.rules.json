@@ -3,10 +3,6 @@
     ".read": false,
     ".write": false,
     "profi-bike": {
-      "brands": {
-        ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
-        ".write": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true"
-      },
       "items": {
         ".read": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",
         ".write": "auth != null && root.child('profi-bike/ownerUids/' + auth.uid).val() === true",

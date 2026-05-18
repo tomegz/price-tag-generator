@@ -1,6 +1,5 @@
 {
   "profi-bike": {
-    "brands": ["Kross", "Giant"],
     "items": {
       "item-demo-1": {
         "discountPrice": 1499,

@@ -6,7 +6,6 @@ export {
   catalogPaths,
   createCatalogRepository,
   isPermissionDenied,
-  readCatalogBrands,
   toFirebaseRepositoryError
 } from './catalogRepository';
 export type {

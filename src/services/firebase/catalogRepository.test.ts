@@ -10,7 +10,6 @@ import {
 
 describe('catalogPaths', () => {
   it('centralizes legacy Realtime Database paths', () => {
-    expect(catalogPaths.brands()).toBe('profi-bike/brands');
     expect(catalogPaths.items()).toBe('profi-bike/items');
     expect(catalogPaths.item('item1')).toBe('profi-bike/items/item1');
   });

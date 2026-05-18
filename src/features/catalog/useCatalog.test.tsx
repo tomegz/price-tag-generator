@@ -1,7 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { AuthUser } from "@/domains/auth/authUser";
-import type { CatalogBrands } from "@/domains/catalog/catalog";
 import type { CatalogItemsById } from "@/domains/catalog/catalogItem";
 import type {
   CatalogReadRepository,
@@ -17,14 +16,8 @@ type SubscriptionHandlers<T> = {
 
 function createCatalogRepository() {
   let itemHandlers: SubscriptionHandlers<CatalogItemsById> | null = null;
-  let brandHandlers: SubscriptionHandlers<CatalogBrands> | null = null;
   const unsubscribeItems = vi.fn();
-  const unsubscribeBrands = vi.fn();
   const repository: CatalogReadRepository = {
-    subscribeCatalogBrands: vi.fn(handlers => {
-      brandHandlers = handlers;
-      return unsubscribeBrands;
-    }),
     subscribeCatalogItems: vi.fn(handlers => {
       itemHandlers = handlers;
       return unsubscribeItems;
@@ -32,9 +25,6 @@ function createCatalogRepository() {
   };
 
   return {
-    emitBrands(brands: CatalogBrands) {
-      act(() => brandHandlers?.next(brands));
-    },
     emitItems(items: CatalogItemsById) {
       act(() => itemHandlers?.next(items));
     },
@@ -42,7 +32,6 @@ function createCatalogRepository() {
       act(() => itemHandlers?.error?.(error));
     },
     repository,
-    unsubscribeBrands,
     unsubscribeItems
   };
 }
@@ -61,8 +50,7 @@ const item = {
 
 describe("useCatalog", () => {
   it("subscribes after login and derives products and brands", () => {
-    const { emitBrands, emitItems, repository, unsubscribeBrands, unsubscribeItems } =
-      createCatalogRepository();
+    const { emitItems, repository, unsubscribeItems } = createCatalogRepository();
     const observability = createTestObservability();
     const { result, rerender, unmount } = renderHook(
       ({ currentUser }) => useCatalog(currentUser, repository, observability),
@@ -77,10 +65,8 @@ describe("useCatalog", () => {
 
     expect(result.current.catalogLoading).toBe(true);
     expect(repository.subscribeCatalogItems).toHaveBeenCalledTimes(1);
-    expect(repository.subscribeCatalogBrands).toHaveBeenCalledTimes(1);
 
     emitItems({ item1: item });
-    emitBrands(["KTM", "Trek"]);
 
     expect(observability.trackEvent).toHaveBeenCalledWith("catalog_load_success", {
       item_count: 1
@@ -101,7 +87,7 @@ describe("useCatalog", () => {
         yearLabel: "2026"
       }
     ]);
-    expect(result.current.brands).toEqual(["KTM", "Trek"]);
+    expect(result.current.brands).toEqual(["KTM"]);
 
     rerender({ currentUser: null });
 
@@ -110,9 +96,28 @@ describe("useCatalog", () => {
     expect(result.current.products).toEqual([]);
     expect(result.current.brands).toEqual([]);
     expect(unsubscribeItems).toHaveBeenCalledTimes(1);
-    expect(unsubscribeBrands).toHaveBeenCalledTimes(1);
 
     unmount();
+  });
+
+  it("drops a brand option when the last product for that brand disappears", () => {
+    const { emitItems, repository } = createCatalogRepository();
+    const observability = createTestObservability();
+    const { result } = renderHook(() => useCatalog(user, repository, observability));
+
+    emitItems({
+      item1: item,
+      item2: {
+        ...item,
+        brand: "Trek",
+        id: "item2",
+        model: "Marlin"
+      }
+    });
+    expect(result.current.brands).toEqual(["KTM", "Trek"]);
+
+    emitItems({ item1: item });
+    expect(result.current.brands).toEqual(["KTM"]);
   });
 
   it("maps permission errors to the catalog access message", () => {

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  parseLegacyCatalogBrands,
   parseLegacyCatalogItem,
   parseLegacyCatalogItems
 } from './catalog';
@@ -91,15 +90,5 @@ describe('parseLegacyCatalogItems', () => {
         year: 2026
       }
     });
-  });
-});
-
-describe('parseLegacyCatalogBrands', () => {
-  it('keeps valid brand names from the legacy brands array', () => {
-    expect(parseLegacyCatalogBrands(['Kross', '', 'Giant', 123])).toEqual(['Kross', 'Giant']);
-  });
-
-  it('returns an empty array for invalid brand data', () => {
-    expect(parseLegacyCatalogBrands({ Kross: true })).toEqual([]);
   });
 });

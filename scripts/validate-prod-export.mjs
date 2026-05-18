@@ -109,16 +109,6 @@ function validateExport(data) {
     };
   }
 
-  if (!Array.isArray(store.brands)) {
-    errors.push('profi-bike/brands must be an array');
-  } else {
-    store.brands.forEach((brand, index) => {
-      if (typeof brand !== 'string' || brand.length === 0) {
-        errors.push(`profi-bike/brands/${index} must be a non-empty string`);
-      }
-    });
-  }
-
   if (!isRecord(store.items)) {
     errors.push('profi-bike/items must be an object keyed by item id');
   } else {
@@ -172,7 +162,6 @@ function validateExport(data) {
     errors,
     itemErrors,
     summary: {
-      brands: Array.isArray(store.brands) ? store.brands.length : 0,
       items: isRecord(store.items) ? Object.keys(store.items).length : 0,
       owners: Array.isArray(store.owners) ? store.owners.length : 0,
       ownerUids: isRecord(store.ownerUids) ? Object.keys(store.ownerUids).length : 0
@@ -211,5 +200,5 @@ if (failed) {
 
 console.log(`Production export validation passed for ${exportPath}.`);
 console.log(
-  `Validated ${result.summary.items} items, ${result.summary.brands} brands, ${result.summary.owners} owners, and ${result.summary.ownerUids} ownerUids.`
+  `Validated ${result.summary.items} items, ${result.summary.owners} owners, and ${result.summary.ownerUids} ownerUids.`
 );

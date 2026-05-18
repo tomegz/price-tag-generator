@@ -1,6 +1,5 @@
 {
   "profi-bike": {
-    "brands": ["Cannondale", "Giant", "Kross", "Trek"],
     "items": {
       "item-e2e-bulk": {
         "discountPrice": 0,

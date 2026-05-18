@@ -46,7 +46,7 @@ Layer boundaries are enforced where practical in `eslint.config.js`:
 `src/App.tsx` wires the runtime services and main hooks:
 
 - `useAuthSession` observes Firebase Auth and exposes login/logout state.
-- `useCatalog` subscribes to Realtime Database catalog items and brands through `catalogRepository`.
+- `useCatalog` subscribes to Realtime Database catalog items through `catalogRepository` and derives brand filters from those items.
 - `usePrintQueue` manages persisted queue state through the storage domain.
 - `useCatalogMutations` writes catalog changes through the repository and lets realtime subscriptions refresh the UI.
 - `useBulkPromotionActions` applies promotion updates to selected products.
@@ -74,7 +74,6 @@ Database root:
 
 ```text
 profi-bike/
-  brands/
   items/
   owners/
   ownerUids/

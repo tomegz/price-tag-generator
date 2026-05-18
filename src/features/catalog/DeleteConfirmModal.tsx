@@ -7,6 +7,7 @@ import {
   productCountLabel
 } from "../../domains/language/catalogCopy";
 import { formatPLN } from "../../domains/pricing/priceFormatting";
+import "./DeleteConfirmModal.css";
 
 type DeleteConfirmMode = "quick" | "phrase";
 

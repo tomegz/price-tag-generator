@@ -1,0 +1,41 @@
+.ds-flow-stepper {
+  align-items: center;
+  color: var(--pb-muted);
+  display: flex;
+  font-family: var(--pb-font-mono);
+  font-size: 11px;
+  gap: 8px;
+}
+
+.ds-flow-stepper__part {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.ds-flow-stepper__dot {
+  align-items: center;
+  border: 1px solid var(--pb-line);
+  border-radius: 999px;
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.ds-flow-stepper__dot[data-active="true"] {
+  background: var(--pb-ink);
+  border-color: var(--pb-ink);
+  color: var(--pb-bg);
+}
+
+.ds-flow-stepper__line {
+  background: var(--pb-line);
+  display: inline-block;
+  height: 1px;
+  width: 32px;
+}
+
+.ds-flow-stepper__line[data-active="true"] {
+  background: var(--pb-ink);
+}

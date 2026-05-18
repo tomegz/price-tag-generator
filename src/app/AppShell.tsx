@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import "./AppShell.css";
+import "../features/printTags/printVisibility.css";
 
 type AppShellProps = {
   children: ReactNode;

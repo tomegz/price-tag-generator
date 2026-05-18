@@ -1,0 +1,26 @@
+.ds-search {
+  position: relative;
+}
+
+.ds-search__icon {
+  color: var(--pb-muted);
+  left: 12px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ds-search__input {
+  background: var(--pb-surface);
+  border: 1px solid var(--pb-line);
+  border-radius: var(--pb-radius-control);
+  color: var(--pb-ink);
+  min-height: 38px;
+  outline: 0;
+  padding: 9px 12px 9px 34px;
+  width: 100%;
+}
+
+.ds-search__input::placeholder {
+  color: var(--pb-muted);
+}

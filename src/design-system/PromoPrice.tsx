@@ -1,4 +1,4 @@
-import "./components.css";
+import "./PromoPrice.css";
 
 type PromoPriceProps = {
   oldPrice: string;

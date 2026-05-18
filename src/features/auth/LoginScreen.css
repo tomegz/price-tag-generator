@@ -1,0 +1,124 @@
+.login-screen {
+  align-items: center;
+  background: var(--pb-ink);
+  color: var(--pb-bg);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.login-wheel {
+  color: var(--pb-bg);
+  pointer-events: none;
+  position: absolute;
+}
+
+.login-wheel--large {
+  bottom: -260px;
+  opacity: 0.05;
+  right: -260px;
+}
+
+.login-wheel--small {
+  left: -200px;
+  opacity: 0.04;
+  top: -200px;
+}
+
+.login-wheel__tire {
+  stroke-width: 1.65;
+}
+
+.login-wheel__rim {
+  stroke-width: 0.32;
+}
+
+.login-wheel__hub {
+  stroke-width: 0.5;
+}
+
+.login-wheel line {
+  stroke-width: 0.42;
+}
+
+.login-wheel .login-wheel__tread {
+  fill: currentColor;
+  stroke: none;
+}
+
+
+.login-card {
+  background: var(--pb-bg);
+  border: 1px solid var(--pb-line);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  color: var(--pb-ink);
+  padding: 36px 36px 30px;
+  position: relative;
+  width: 420px;
+  z-index: 1;
+}
+
+.login-card__brand {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.login-card__brand strong {
+  color: var(--pb-ink);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.login-card__badge {
+  border: 1px solid var(--pb-line);
+  border-radius: 4px;
+  color: var(--pb-muted);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  margin-left: auto;
+  padding: 2px 6px;
+}
+
+.login-card__kicker {
+  color: var(--pb-muted);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  margin: 0 0 8px;
+}
+
+.login-card h1 {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 24px;
+}
+
+.login-card__form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-card__error {
+  color: var(--pb-accent);
+  font-size: 12px;
+  margin: -2px 0 0;
+}
+
+.login-card__submit {
+  margin-top: 18px;
+  width: 100%;
+}
+
+.login-card__footer {
+  border-top: 1px solid var(--pb-line);
+  color: var(--pb-muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+  margin: 22px 0 0;
+  padding-top: 18px;
+  text-align: center;
+}

@@ -16,6 +16,7 @@ import {
   getEffectivePrice
 } from "../../domains/pricing/priceFormatting";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import "./PrintQueuePanel.css";
 
 type PrintQueuePanelProps = {
   printQueue: PrintQueue;

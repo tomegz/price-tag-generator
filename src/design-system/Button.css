@@ -1,0 +1,60 @@
+.ds-button {
+  align-items: center;
+  border: 0;
+  border-radius: var(--pb-radius-control);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 7px;
+  justify-content: center;
+  min-height: 36px;
+  padding: 10px 16px;
+  white-space: nowrap;
+}
+
+.ds-button:disabled {
+  cursor: default;
+}
+
+.ds-button--primary {
+  background: var(--pb-ink);
+  color: var(--pb-bg);
+}
+
+.ds-button--accent {
+  background: var(--pb-accent);
+  color: var(--pb-accent-ink);
+}
+
+.ds-button--accent:hover:not(:disabled) {
+  background: var(--pb-accent-deep);
+}
+
+.ds-button--ghost {
+  background: var(--pb-surface);
+  border: 1px solid var(--pb-line);
+  color: var(--pb-ink);
+}
+
+.ds-button--darkGhost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--pb-bg);
+}
+
+.ds-button--icon {
+  background: var(--pb-surface);
+  border: 1px solid var(--pb-line);
+  color: var(--pb-ink);
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  width: 32px;
+}
+
+.ds-button:disabled,
+.ds-button[aria-disabled="true"] {
+  background: var(--pb-line);
+  color: var(--pb-muted);
+}

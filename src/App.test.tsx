@@ -28,10 +28,6 @@ it('tracks screen changes and print workflow events', async () => {
     deleteCatalogItems: vi.fn(async () => undefined),
     saveCatalogItem: vi.fn(async () => undefined),
     saveCatalogItems: vi.fn(async () => undefined),
-    subscribeCatalogBrands: vi.fn(handlers => {
-      handlers.next(['KTM']);
-      return vi.fn();
-    }),
     subscribeCatalogItems: vi.fn(handlers => {
       handlers.next({
         item1: {

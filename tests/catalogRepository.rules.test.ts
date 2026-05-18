@@ -140,12 +140,13 @@ function unauthenticatedDatabase(): Database {
 }
 
 describe('CatalogRepository security rules integration', () => {
-  it('allows an owner to read and write brands and items', async () => {
+  it('keeps temporary owner access to legacy brands while allowing item writes', async () => {
     await seedOwner();
 
     const repository = authenticatedRepository('owner-uid');
     const database = authenticatedDatabase('owner-uid');
 
+    // PR1 keeps this legacy node available for already deployed clients. PR2 will deny it.
     await assertSucceeds(set(ref(database, 'profi-bike/brands'), ['Kross']));
     await assertSucceeds(get(ref(database, 'profi-bike/brands')));
     await assertSucceeds(repository.saveCatalogItem('item-1', validCatalogItem));

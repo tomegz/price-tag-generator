@@ -1,4 +1,3 @@
-import type { CatalogBrands } from "./catalog";
 import type { CatalogItem, CatalogItemsById } from "./catalogItem";
 
 export type CatalogProduct = CatalogItem & {
@@ -14,11 +13,8 @@ export function catalogItemsToProducts(items: CatalogItemsById): CatalogProduct[
     .sort((a, b) => `${a.brand} ${a.model}`.localeCompare(`${b.brand} ${b.model}`, "pl"));
 }
 
-export function getCatalogBrands(products: CatalogProduct[], dbBrands: CatalogBrands = []): string[] {
+export function getCatalogBrands(products: CatalogProduct[]): string[] {
   const brands = new Set<string>();
-  dbBrands.forEach(brand => {
-    if (brand.trim()) brands.add(brand.trim());
-  });
   products.forEach(product => {
     if (product.brand.trim()) brands.add(product.brand.trim());
   });

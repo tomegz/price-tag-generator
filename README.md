@@ -139,7 +139,6 @@ Realtime Database path:
 
 ```text
 profi-bike/
-  brands/
   items/
   owners/
   ownerUids/

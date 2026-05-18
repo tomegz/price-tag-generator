@@ -5,7 +5,6 @@ import {
   getCatalogErrorMessage,
   type CatalogErrorHandler
 } from "./catalogErrors";
-import type { CatalogBrands } from "@/domains/catalog/catalog";
 import type { CatalogItemsById } from "@/domains/catalog/catalogItem";
 import type { CatalogReadRepository } from "@/services/firebase";
 import {
@@ -20,15 +19,12 @@ import {
 } from "@/domains/catalog/catalogProduct";
 
 type CatalogDataState = {
-  brands: CatalogBrands;
-  brandsLoadedForUid: string | null;
   error: string;
   items: CatalogItemsById;
   itemsLoadedForUid: string | null;
 };
 
 const emptyCatalogItems: CatalogItemsById = {};
-const emptyCatalogBrands: CatalogBrands = [];
 
 export type CatalogState = {
   brands: string[];
@@ -47,8 +43,6 @@ export function useCatalog(
   const activeUid = currentUser?.uid ?? null;
   const trackedCatalogLoadsRef = useRef(new Set<string>());
   const [catalogData, setCatalogData] = useState<CatalogDataState>({
-    brands: [],
-    brandsLoadedForUid: null,
     error: "",
     items: {},
     itemsLoadedForUid: null
@@ -83,35 +77,18 @@ export function useCatalog(
       }
     });
 
-    const unsubscribeBrands = repository.subscribeCatalogBrands({
-      next: brands => {
-        setCatalogData(currentData => ({
-          ...currentData,
-          brands,
-          brandsLoadedForUid: activeUid
-        }));
-      },
-      error: error => {
-        handleCatalogError(error);
-        workflowTelemetry.trackCatalogLoadFailure(observability, "catalog.subscribe_brands", error);
-      }
-    });
-
     return () => {
       unsubscribeItems();
-      unsubscribeBrands();
     };
   }, [activeUid, handleCatalogError, observability, repository]);
 
   const catalogItems =
     activeUid && catalogData.itemsLoadedForUid === activeUid ? catalogData.items : emptyCatalogItems;
-  const catalogBrands =
-    activeUid && catalogData.brandsLoadedForUid === activeUid ? catalogData.brands : emptyCatalogBrands;
   const catalogError = activeUid ? catalogData.error : "";
   const catalogLoading = Boolean(activeUid && catalogData.itemsLoadedForUid !== activeUid && !catalogError);
 
   const products = useMemo(() => catalogItemsToProducts(catalogItems), [catalogItems]);
-  const brands = useMemo(() => getCatalogBrands(products, catalogBrands), [catalogBrands, products]);
+  const brands = useMemo(() => getCatalogBrands(products), [products]);
 
   return {
     brands,

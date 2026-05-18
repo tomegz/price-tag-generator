@@ -54,10 +54,10 @@ describe("catalog domain view models", () => {
     ]);
   });
 
-  it("uses DB brands and item-derived brands without duplicates", () => {
+  it("derives distinct brands from products", () => {
     const products = catalogItemsToProducts(catalogItems);
 
-    expect(getCatalogBrands(products, ["Trek", "Giant"])).toEqual(["Giant", "Kross", "Trek"]);
+    expect(getCatalogBrands(products)).toEqual(["Kross", "Trek"]);
   });
 
   it("composes case-insensitive search and brand filtering", () => {

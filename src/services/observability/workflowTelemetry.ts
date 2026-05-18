@@ -3,7 +3,7 @@ import type { RepositoryError } from "@/services/firebase/repositoryError";
 import { countTelemetryItems } from "./countTelemetryItems";
 import type { ObservabilityService } from "./types";
 
-type CatalogLoadOperation = "catalog.subscribe_items" | "catalog.subscribe_brands";
+type CatalogLoadOperation = "catalog.subscribe_items";
 type CatalogMutationOperation = "catalog.create" | "catalog.update" | "catalog.delete";
 
 export const workflowTelemetry = {

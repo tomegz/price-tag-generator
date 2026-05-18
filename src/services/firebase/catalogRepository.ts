@@ -1,10 +1,8 @@
-import { get, onValue, ref, remove, set, update, type Database } from 'firebase/database';
+import { onValue, ref, remove, set, update, type Database } from 'firebase/database';
 
 import {
-  parseLegacyCatalogBrands,
   parseLegacyCatalogItem,
   parseLegacyCatalogItems,
-  type CatalogBrands,
   type LegacyCatalogItem,
   type LegacyCatalogItemsById
 } from '@/domains/catalog/catalog';
@@ -20,9 +18,6 @@ import type { RepositoryError } from './repositoryError';
 export const defaultStoreId = 'profi-bike';
 
 export const catalogPaths = {
-  brands(storeId = defaultStoreId) {
-    return `${storeId}/brands`;
-  },
   items(storeId = defaultStoreId) {
     return `${storeId}/items`;
   },
@@ -40,7 +35,6 @@ export type SubscriptionHandlers<T> = {
 
 export type CatalogReadRepository = {
   subscribeCatalogItems(handlers: SubscriptionHandlers<CatalogItemsById>): () => void;
-  subscribeCatalogBrands(handlers: SubscriptionHandlers<CatalogBrands>): () => void;
 };
 
 export type CatalogWriteRepository = {
@@ -97,13 +91,6 @@ export function createCatalogRepository(
         firebaseError => error?.(toFirebaseRepositoryError(firebaseError))
       );
     },
-    subscribeCatalogBrands({ next, error }) {
-      return onValue(
-        ref(database, catalogPaths.brands(storeId)),
-        snapshot => next(parseLegacyCatalogBrands(snapshot.val())),
-        firebaseError => error?.(toFirebaseRepositoryError(firebaseError))
-      );
-    },
     saveCatalogItem(itemId, item) {
       return set(
         ref(database, catalogPaths.item(itemId, storeId)),
@@ -128,9 +115,4 @@ export function createCatalogRepository(
       return update(ref(database, catalogPaths.items(storeId)), createCatalogItemsDeletePayload(itemIds));
     }
   };
-}
-
-export async function readCatalogBrands(database: Database, storeId = defaultStoreId): Promise<CatalogBrands> {
-  const snapshot = await get(ref(database, catalogPaths.brands(storeId)));
-  return parseLegacyCatalogBrands(snapshot.val());
 }

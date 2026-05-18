@@ -11,7 +11,6 @@ function createCatalogRepository(): CatalogRepository {
     deleteCatalogItems: vi.fn(async () => undefined),
     saveCatalogItem: vi.fn(async () => undefined),
     saveCatalogItems: vi.fn(async () => undefined),
-    subscribeCatalogBrands: vi.fn(() => vi.fn()),
     subscribeCatalogItems: vi.fn(() => vi.fn())
   };
 }

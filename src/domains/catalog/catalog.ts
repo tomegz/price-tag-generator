@@ -22,7 +22,6 @@ export type LegacyCatalogItem = {
 };
 
 export type LegacyCatalogItemsById = Record<string, LegacyCatalogItem>;
-export type CatalogBrands = string[];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -59,9 +58,4 @@ export function parseLegacyCatalogItems(value: unknown): LegacyCatalogItemsById 
     }
     return items;
   }, {});
-}
-
-export function parseLegacyCatalogBrands(value: unknown): CatalogBrands {
-  if (!Array.isArray(value)) return [];
-  return value.filter((brand): brand is string => typeof brand === 'string' && brand.length > 0);
 }

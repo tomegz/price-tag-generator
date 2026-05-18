@@ -1,7 +1,7 @@
-import "../styles/PrintTag.css";
-import formatParagraphs from "../helpers/formatParagraphs";
-import type { CatalogItem } from "../domains/catalog/catalogItem";
-import { hasActivePromotion } from "../domains/pricing/priceFormatting";
+import type { CatalogItem } from "../../domains/catalog/catalogItem";
+import { hasActivePromotion } from "../../domains/pricing/priceFormatting";
+import "./PrintTag.css";
+import renderPrintTagParagraphs from "./renderPrintTagParagraphs";
 
 type PrintTagProps = {
   item: CatalogItem;
@@ -9,7 +9,7 @@ type PrintTagProps = {
 
 const PrintTag = ({ item }: PrintTagProps) => {
   const name = item.brand.toUpperCase();
-  const model = formatParagraphs(item.model.toUpperCase());
+  const model = renderPrintTagParagraphs(item.model.toUpperCase());
   const onDiscount = hasActivePromotion(item);
   const discountPrice = onDiscount ? <p className="after-discount">{item.discountPrice},-</p> : "";
   const smallHeader = name.length > 7 ? "smaller" : "";

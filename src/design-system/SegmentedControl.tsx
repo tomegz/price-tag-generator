@@ -1,5 +1,5 @@
-import "./components.css";
 import type { ReactNode } from "react";
+import "./SegmentedControl.css";
 
 export type SegmentedOption<TValue extends string> = {
   label: ReactNode;

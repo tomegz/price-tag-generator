@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 
-const formatParagraphs = (model: string): ReactElement => {
+const renderPrintTagParagraphs = (model: string): ReactElement => {
   const words = model.split(" ");
   const paragraphs: string[] = [];
   while(words.length > 0) {
@@ -17,4 +17,4 @@ const formatParagraphs = (model: string): ReactElement => {
   );
 }
 
-export default formatParagraphs;
+export default renderPrintTagParagraphs;

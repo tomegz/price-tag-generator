@@ -1,5 +1,5 @@
 import Icon from "./Icon";
-import "./components.css";
+import "./FlowStepper.css";
 
 type FlowStepperProps = {
   currentStep: number;

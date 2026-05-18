@@ -1,0 +1,40 @@
+.ds-promo-price {
+  align-items: flex-start;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ds-promo-price[data-inline="true"] {
+  align-items: baseline;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.ds-promo-price__old {
+  color: var(--pb-muted);
+  font-size: 14px;
+  text-decoration: line-through;
+  white-space: nowrap;
+}
+
+.ds-promo-price__new {
+  color: var(--pb-accent);
+  font-size: 22px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ds-promo-price[data-inline="true"] .ds-promo-price__new {
+  font-size: 14px;
+}
+
+.ds-promo-price__chip {
+  background: var(--pb-accent);
+  border-radius: 4px;
+  color: var(--pb-accent-ink);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+}

@@ -1,0 +1,33 @@
+.print-tag-rendering {
+  display: none;
+}
+
+@page {
+  margin: 0;
+  size: A4;
+}
+
+@media print {
+  .redesign-app {
+    display: initial;
+    height: auto;
+    min-width: 0;
+    overflow: visible;
+  }
+
+  html,
+  body,
+  .print-tag-rendering {
+    display: initial;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    width: 210mm;
+  }
+
+  .app-loading,
+  .login-screen,
+  .redesign-app > :not(.print-tag-rendering) {
+    display: none;
+  }
+}

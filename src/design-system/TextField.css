@@ -1,0 +1,31 @@
+.ds-field {
+  display: block;
+}
+
+.ds-field__label {
+  color: var(--pb-muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.ds-input {
+  background: var(--pb-surface);
+  border: 1px solid var(--pb-line);
+  border-radius: var(--pb-radius-control);
+  color: var(--pb-ink);
+  min-height: 38px;
+  outline: 0;
+  padding: 9px 12px;
+  width: 100%;
+}
+
+.ds-input::placeholder {
+  color: var(--pb-muted);
+}
+
+.ds-input--numeric {
+  font-family: var(--pb-font-mono);
+  font-variant-numeric: tabular-nums;
+}

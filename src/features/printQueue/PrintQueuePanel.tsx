@@ -4,8 +4,10 @@ import QuantityStepper from "../../design-system/QuantityStepper";
 import {
   getPrintableTagCountWord,
   getPrintSheetCountWord,
+  getTagCountWord
+} from "../../domains/language/printCopy";
+import {
   getPrintQueueTotal,
-  getTagCountWord,
   type PrintQueue
 } from "../../domains/printQueue/printQueue";
 import { getPrintSheetCount } from "../../domains/printTagRendering/printTagRendering";
@@ -14,6 +16,7 @@ import {
   getEffectivePrice
 } from "../../domains/pricing/priceFormatting";
 import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import "./PrintQueuePanel.css";
 
 type PrintQueuePanelProps = {
   printQueue: PrintQueue;

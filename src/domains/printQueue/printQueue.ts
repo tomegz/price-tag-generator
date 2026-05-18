@@ -19,6 +19,17 @@ export function removeFromPrintQueue(queue: PrintQueue, itemId: string): PrintQu
   return nextQueue;
 }
 
+export function setPrintQueueItemQuantity(queue: PrintQueue, itemId: string, quantity: number): PrintQueue {
+  if (quantity <= 0) {
+    return removeFromPrintQueue(queue, itemId);
+  }
+
+  return {
+    ...queue,
+    [itemId]: Math.floor(quantity)
+  };
+}
+
 export function clearPrintQueue(): PrintQueue {
   return {};
 }

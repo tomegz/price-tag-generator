@@ -4,6 +4,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 
 const relativeLayerImportPattern = (layers) => `^(?:\\.\\./)+(?:${layers.join('|')})(?:/|$)`;
+const aliasedLayerImportPattern = (layers) => `^@/(?:${layers.join('|')})(?:/|$)`;
 
 export default tseslint.config(
   { ignores: ['dist', 'coverage', 'node_modules', 'emulator-data', 'Design system & app redesign'] },
@@ -66,6 +67,10 @@ export default tseslint.config(
           {
             regex: relativeLayerImportPattern(['app', 'design-system', 'features', 'services']),
             message: 'Domain modules must not depend on app, UI, feature, or service layers.'
+          },
+          {
+            regex: aliasedLayerImportPattern(['app', 'design-system', 'features', 'services']),
+            message: 'Domain modules must not depend on app, UI, feature, or service layers.'
           }
         ]
       }]
@@ -78,6 +83,10 @@ export default tseslint.config(
         patterns: [
           {
             regex: relativeLayerImportPattern(['app']),
+            message: 'App-layer modules compose features; move shared contracts into domains or services instead.'
+          },
+          {
+            regex: aliasedLayerImportPattern(['app']),
             message: 'App-layer modules compose features; move shared contracts into domains or services instead.'
           },
           {
@@ -96,6 +105,10 @@ export default tseslint.config(
           {
             regex: relativeLayerImportPattern(['app', 'design-system', 'features']),
             message: 'Service modules must not depend on app, UI, or feature layers.'
+          },
+          {
+            regex: aliasedLayerImportPattern(['app', 'design-system', 'features']),
+            message: 'Service modules must not depend on app, UI, or feature layers.'
           }
         ]
       }]
@@ -108,6 +121,10 @@ export default tseslint.config(
         patterns: [
           {
             regex: relativeLayerImportPattern(['app', 'domains', 'features', 'services']),
+            message: 'Design-system primitives must stay generic and not depend on app-specific layers.'
+          },
+          {
+            regex: aliasedLayerImportPattern(['app', 'domains', 'features', 'services']),
             message: 'Design-system primitives must stay generic and not depend on app-specific layers.'
           }
         ]

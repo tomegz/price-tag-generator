@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
-import BrandMark from "../../design-system/BrandMark";
-import Button from "../../design-system/Button";
-import TextField from "../../design-system/TextField";
+import BrandMark from "@/design-system/BrandMark";
+import Button from "@/design-system/Button";
+import TextField from "@/design-system/TextField";
 import LoginWheelBackdrop from "./LoginWheelBackdrop";
 import "./LoginScreen.css";
 

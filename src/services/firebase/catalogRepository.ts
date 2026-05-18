@@ -7,14 +7,14 @@ import {
   type CatalogBrands,
   type LegacyCatalogItem,
   type LegacyCatalogItemsById
-} from '../../domains/catalog/catalog';
+} from '@/domains/catalog/catalog';
 import {
   catalogItemsToLegacyCatalogItems,
   catalogItemToLegacyCatalogItem,
   legacyCatalogItemsToCatalogItems,
   type CatalogItemInput,
   type CatalogItemsById
-} from '../../domains/catalog/catalogItem';
+} from '@/domains/catalog/catalogItem';
 import type { RepositoryError } from './repositoryError';
 
 export const defaultStoreId = 'profi-bike';

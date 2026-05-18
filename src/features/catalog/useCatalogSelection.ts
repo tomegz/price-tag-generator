@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 
 type SelectedProducts = Record<string, true>;
 

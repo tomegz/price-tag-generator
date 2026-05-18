@@ -2,8 +2,8 @@ import { useCallback, useMemo, useState } from "react";
 import {
   draftFromItem,
   type CatalogDraft
-} from "../../domains/catalog/catalogDraft";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+} from "@/domains/catalog/catalogDraft";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 
 export type CatalogDraftEditorState = {
   drafts: Record<string, CatalogDraft>;

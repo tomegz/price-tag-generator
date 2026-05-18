@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import BulkPromotionModal from "./BulkPromotionModal";
 
 const product: CatalogProduct = {

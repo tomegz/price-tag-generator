@@ -1,4 +1,4 @@
-import type { RepositoryError } from "../../services/firebase/repositoryError";
+import type { RepositoryError } from "@/services/firebase/repositoryError";
 
 export type CatalogErrorHandler = (error: RepositoryError) => void;
 

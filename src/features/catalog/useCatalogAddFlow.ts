@@ -1,15 +1,15 @@
 import { useCallback, useState } from "react";
-import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
+import type { CatalogItemInput } from "@/domains/catalog/catalogItem";
 import {
   catalogDraftToItem,
   emptyCatalogDraft,
   isDraftValid,
   type CatalogDraft
-} from "../../domains/catalog/catalogDraft";
+} from "@/domains/catalog/catalogDraft";
 import {
   ALL_BRANDS,
   ALL_YEARS
-} from "../../domains/catalog/catalogFilter";
+} from "@/domains/catalog/catalogFilter";
 
 type UseCatalogAddFlowOptions = {
   activeBrand: string;

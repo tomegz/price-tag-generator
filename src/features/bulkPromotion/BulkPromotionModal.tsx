@@ -1,19 +1,19 @@
 import { useMemo, useState } from "react";
-import Button from "../../design-system/Button";
-import Icon from "../../design-system/Icon";
-import Modal from "../../design-system/Modal";
-import SegmentedControl from "../../design-system/SegmentedControl";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import Button from "@/design-system/Button";
+import Icon from "@/design-system/Icon";
+import Modal from "@/design-system/Modal";
+import SegmentedControl from "@/design-system/SegmentedControl";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import {
   productCountLabel,
   productGenitiveCountLabel
-} from "../../domains/language/catalogCopy";
-import { formatPLN } from "../../domains/pricing/priceFormatting";
+} from "@/domains/language/catalogCopy";
+import { formatPLN } from "@/domains/pricing/priceFormatting";
 import {
   calculateBulkDiscountPrice,
   type BulkPromotionMode,
   type BulkPromotionOptions
-} from "../../domains/pricing/bulkPromotion";
+} from "@/domains/pricing/bulkPromotion";
 import "./BulkPromotionModal.css";
 
 type BulkPromotionModalProps = {

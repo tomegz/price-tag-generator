@@ -1,4 +1,4 @@
-import type { CatalogItem } from "../catalog/catalogItem";
+import type { CatalogItem } from "@/domains/catalog/catalogItem";
 
 export type BulkPromotionMode = "percent" | "amount";
 

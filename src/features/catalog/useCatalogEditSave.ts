@@ -1,12 +1,12 @@
 import { useCallback } from "react";
-import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
+import type { CatalogItemInput } from "@/domains/catalog/catalogItem";
 import {
   catalogDraftToItem,
   isDraftDirty,
   isDraftValid,
   type CatalogDraft
-} from "../../domains/catalog/catalogDraft";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+} from "@/domains/catalog/catalogDraft";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 
 type UseCatalogEditSaveOptions = {
   drafts: Record<string, CatalogDraft>;

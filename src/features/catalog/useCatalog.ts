@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { AuthUser } from "../../domains/auth/authUser";
-import type { RepositoryError } from "../../services/firebase/repositoryError";
+import type { AuthUser } from "@/domains/auth/authUser";
+import type { RepositoryError } from "@/services/firebase/repositoryError";
 import {
   getCatalogErrorMessage,
   type CatalogErrorHandler
 } from "./catalogErrors";
-import type { CatalogBrands } from "../../domains/catalog/catalog";
-import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
-import type { CatalogReadRepository } from "../../services/firebase";
+import type { CatalogBrands } from "@/domains/catalog/catalog";
+import type { CatalogItemsById } from "@/domains/catalog/catalogItem";
+import type { CatalogReadRepository } from "@/services/firebase";
 import {
   observability as defaultObservability,
   type ObservabilityService,
   workflowTelemetry
-} from "../../services/observability";
+} from "@/services/observability";
 import {
   catalogItemsToProducts,
   getCatalogBrands,
   type CatalogProduct
-} from "../../domains/catalog/catalogProduct";
+} from "@/domains/catalog/catalogProduct";
 
 type CatalogDataState = {
   brands: CatalogBrands;

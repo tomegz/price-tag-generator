@@ -1,21 +1,21 @@
 import { useMemo, useState } from "react";
-import FilterPills from "../../design-system/FilterPills";
-import Icon from "../../design-system/Icon";
-import SearchInput from "../../design-system/SearchInput";
-import SegmentedControl, { type SegmentedOption } from "../../design-system/SegmentedControl";
-import type { PrintQueue } from "../../domains/printQueue/printQueue";
+import FilterPills from "@/design-system/FilterPills";
+import Icon from "@/design-system/Icon";
+import SearchInput from "@/design-system/SearchInput";
+import SegmentedControl, { type SegmentedOption } from "@/design-system/SegmentedControl";
+import type { PrintQueue } from "@/domains/printQueue/printQueue";
 import {
   ALL_BRANDS,
   filterCatalogProducts
-} from "../../domains/catalog/catalogFilter";
+} from "@/domains/catalog/catalogFilter";
 import {
   getDefaultCatalogSortDirection,
   sortCatalogProducts,
   toggleCatalogSortDirection,
   type CatalogSort,
   type CatalogSortMode,
-} from "../../domains/catalog/catalogSort";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+} from "@/domains/catalog/catalogSort";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import ProductRow from "./ProductRow";
 import "./ProductList.css";
 

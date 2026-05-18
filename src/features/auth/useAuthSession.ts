@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import type { AuthUser } from "../../domains/auth/authUser";
-import type { AuthService } from "../../services/firebase";
+import type { AuthUser } from "@/domains/auth/authUser";
+import type { AuthService } from "@/services/firebase";
 import {
   observability as defaultObservability,
   type ObservabilityService,
   workflowTelemetry
-} from "../../services/observability";
+} from "@/services/observability";
 
 export type AuthSession = {
   authError: string;

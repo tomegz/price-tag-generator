@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import type { CatalogAdminMode } from "./catalogAdminTypes";
 
 export type CatalogDeleteConfirmState = {

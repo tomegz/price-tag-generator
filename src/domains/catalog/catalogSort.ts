@@ -1,4 +1,4 @@
-import { hasActivePromotion } from "../pricing/priceFormatting";
+import { hasActivePromotion } from "@/domains/pricing/priceFormatting";
 import type { CatalogProduct } from "./catalogProduct";
 
 export type CatalogSortMode = "brand" | "price" | "year" | "promo";

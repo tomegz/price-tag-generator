@@ -1,5 +1,5 @@
-import TextField from "../../design-system/TextField";
-import type { CatalogDraft } from "../../domains/catalog/catalogDraft";
+import TextField from "@/design-system/TextField";
+import type { CatalogDraft } from "@/domains/catalog/catalogDraft";
 import { getCatalogAdminFieldLabel } from "./catalogAdminFields";
 
 type CatalogAdminPromoDraftCellProps = {

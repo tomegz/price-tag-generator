@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getUserInitials } from "../auth/authUser";
+import { getUserInitials } from "@/domains/auth/authUser";
 import {
   catalogDraftToItem,
   draftFromItem,
@@ -22,7 +22,7 @@ import {
 import {
   formatPLN,
   hasActivePromotion
-} from "../pricing/priceFormatting";
+} from "@/domains/pricing/priceFormatting";
 import type { CatalogItemsById } from "./catalogItem";
 
 const catalogItems: CatalogItemsById = {

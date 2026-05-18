@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import type { CatalogProduct } from "../../domains/catalog/catalogProduct";
+import type { CatalogProduct } from "@/domains/catalog/catalogProduct";
 import CatalogAdminScreen from "./CatalogAdminScreen";
 
 const products: CatalogProduct[] = [

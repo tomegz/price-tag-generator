@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
-import type { CatalogRepository } from "../../services/firebase";
-import { createTestObservability } from "../../test/observability";
+import type { CatalogItemInput } from "@/domains/catalog/catalogItem";
+import type { CatalogRepository } from "@/services/firebase";
+import { createTestObservability } from "@/test/observability";
 import { useCatalogMutations } from "./useCatalogMutations";
 
 function createCatalogRepository(): CatalogRepository {

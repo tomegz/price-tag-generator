@@ -1,5 +1,5 @@
-import type { CatalogItem } from "../../domains/catalog/catalogItem";
-import { hasActivePromotion } from "../../domains/pricing/priceFormatting";
+import type { CatalogItem } from "@/domains/catalog/catalogItem";
+import { hasActivePromotion } from "@/domains/pricing/priceFormatting";
 import "./PrintTag.css";
 import renderPrintTagParagraphs from "./renderPrintTagParagraphs";
 

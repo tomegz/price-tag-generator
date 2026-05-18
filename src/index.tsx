@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client';
 
 import './index.css';
 import App from './App';
-import { firebaseServices } from './services/firebase/runtime';
-import { initializeObservability, ObservabilityErrorBoundary } from './services/observability';
+import { firebaseServices } from '@/services/firebase/runtime';
+import { initializeObservability, ObservabilityErrorBoundary } from '@/services/observability';
 
 const rootElement = document.getElementById('root');
 

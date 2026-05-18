@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Icon from "../design-system/Icon";
+import Icon from "@/design-system/Icon";
 
 type ProfileMenuProps = {
   email: string;

@@ -1,25 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 
-import CatalogAdminRoute from "./app/CatalogAdminRoute";
-import AppShell from "./app/AppShell";
-import PrintWorkflowScreen from "./app/PrintWorkflowScreen";
-import type { AppMode } from "./app/appMode";
-import PrintTagRenderer from "./features/printTags/PrintTagRenderer";
-import LoginScreen from "./features/auth/LoginScreen";
-import { useAuthSession } from "./features/auth/useAuthSession";
-import { useBulkPromotionActions } from "./features/bulkPromotion/useBulkPromotionActions";
-import { getUserInitials } from "./domains/auth/authUser";
-import { useCatalog } from "./features/catalog/useCatalog";
-import { useCatalogMutations } from "./features/catalog/useCatalogMutations";
-import { usePrintQueue } from "./features/printQueue/usePrintQueue";
-import type { AuthService, CatalogRepository } from "./services/firebase";
-import { authService, catalogRepository } from "./services/firebase/runtime";
-import type { StorageLike } from "./domains/storage/printQueueStorage";
+import AppShell from "@/app/AppShell";
+import type { AppMode } from "@/app/appMode";
+import PrintWorkflowScreen from "@/app/PrintWorkflowScreen";
+import CatalogAdminRoute from "@/app/CatalogAdminRoute";
+import PrintTagRenderer from "@/features/printTags/PrintTagRenderer";
+import LoginScreen from "@/features/auth/LoginScreen";
+import { useAuthSession } from "@/features/auth/useAuthSession";
+import { useBulkPromotionActions } from "@/features/bulkPromotion/useBulkPromotionActions";
+import { getUserInitials } from "@/domains/auth/authUser";
+import { useCatalog } from "@/features/catalog/useCatalog";
+import { useCatalogMutations } from "@/features/catalog/useCatalogMutations";
+import { usePrintQueue } from "@/features/printQueue/usePrintQueue";
+import type { AuthService, CatalogRepository } from "@/services/firebase";
+import { authService, catalogRepository } from "@/services/firebase/runtime";
+import type { StorageLike } from "@/domains/storage/printQueueStorage";
 import {
   observability as defaultObservability,
   type ObservabilityService,
   workflowTelemetry
-} from "./services/observability";
+} from "@/services/observability";
 
 type AppProps = {
   auth?: AuthService;

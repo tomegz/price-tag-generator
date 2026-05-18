@@ -1,15 +1,15 @@
 import { useCallback } from "react";
-import type { CatalogItemInput } from "../../domains/catalog/catalogItem";
+import type { CatalogItemInput } from "@/domains/catalog/catalogItem";
 import {
   type CatalogWriteRepository,
   toFirebaseRepositoryError
-} from "../../services/firebase";
+} from "@/services/firebase";
 import type { CatalogErrorHandler } from "./catalogErrors";
 import {
   observability as defaultObservability,
   type ObservabilityService,
   workflowTelemetry
-} from "../../services/observability";
+} from "@/services/observability";
 
 type UseCatalogMutationsOptions = {
   createCatalogItemId?: () => string;

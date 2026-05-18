@@ -1,19 +1,19 @@
 import { useCallback } from "react";
-import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
+import type { CatalogItemsById } from "@/domains/catalog/catalogItem";
 import {
   type CatalogWriteRepository,
   toFirebaseRepositoryError
-} from "../../services/firebase";
-import type { RepositoryError } from "../../services/firebase/repositoryError";
+} from "@/services/firebase";
+import type { RepositoryError } from "@/services/firebase/repositoryError";
 import {
   observability as defaultObservability,
   type ObservabilityService,
   workflowTelemetry
-} from "../../services/observability";
+} from "@/services/observability";
 import {
   applyBulkPromotion,
   type BulkPromotionOptions
-} from "../../domains/pricing/bulkPromotion";
+} from "@/domains/pricing/bulkPromotion";
 
 type UseBulkPromotionActionsOptions = {
   catalogItems: CatalogItemsById;

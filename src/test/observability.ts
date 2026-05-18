@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { ObservabilityService } from "../services/observability";
+import type { ObservabilityService } from "@/services/observability";
 
 export function createTestObservability(): ObservabilityService {
   return {

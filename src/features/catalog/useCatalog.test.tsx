@@ -1,13 +1,13 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { AuthUser } from "../../domains/auth/authUser";
-import type { CatalogBrands } from "../../domains/catalog/catalog";
-import type { CatalogItemsById } from "../../domains/catalog/catalogItem";
+import type { AuthUser } from "@/domains/auth/authUser";
+import type { CatalogBrands } from "@/domains/catalog/catalog";
+import type { CatalogItemsById } from "@/domains/catalog/catalogItem";
 import type {
   CatalogReadRepository,
   FirebaseRepositoryError
-} from "../../services/firebase";
-import { createTestObservability } from "../../test/observability";
+} from "@/services/firebase";
+import { createTestObservability } from "@/test/observability";
 import { useCatalog } from "./useCatalog";
 
 type SubscriptionHandlers<T> = {

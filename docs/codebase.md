@@ -18,14 +18,12 @@ This repository contains the Profi Bike price-tag app. It is a narrow internal t
 ```text
 src/
   app/                 top-level shell, header, profile menu, and app mode types
-  components/          print-tag rendering components shared by screens
   design-system/       tokens, base CSS, and generic UI primitives
   domains/             framework-free catalog, pricing, language, queue, print, and storage helpers
-  features/            auth, catalog admin, product discovery, bulk promotion, and print queue UI
+  features/            auth, catalog admin, product discovery, bulk promotion, print queue, and print tags
   services/firebase/   Firebase config, Auth service, catalog repository, and runtime singletons
   services/observability/
                        Firebase Analytics and Sentry facade
-  styles/              physical print-tag CSS
   test/                shared test helpers
 tests/
   e2e/                 Playwright browser workflows with deterministic emulator data
@@ -94,6 +92,8 @@ Catalog items are persisted with these fields:
 
 The app maps that persisted shape to typed catalog items in `src/domains/catalog/catalogItem.ts`. Prices are display amounts in production data, not formally named cents fields.
 
+Brand filter options are derived from catalog item `name` values through the domain view-model helpers. The app does not read or write a separate `brands` node.
+
 Do not commit production exports, local emulator state, secrets, Firebase service accounts, or Sentry credentials.
 
 ## Local Development
@@ -128,7 +128,7 @@ The UI uses a restrained, utility-focused Profi Bike style with Carbon-inspired 
 
 - Generic tokens, base rules, and primitives live in `src/design-system/`.
 - Screen and workflow styling lives with the UI that owns it when styles are added or moved.
-- Physical printed tag output is separate from app chrome and uses `src/components/PrintTag.tsx` plus `src/styles/PrintTag.css`.
+- Physical printed tag output is separate from app chrome and uses `src/features/printTags/PrintTag.tsx` plus `src/features/printTags/PrintTag.css`.
 - Print CSS must keep app UI hidden during printing and preserve the A4 output layout.
 
 ## Observability

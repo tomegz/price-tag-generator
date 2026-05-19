@@ -144,6 +144,8 @@ profi-bike/
   ownerUids/
 ```
 
+Brand filters are derived from catalog items. The app does not read or write a separate `brands` node.
+
 Do not commit production exports, secrets, service account keys, or local emulator state.
 
 ## Deployment

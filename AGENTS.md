@@ -35,7 +35,7 @@ Layer rules:
 - `src/features/`: screen workflows, hooks, forms, tables, modals, and user-action orchestration.
 - `src/domains/`: framework-free business rules, model conversions, validation, calculations, copy helpers, and storage helpers.
 - `src/services/`: Firebase and observability adapters behind typed facades.
-- `src/styles/`: physical print-tag styling.
+- `src/features/printTags/`: print-tag rendering components and physical print CSS.
 
 ESLint enforces the main layer boundaries. Do not bypass those rules with direct SDK imports or cross-layer shortcuts.
 
@@ -44,13 +44,12 @@ ESLint enforces the main layer boundaries. Do not bypass those rules with direct
 - The print workflow supports product search, brand filtering, sorting, queue quantities, clearing, and printing.
 - The catalog admin supports single-row editing, adding, deleting, bulk selection, bulk promotion, and typed-confirmation bulk delete.
 - User initials come from Firebase user identity.
-- Brand filters combine the database `brands` node with item-derived fallback brands.
-- The database `brands` node is an independent brand list; deleting all products for a brand does not automatically delete that brand entry.
+- Brand filters are derived from catalog items. The app does not read or write a separate `brands` node.
 - Catalog writes go through the repository layer and rely on realtime subscriptions to refresh catalog state.
 - New catalog item IDs are generated as collision-resistant `item-<uuid>` values in `useCatalogMutations`; preserve existing IDs when reading, updating, or deleting.
 - Polish product and print copy is intentional. Use helpers from `src/domains/language/` for pluralization.
 - Main product rows are not clickable add targets. Keep adding explicit through the `Dodaj` button and quantity stepper.
-- Keep print tag rendering separate from app chrome. The physical output uses `PrintTag` and `PrintTag.css`.
+- Keep print tag rendering separate from app chrome. The physical output uses `src/features/printTags/PrintTag.tsx` and `src/features/printTags/PrintTag.css`.
 
 ## Firebase And Data
 
@@ -70,7 +69,6 @@ Database shape:
 
 ```text
 profi-bike/
-  brands/
   items/
   owners/
   ownerUids/
